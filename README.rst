@@ -1,9 +1,9 @@
-Template for the Read the Docs tutorial
+Documentation for AbsBox
 =======================================
+This repo serves document for Python `AbsBox` package .
+`AbsBox` is a Python-based wrapper for MBS/ABS cashflow engine `Hastructure`,which ships the analytics & modelling capabilities for structured product.
 
-This GitHub template includes fictional Python library
-with some basic Sphinx docs.
-
-Read the tutorial here:
-
-https://docs.readthedocs.io/en/stable/tutorial/
+Features
+------
+* Model deals
+* Cashflow projection
