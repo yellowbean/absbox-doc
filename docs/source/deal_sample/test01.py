@@ -1,40 +1,40 @@
-test01 = 信贷ABS(
+test01 = Generic(
     "TEST01"
     ,("2021-03-01","2021-06-15","2021-07-26")
-    ,"每月"
-    ,{'清单':[["按揭贷款"
-        ,{"放款金额":120,"放款利率":["固定",0.045],"初始期限":30
-          ,"频率":"每月","类型":"等额本金","放款日":"2021-02-01"}
-          ,{"当前余额":120
-          ,"当前利率":0.08
-          ,"剩余期限":20
-          ,"状态":"正常"}]]}
-    ,(("账户01",{"余额":0}),)
-    ,(("A1",{"当前余额":100
-             ,"当前利率":0.07
-             ,"初始余额":100
-             ,"初始利率":0.07
-             ,"起息日":"2020-01-03"
-             ,"利率":{"固定":0.08}
-             ,"债券类型":{"过手摊还":None}})
-      ,("B",{"当前余额":20
-             ,"当前利率":0.0
-             ,"初始余额":100
-             ,"初始利率":0.07
-             ,"起息日":"2020-01-03"
-             ,"利率":{"固定":0.00}
-             ,"债券类型":{"权益":None}
+    ,{"payment":"Monthly","collection":"Monthly"}
+    ,{'breakdown':[["Mortgage"
+        ,{"faceValue":120,"originRate":["Fix",0.045],"originTerm":30
+          ,"frequency":"Monthly","originDate":"2021-02-01"}
+          ,{"currentBalance":120
+          ,"currentRate":0.08
+          ,"remainTerms":20
+          ,"status":"current"}]]}
+    ,(("acc01",{"balance":0}),)
+    ,(("A1",{"balance":100
+             ,"rate":0.07
+             ,"originBalance":100
+             ,"originRate":0.07
+             ,"startDate":"2020-01-03"
+             ,"rateType":{"Fix":0.08}
+             ,"bondType":{"Sequential":None}})
+      ,("B",{"balance":20
+             ,"rate":0.0
+             ,"originBalance":100
+             ,"originRate":0.07
+             ,"startDate":"2020-01-03"
+             ,"rateType":{"Fix":0.00}
+             ,"bondType":{"Equity":None}
              }))
-    ,(("信托费用",{"类型":{"固定费用":30}}),)
-    ,{"未违约":[
-         ["支付费用",["账户01"],['信托费用']]
-         ,["支付利息","账户01",["A1"]]
-         ,["支付本金","账户01",["A1"]]
-         ,["支付本金","账户01",["B"]]
-         ,["支付收益","账户01","B"]
+    ,(("trusteeFee",{"type":{"FixFee":30}}),)
+    ,{"Normal":[
+         ["PayFee",["acc01"],['trusteeFee']]
+         ,["PayInt","acc01",["A1"]]
+         ,["PayPrin","acc01",["A1"]]
+         ,["PayPrin","acc01",["B"]]
+         ,["PayEquityResidual","acc01","B"]
      ]}
-    ,(["利息回款","账户01"]
-      ,["本金回款","账户01"]
-      ,["早偿回款","账户01"]
-      ,["回收回款","账户01"])
+    ,(["CollectedInterest","acc01"]
+      ,["CollectedPrincipal","acc01"]
+      ,["CollectedPrepayment","acc01"]
+      ,["CollectedRecoveries","acc01"])
     ,None)

@@ -13,13 +13,13 @@ Deal Modeling is a process to build a deal with descriptive factual data, like:
 
 `absbox` ships with couple built-in class to accomodate serval deal typs, like Agency MBS or Automobile Loans Deal.
 
-.. _AgencyMBS:
+.. _Generic ABS:
 
-AgencyMBS
+Generic
 ====
 .. code-block:: python
 
-   from absbox.local.us import 
+   from absbox import generic 
 
 
 Components
@@ -27,17 +27,12 @@ Components
 Dates
 ----
 
-- Closing Date:
-  指 原始权益人 将 底层资产转移到SPV的当天。该日期之后所有资产的现金流的归属于SPV
+- `Closing Date`: All pool cashflow after `Closing Date` will be flow into the SPV
 
-- Settle Date:
-  指 产品 成立之后，负债端债券的起始计算利息的日期。
+- `Settle Date`: Bond start to accure interest after `Settle Date`
 
-- First Pay Date / Next Pay Date:
-  指 产品 成立之后，负债端第一次支付利息/本金的日期。
+- `First Pay Date` / `Next Pay Date`: First execution of waterfall or next date of executing the waterfall
 
-建模时按照顺序，通过建立一个tuple ``(封包日,起息日,首次支付日)`` 用于描述产品的日期要素.
-因为日期有着业务顺序含义，因此无需通过字典形式进行建模，而是一个tuple即可。
 
 .. code-block:: python
 
@@ -61,18 +56,17 @@ Dates
   # 起息日=2022-09-26，表示 2022-10-26的债券兑付起息日为 2022-09-26
   # 下次支付日=2022-10-26
 
-费用
+Fee/Expenses
 ----
 
-费用类型包括
-  * 一次性费用, 例如需要支付的承销费用。
-  * 周期性费用, 例如一年一次的跟踪评级费用,或者每个月产生的事务性费用
-  * 按照比例产生的费用
-     * 例如按照 ``资产池余额`` ,或者 ``债券余额`` 作为基数的费用，计算年化费用
-     * 或者按照 ``资产池利息`` ,作为基数的增值税计算费用
-     * 或者按照 ``违约余额`` , 作为基数计算违约处置费用
+Fees fall into couple categories:
+  * one-off, with initial balance and won't get paid after initial balance was paid off。
+  * reoccur fee , a fix amount fee which shall be paid annually
+  * pecerntage fee, a fee type which the due amount depends on a percentage of balance, ie
+     * ``current pool balance`` ,或者 ``current bond balance`` 作为基数的费用，计算年化费用
+     * ``defaulted balance`` , 作为基数计算违约处置费用
 
-建模格式为： ``(费用名称 , {费用描述} )``
+format： ``({fee name} , {fee description} )``
 
 示例为设定两个费用，一个按照当期资产池利息金额乘以3.25%。另外一个按照资产池余额的年化2%收取当期费用。
 
@@ -81,7 +75,7 @@ Dates
   (("增值税",{"类型":{"百分比费率":["资产池当期利息",0.0325]}})
       ,("服务商费用",{"类型":{"年化费率":["资产池余额",0.02]}}))
 
-资产池
+Pool
 ----
 用一个列表表示底层资产的清单，目前资产清单包含 ``按揭贷款`` ``消费贷款`` ``租金合同`` ``企业贷款`` .
 
@@ -263,75 +257,15 @@ Subordination
   
 .. literalinclude:: deal_sample/test01.py
    :language: python
-   :linenos:
-   :emphasize-lines: 28
-
-PAC like bond with a target amortization balance
-----
-
-.. literalinclude:: deal_sample/test02.py
-   :language: python
-   :linenos:
-   :emphasize-lines: 20-22
-
-Pay out account by percentage of account balance
-----
-
-当进行清仓回购的时候，剩余资金按照 3：7 分成比例支付给次级投资者和服务商。
-
-.. literalinclude:: deal_sample/test03.py
-   :language: python
-   :linenos:
-   :emphasize-lines: 40-42
-
-
-Floating tranche
-----
-
-.. literalinclude:: deal_sample/test04.py
-   :language: python
-   :linenos:
-   :emphasize-lines: 22,30,38
-
-
-Clean up call
----- 
-
-.. literalinclude:: deal_sample/test06.py
-   :language: python
-   :linenos:
-   :emphasize-lines: 74
-
-
-Model pool cashflow mannually
-----
-  * annualized fee rate 0.12%
-
-.. literalinclude:: deal_sample/test07.py
-   :language: python
-   :linenos:
-   :emphasize-lines: 6-41
-
-Reserve Account with target balance
-----
-* Target amount is higher of
-   * 0.9% of pool balance
-   * 3*(Due fee + Due Int paied)
-
-.. literalinclude:: deal_sample/test08.py
-   :language: python
-   :linenos:
-   :emphasize-lines: 59-66
 
 
 
 Save a deal file
 ====
-建议通过python自带的 ``pickle`` 包对建模文件进行存储。
 
 Save
 ----
-建模的内容可以通过调用 ``save()`` 方法将内容保存至本地文件夹。
+using ``save()`` to save a deal file to disk
 
 .. code-block:: python
 
@@ -342,10 +276,10 @@ Save
 
 Load
 ----
-建模的内容可以通过调用 ``load()`` 方法将内容保存至本地文件夹。
+ ``load()`` to load a deal from disk
 
 .. code-block:: python
 
   ...
-  from absbox.local.china import 信贷ABS
-  信贷ABS.load("path/to/file")
+  from absbox.local.generic import Generic
+  Generic.load("path/to/file")

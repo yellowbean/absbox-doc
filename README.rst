@@ -6,4 +6,4 @@ This repo serves document for Python `AbsBox` package .
 Features
 ------
 * Model deals
-* Cashflow projection
+* Cashflow projection, tranche pricing and multi-scenario analysis
