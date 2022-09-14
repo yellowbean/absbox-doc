@@ -14,12 +14,13 @@ Setup a API
 
 .. code-block:: python
 
-   from absbox import API,save
-   from absbox.local.china import 信贷ABS,show
+   from absbox import API
    localAPI = API("https://deal-bench.xyz/api")
 
 
-``"https://deal-bench.xyz/api"`` Can be depolyed in user's local enviroment
+.. note::
+   user can deploy its own server within his own in-house enviroment.
+
 
 .. note::
    the remote engine exposes REST Service ,`absbox` send deal models and cashflow projection assumptions to that server.
@@ -36,5 +37,62 @@ Once the API was instantised call "``run()``" to project cashflow and pricing th
                            ,{"Recovery":(0.7,18)}],  
                pricing={"PVDay":"2023-06-22"
                        ,"Curve":[["2020-01-01",0.025]]},
-               read=True
-              )
+               read=True)
+
+Getting cashflow
+----
+the `run()` function will return a dict
+
+.. code-block:: python
+
+   r = localAPI.run(test01, 
+                    assumptions=[{"CPR":0.01}  
+                                ,{"CDR":0.01}  
+                                ,{"Recovery":(0.7,18)}],  
+                    pricing={"PVDay":"2023-06-22"
+                            ,"Curve":[["2020-01-01",0.025]]},
+                    read=True)
+
+Bond Cashflow 
+^^^^
+
+.. code-block:: python
+
+   r['bonds'].keys() # all bond names
+   r['bonds']['A1'] # cashflow for bond `A1`
+
+Fee Cashflow
+^^^^
+
+.. code-block:: python
+
+   r['fees'].keys() # all fee names
+   r['fees']['trusteeFee'] 
+
+Account flow
+^^^^
+
+.. code-block:: python
+
+   r['accounts'].keys() # all account names
+   r['accounts']['acc01'] 
+
+
+Pool Cashflow 
+^^^^
+
+.. code-block:: python
+
+   r['pool']['flow'] # pool cashflow 
+
+
+Bond Pricing 
+^^^^
+
+if passing `pricing` in the `run`, then response would have a key `pricing`
+
+.. code-block:: python
+
+   r['pricing']
+
+
