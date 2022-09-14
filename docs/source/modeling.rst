@@ -37,213 +37,194 @@ Dates
 .. code-block:: python
 
   ("2022-01-01","2022-03-01","2022-05-01")
-  # 表示 封包日=2022-01-01,起息日=2022-03-01,首次支付日=2022-05-01
+  # which means
+  # closing date=2022-01-01
+  # last paid date=2022-03-01
+  # first pay date/next pay date=2022-05-01
 
-对于存量产品建模时,受托报告获取的日期是： 
-  * 收款期间（2022-08-01,2022-09-01）
-  * 债券当期兑付日 ： 2022-09-26
-
-针对上述要素，我们需要获取的三个日期如下： 
-
-  - 下次债券兑付对应收款期间截止日
-  - 下次债券兑付的起息日
-  - 下次债券兑付日
 
 .. code-block:: python
 
   ("2022-09-01","2022-09-26","2022-10-26")
-  # 表示 2022-09-01 之后的资产池现金流都会用于本次 2022-10-26日的债券兑付
-  # 起息日=2022-09-26，表示 2022-10-26的债券兑付起息日为 2022-09-26
-  # 下次支付日=2022-10-26
+  # 2022-09-01, all pool projected cashflow will be follow to SPV after this date
+  # 2022-09-26，all the bonds start to accure interest after this date
+  # 2022-10-26, next payment date
 
 Fee/Expenses
 ----
 
 Fees fall into couple categories:
   * one-off, with initial balance and won't get paid after initial balance was paid off。
-  * reoccur fee , a fix amount fee which shall be paid annually
+  * recur fee , a fix amount fee which occur by an interval like `Monthly` or `Yearly`
   * pecerntage fee, a fee type which the due amount depends on a percentage of balance, ie
-     * ``current pool balance`` ,或者 ``current bond balance`` 作为基数的费用，计算年化费用
-     * ``defaulted balance`` , 作为基数计算违约处置费用
+     * using ``current pool balance/current bond balance`` as base and multiply with an annualise percentage.
 
 format： ``({fee name} , {fee description} )``
 
-示例为设定两个费用，一个按照当期资产池利息金额乘以3.25%。另外一个按照资产池余额的年化2%收取当期费用。
-
 .. code-block:: python
-
-  (("增值税",{"类型":{"百分比费率":["资产池当期利息",0.0325]}})
-      ,("服务商费用",{"类型":{"年化费率":["资产池余额",0.02]}}))
+  #two fees
+  (("servicer_fee",{"type":{"AnnualPctFee":["PoolBalance",0.02]}})
+   ,("bond_service_fee",{"type":{"PctFee":["BondBalance",0.02]}})
+   ,("issuance_fee",{"type":{"FixFee":100}})
+  )
 
 Pool
 ----
-用一个列表表示底层资产的清单，目前资产清单包含 ``按揭贷款`` ``消费贷款`` ``租金合同`` ``企业贷款`` .
 
-按揭贷款
+Mortgage
 
 .. code-block:: python
 
-  (["按揭贷款"
-        ,{"放款金额":9961626400,"放款利率":"放款利率":["浮动",0.085,{"基准":"LPR5Y","利差":0.01,"重置频率":"每月"}],"初始期限":218
-          ,"频率":"每月","类型":"等额本息","放款日":"2020-06-01"}
-          ,{"当前余额":7596981800
-          ,"当前利率":0.0495
-          ,"剩余期限":165}]
-      ,["按揭贷款"
-        ,{"放款金额":330_977.45*10000,"放款利率":["固定",0.045],"初始期限":218
-          ,"频率":"每月","类型":"等额本金","放款日":"2020-06-01"}
-          ,{"当前余额":239_790.20*10000
-          ,"当前利率":0.0495
-          ,"剩余期限":165}])
+  [["Mortgage"
+        ,{"faceValue":120,"originRate":["Fix",0.045],"originTerm":30
+          ,"frequency":"Monthly","originDate":"2021-02-01"}
+          ,{"currentBalance":120
+          ,"currentRate":0.08
+          ,"remainTerms":20
+          ,"status":"current"}]]
 
-账户
+Accounts
 ----
-账户有两种：
-  * 普通账户 -> 表示用于简单的现金收支。
-  * 储备账户 -> 储备账户可以锚定一个储备金额数值。在存入金额和取出时，按照预定锚定的金额进行留存。
+There are two types of accounts,
+  * Bank Account -> which used to collect money from pool and pay out to fees/bonds
+  * Reserve Account -> with one more attribute to `Bank Account` which set the reserve amount of the account
 
-建模格式为 ``(账户名称,账户属性)``, 例如
+Format ``({account name},{account description})``, i.e
+
+* Bank Account
 
 .. code-block:: python
 
-  (("本金分账户",{"余额":0})
-   ,("收入分账户",{"余额":0}))
+  (("principalAccount",{"balance":0})
+   ,("repaymentAccount",{"balance":0}))
 
-另外一种为 ``储备账户`` ，该类账户存在一个目标储备金额,其设置可以通过 ``账户属性`` 进行建模
+* Reserve Account 
 
-目标储备金额: 有多种设置方式，例如
+There is one extra attribute to set : `type`
 
-  * 单一值： 固定的绝对金额，例如，10000元
-    ``("储备账户A",{"余额":0,"类型":{"固定储备金额":1000}})``
-  * 公式值： 例如资产池余额的一个百分比，例如资产池余额的 2%
-    ``("储备账户B",{"余额":0,"类型":{"目标储备金额":["资产池余额",0.015]}})``
-
-  * 复合值： 例如为 单一值 公式值 两者取大，或者取小
+  * Fix Amount： a single reserve amount 
+    ``("ReserveAccountA",{"balance":0,"type":{"FixReserve":1000}})``
+  * Formula： the target reserve amount is derived from a formula, like 2% of pool balance
+    ``("ReserveAccountB",{"balance":0,"type":{"Target":["PctReserve",0.015]}})``
+  * Nested Formula, the target reserve amount is base on higher or lower of two formula 
 
     .. code-block:: python
 
-      ("储备账户C",{"余额":0,"类型":{"较高":[
-                                     {"目标储备金额":["资产池余额",0.015]}
-                                    ,{"固定储备金额":100}]})
-      ("储备账户D",{"余额":0,"类型":{"较低":[
-                                     {"目标储备金额":["资产池余额",0.015]}
-                                    ,{"固定储备金额":100}]})
-      # 甚至可以进行多条件组合
-      ("储备账户E",{"余额":0,"类型":{"较低":[{"较高":[
-                                            {"目标储备金额":["资产池余额",0.015]}
-                                            ,{"固定储备金额":100}]}
-                                    ,{"固定储备金额":150}]})
-债券
+      ("ReserveAccountC",{"balance":0,"type":{"Max":[
+                                     {"Target":["PoolBalance",0.015]}
+                                    ,{"FixReserve":100}]})
+      ("ReserveAccountD",{"balance":0,"type":{"Min":[
+                                     {"Target":["PoolBalance",0.015]}
+                                    ,{"FixReserve":100}]})
+      ("ReserveAccountE",{"balance":0,"type":{"Min":[{"Max":[
+                                            {"Target":["PoolBalance",0.015]}
+                                            ,{"FixReserve":100}]}
+                                    ,{"FixReserve":150}]})
+Bonds/Tranches
 ----
 
-建模格式为 ``(债券层级名称,属性)`` ， 其中 ``利率类型`` 分为三种
+format ``({bond/tranche name},{bond/tranche description})`` ， 
+there are 3 types of `Interest`
 
-  * 固定利率   :code:`"利率":{"固定":0.0569}`
-  * 浮动利率   :code:`"利率":{"浮动":["LPR5Y",-0.0169,"每月"]}`
-  * 期间收益   :code:`"利率":{"期间收益":0.02}`
+  * Fix Rate   :code:`"rateType":{"Fix":0.0569}`
+  * Float Rate   :code:`"rateType":{"Floater":["SOFAR1Y",-0.0169,"Monthly"]}`
+  * Interim Yield   :code:`"rateType":{"InterimYield":0.02}`
 
-债券种类众多，包括 ``过手摊还类`` ，``固定摊还`` ，``锁定类`` , ``权益类``：
+there are 4 types of `Principal` for bonds/tranches
 
-  * 过手摊还类： 较为常见利随本清式债券。
-  * 固定摊还： 预定义固定摊还目标额，限定了每次兑付时候最大的本金还款额。
-  * 锁定类： 预定义一个日期，该日期之前都不会偿还本金
-  * 权益：  权益类债券，用于次级证券建模, 可以支付超额收益。
+  * `Sequential`： can be paid down as much as its oustanding balance
+  * `PAC`： Balance of bond can only be paid down by a predefined schedule
+  * `Lockout`： Principal won't be paid after lockout date
+  * `Equity`：  No interest and shall serve as junior tranche
 
 .. code-block:: python
 
-    ("A1",{"当前余额":3_650_000_000
-                             ,"当前利率":0.03
-                             ,"初始余额":3_650_000_000
-                             ,"初始利率":0.03
-                             ,"起息日":"2020-01-03"
-                             ,"利率":{"浮动":["LPR5Y",-0.0169,"每月"]}
-                             ,"债券类型":{"过手摊还":None}
-                            })
-      ,("A2",{"当前余额":5_444_000_000
-                             ,"当前利率":0.03
-                             ,"初始余额":5_444_000_000
-                             ,"初始利率":0.03
-                             ,"起息日":"2020-01-03"
-                             ,"利率":{"浮动":["LPR5Y",-0.0091,"每月"]}
-                             ,"债券类型":{"过手摊还":None}
-                            })
-      ,("次级",{"当前余额":900_883_783.62
-                             ,"当前利率":0.0
-                             ,"初始余额":2_123_875_534.53
-                             ,"初始利率":0.00
-                             ,"起息日":"2020-01-03"
-                             ,"利率":{"期间收益":0.02}  # 期间收益必须满足 2%
-                             ,"债券类型":{"权益":None}
-                            })
+    ("A1",{"balance":3_650_000_000
+           ,"rate":0.03
+           ,"originBalance初始余额":3_650_000_000
+           ,"originRate":0.03
+           ,"startDate":"2020-01-03"
+           ,"rateType":{"Floater":["LPR5Y",-0.0169,"Monthly"]}
+           ,"bondType":{"Sequential":None} })
+      ,("A2",{"balance":5_444_000_000
+           ,"rate":0.03
+           ,"originBalance初始余额":5_444_000_000
+           ,"originRate":0.03
+           ,"startDate":"2020-01-03"
+           ,"rateType":{"Floater":["LPR5Y",-0.0091,"Monthly"]}
+           ,"bondType":{"Sequential":None} })
+      ,("R",{"balance":900_883_783.62
+           ,"rate":0.0
+           ,"originBalance":2_123_875_534.53
+           ,"originRate":0.00
+           ,"startDate":"2020-01-03"
+           ,"rateType":{"InterimYield":0.02}  
+           ,"bondType":{"Equity":None} })
 
 
 
-分配规则
+Waterfall
 ----
 
-分配规则描述了一系列SPV资金的收取和支出的动作。包括
+Waterfall means a list of `action`` involves cash movement.
 
-  * 支付费用
+`action`
+  * PayFee
 
-    * 格式为 ``["支付费用", [资金来源账户列表], [需要支付的费用列表]]``
-    其中，
-      *  ``[资金来源账户列表]``   -> 按照顺序，首先从第一个账户获取可用资金进行支付，以此类推
-      *  ``[需要支付的费用列表]`` -> 按照列表中的费用，同顺序按照应付比例进行支付
+    * format ``["PayFee", [{Account}], [<Fees>]]``
+      *  ``[{Account}]`` -> Using the available funds of accounts in the list from 1st ,then 2nd ..
+      *  ``[<Fees>]`` -> Pay the fees in the list on pro-rata basis
 
-  * 支付费用限额
+  * PayFeeBy
 
-    * 相比于 ``支付费用`` , 在最后新增一个map列表,用于描述支付费用的上限形式
+    * Using one more map to limit the amount to be paid
 
-      * ``应计费用百分比`` , 限制支付应计费用的比例上限
-      * ``应计费用金额`` ,  限制支付应计费用的绝对金额
-      示例 ``["支付费用限额",["收入分账户"],["服务商费用"],{"应计费用百分比":0.1}]``
+      * ``DuePct`` , limit the percentage of fee due to be paid
+      * ``DueCapAmt`` ,  cap the paid amount to the fee
+      ie. ``["PayFeeBy", ["CashAccount"], ["ServiceFee"], {"DuePct":0.1}]``
 
-  * 支付债券利息
+  * PayInt
 
-    * 格式为 ``["支付利息", 资金来源账户, [需要支付的债券列表] ]``
+    * format ``["PayInt", {Account}, [<Bonds>] ]``
 
-  * 支付债券本金
+  * PayPrin
 
-    * 格式为 ``["支付本金", 资金来源账户, [需要支付的债券列表] ]``
+    * format ``["PayPrin", {Account}, [<Bonds>] ]``
 
-  * 支付债券期间收益
-
-    * 格式为 ``["支付期间收益", 资金来源账户, [需要支付的债券列表] ]``
-
-  * 账户转移
+  * Transfer
    
-    * 格式为 ``["支付费用", 资金来源账户, 目标转入账户 ]``
+    * format ``["Transfer", {Account}, {Account}]``
   
-  * 出售资产
+  * TransferReserve
    
-    * 格式为 ``["出售资产", 计价方式, 目标转入账户 ]``
+    * format ``["TransferReserve", {Account}, {Account}, {satisfy} ]``
+      * satisfy = "target" -> transfer till reserve amount of *target* account is met
+      * satisfy = "source" -> transfer till reserve amount of *source* account is met
 
-建模方式为一个map, 支持的key为:
+  * Liquidation
+   
+    * format ``["LiquidatePool", {LiquidationMethod}, {Account}]``
 
-  * ``未违约``, 表示动作只有在 处于非违约状态的情况下，在债券支付日执行。
-  * ``回款后``, 表示动作只有在 资产池搜集回款后执行。
-  * ``清仓回购``, 表示动作只有在 清仓回购条件触发后执行。
+`Waterfall`: there are 3 waterfalls in a deal 
+
+  * ``Normal``, executing when deal is *not defaulted*
+  * ``CollectionEnd``, executing at end of pool collection period
+  * ``CleanUp``, executing when deal is being *clean up*
 
 
-示例：
+ie：
 
 .. code-block:: python
 
-    ,{"未违约":[
-         ["支付费用",["收入分账户"],["执行费用"]]
-         ,["支付费用限额",["收入分账户"],["服务商费用"],{"应计费用百分比":0.1}]
-         ,["支付利息","收入分账户",["A1","A2"]]
-         ,["支付费用",["收入分账户"],["服务商费用"]]
-         ,["支付期间收益","收入分账户",["次级"]]
-         ,["账户转移","收入分账户","本金分账户"]
-         ,["支付本金","本金分账户",["A1"]]
-         ,["支付本金","本金分账户",["A2"]]
-         ,["支付本金","本金分账户",["次级"]]
-         ,["支付收益","本金分账户","次级"]]
-     ,"回款后":[["支付费用",["收入分账户"],["增值税"]]]
-     ,"清仓回购":[....]
-     }
-
+   {"Normal":[
+       ["PayFee",["acc01"],['trusteeFee']]
+       ,["PayInt","acc01",["A1"]]
+       ,["PayPrin","acc01",["A1"]]
+       ,["PayPrin","acc01",["B"]]
+       ,["PayEquityResidual","acc01","B"]]
+    ,"CleanUp":[]
+    ,"Defaulted":[]
+    }
 
 
 Examples

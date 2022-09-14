@@ -28,6 +28,7 @@ Content
 
    installation
    modeling
+   analytics
    support
 
 
