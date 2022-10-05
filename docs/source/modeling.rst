@@ -141,14 +141,14 @@ there are 4 types of `Principal` for bonds/tranches
 
     ("A1",{"balance":3_650_000_000
            ,"rate":0.03
-           ,"originBalance初始余额":3_650_000_000
+           ,"originBalance":3_650_000_000
            ,"originRate":0.03
            ,"startDate":"2020-01-03"
            ,"rateType":{"Floater":["LPR5Y",-0.0169,"Monthly"]}
            ,"bondType":{"Sequential":None} })
       ,("A2",{"balance":5_444_000_000
            ,"rate":0.03
-           ,"originBalance初始余额":5_444_000_000
+           ,"originBalance":5_444_000_000
            ,"originRate":0.03
            ,"startDate":"2020-01-03"
            ,"rateType":{"Floater":["LPR5Y",-0.0091,"Monthly"]}
