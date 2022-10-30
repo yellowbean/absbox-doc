@@ -29,7 +29,7 @@ Generic
 ====
 .. code-block:: python
 
-   from absbox import generic 
+    from absbox import generic 
 
 
 Components
@@ -45,13 +45,14 @@ Dates
 
 
 .. code-block:: python
-  {"cutoff":"2022-11-01"
-  ,"closing":"2022-11-15"
-  ,"nextPay":"2022-12-26"
-  ,"stated":"2030-01-01"
-  ,"poolFreq":"MonthEnd"
-  ,"payFreq":["DayOfMonth",20]
-  }
+
+    {"cutoff":"2022-11-01"
+    ,"closing":"2022-11-15"
+    ,"nextPay":"2022-12-26"
+    ,"stated":"2030-01-01"
+    ,"poolFreq":"MonthEnd"
+    ,"payFreq":["DayOfMonth",20]
+    }
 
 Date Pattern
 ^^^^^^^^^^
@@ -65,32 +66,79 @@ Date Pattern
 * ["MonthDayOfYear",M,D]
 * ["DayOfMonth",M]
 
+Formula 
+---------
+Structured product is using ``formula`` to restructure the cashflow distribution on the liabilities.
+``absbox`` reuse the concept of ``formula`` in an extreamly powerful way, a ``formula`` can be
 
+* Bond 
+    * bondBalance -> sum of all bond balance
+    * bondBalanceOf [String] -> sum of balance of specified bonds
+    * originalBondBalance
+    * bondFactor
+* Pool 
+    * poolBalance
+    * originalPoolBalance
+    * poolFactor
+* Accounts
+    * accountBalance -> sum of all account balance
+    * accountBalance [String] -> sum of specified account balance
+    * reserveGap [String] -> sum of shortfall of reserve amount of specified accounts
+* Due Amount 
+    * bondDueInt [String] -> sum of bond interest due
+    * feeDue [String] -> sum of fee due
+* Combination
+    * factor <Formula> <Number> -> multiply a value to a formula
+    * Max <Formula> <Formula> -> get the higher value
+    * Min <Formula> <Formula> -> get the lower value 
+    * sum [<Formula>] -> sum of formula value
+    * substract [<Formula>] -> using 1st of element to substract rest in the list
+    * constant <Number>  -> a constant value
+    * custom <Name of user define data>
 
 
 Fee/Expenses
-----
+--------------
 
-Fees fall into couple categories:
-  * one-off, with initial balance and won't get paid after initial balance was paid off。
-  * recur fee , a fix amount fee which occur by an interval like `Monthly` or `Yearly`
-  * pecerntage fee, a fee type which the due amount depends on a percentage of balance, ie
-     * using ``current pool balance/current bond balance`` as base and multiply with an annualise percentage.
+syntax: ``({fee name} , {fee description} )``, fees fall into types:
 
-format： ``({fee name} , {fee description} )``
+  * one-off
+      * with a balance and will be paid off once it paid down to zero
+  * recurrance fee
+      * a fix amount fee which occurs by defined ``Date Pattern``
+  * pecentage fee, a fee type which the due amount depends on a percentage of ``Formula``
+      * like a fee is base on 
+          * percentage of `pool balance`
+          * a percentage of pool collection `interest`
+          * a higher/lower amount of two `formula`
+          * a sum of `formula` 
+          * ...
+  * annualized fee, 
+      * similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
+  * custom fee flow,
+      * an user defined date expenses, the date and amount can be customized.
+      * like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
+
+
 
 .. code-block:: python
-  #two fees
-  (("servicer_fee",{"type":{"AnnualPctFee":["PoolBalance",0.02]}})
-   ,("bond_service_fee",{"type":{"PctFee":["BondBalance",0.02]}})
-   ,("issuance_fee",{"type":{"FixFee":100}})
+  
+  (("servicer_fee",{"type":{"annualPctFee":["poolBalance",0.02]}})
+   ,("bond_service_fee",{"type":{"pctFee":["bondBalance",0.02]}})
+   ,("issuance_fee",{"type":{"fixFee":100}})
+   ,("rating_fee",{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
   )
 
 Pool
-----
+---------
+
+a ``Pool`` represents a set of assets ,which generate cashflows to support expenses and liabilities.
+
+* it can either has a loan level ``asset`` or ``projected cashflow``
+* other optional fields like `issuance balance`
 
 Mortgage
-
+^^^^^^^^
 .. code-block:: python
 
   [["Mortgage"
@@ -102,10 +150,12 @@ Mortgage
           ,"status":"current"}]]
 
 Accounts
-----
-There are two types of accounts,
-  * Bank Account -> which used to collect money from pool and pay out to fees/bonds
-  * Reserve Account -> with one more attribute to `Bank Account` which set the reserve amount of the account
+---------
+
+There are two types of accounts:
+
+  * `Bank Account` -> which used to collect money from pool and pay out to fees/bonds
+  * `Reserve Account` -> with one more attribute to `Bank Account` which specifies target reserve amount of the account
 
 Format ``({account name},{account description})``, i.e
 
@@ -116,37 +166,93 @@ Format ``({account name},{account description})``, i.e
   (("principalAccount",{"balance":0})
    ,("repaymentAccount",{"balance":0}))
 
-* Reserve Account 
+Reserve Account
+^^^^^^^^^^^^^^
 
 There is one extra attribute to set : `type`
 
   * Fix Amount： a single reserve amount 
-    ``("ReserveAccountA",{"balance":0,"type":{"FixReserve":1000}})``
-  * Formula： the target reserve amount is derived from a formula, like 2% of pool balance
-    ``("ReserveAccountB",{"balance":0,"type":{"Target":["PctReserve",0.015]}})``
-  * Nested Formula, the target reserve amount is base on higher or lower of two formula 
-
+  
     .. code-block:: python
 
-      ("ReserveAccountC",{"balance":0,"type":{"Max":[
-                                     {"Target":["PoolBalance",0.015]}
-                                    ,{"FixReserve":100}]})
-      ("ReserveAccountD",{"balance":0,"type":{"Min":[
-                                     {"Target":["PoolBalance",0.015]}
-                                    ,{"FixReserve":100}]})
-      ("ReserveAccountE",{"balance":0,"type":{"Min":[{"Max":[
-                                            {"Target":["PoolBalance",0.015]}
-                                            ,{"FixReserve":100}]}
-                                    ,{"FixReserve":150}]})
+      ("ReserveAccountA",{"balance":0
+                         ,"type":{"fixReserve":1000}})
+
+  * Formula： the target reserve amount is derived from a formula, like 2% of pool balance
+  
+    .. code-block:: python
+
+      ("ReserveAccountB",{"balance":0
+                         ,"type":{"targetReserve":[("poolBalance",),0.015]}})
+
+  * Nested Formula, the target reserve amount is base on higher or lower of two formula 
+
+  * Conditional amount, the target reserve amount depends on ``condition``:
+    
+    * certain <formula> value is above or below certain value
+    * satisfy all of ``condition`` s 
+    * satisfy any one of ``condition`` s 
+  
+    .. code-block:: python
+
+      ("ReserveAccountC",{"balance":0
+                         ,"type":{"max":[
+                                   {"targetReserve":[("poolBalance",),0.015]}
+                                   ,{"fixReserve":100}]})
+
+      ("ReserveAccountD",{"balance":0
+                         ,"type":{"min":[
+                                    {"targetReserve":[("poolBalance",),0.015]}
+                                    ,{"fixReserve":100}]})
+
+      ("ReserveAccountE",{"balance":0
+                         ,"type":{"min":[
+                                    {"max":[{"targetReserve":[("poolBalance",),0.015]}
+                                           ,{"fixReserve":100}]}
+                                    ,{"fixReserve":150}]})
+
+      ("ReserveAccountF",{"balance":0
+                         ,"type":{"when":[
+                                     [("bondBalance",">",0]
+                                    ,{"max":[{"targetReserve":[("poolBalance",),0.015]}
+                                           ,{"fixReserve":100}]}
+                                    ,{"fixReserve":150}]})
+
+      ("ReserveAccountG",{"balance":0
+                         ,"type":{"when":[
+                                     ["any"
+                                       ,[("bondBalance",">",0]
+                                       ,[("poolFactor","<",0.5]]
+                                    ,{"max":[{"targetReserve":[("poolBalance",),0.015]}
+                                           ,{"fixReserve":100}]}
+                                    ,{"fixReserve":150}]})
+
+Interest/Investment 
+^^^^^^^^^^^^^^^^^^^
+
+model the interest or short-term investment income in the account.
+
+syntax: 
+``{"period": <date Pattern>,"rate": <number>,"lastSettleDate":<date>}``
+
+.. code-block:: python
+
+  ("ReserveAccountA",{"balance":0
+                    ,"type":{"fixReserve":1000}
+                    ,"interest":{"period":"QuarterEnd"
+                                 ,"rate":0.05
+                                 ,"lastSettleDate":"2022-11-02"}})
+
+
 Bonds/Tranches
-----
+---------------
 
-format ``({bond/tranche name},{bond/tranche description})`` ， 
-there are 3 types of `Interest`
+syntax ``({bond/tranche name},{bond/tranche description})`` ,
 
-  * Fix Rate   :code:`"rateType":{"Fix":0.0569}`
-  * Float Rate   :code:`"rateType":{"Floater":["SOFAR1Y",-0.0169,"Monthly"]}`
-  * Interim Yield   :code:`"rateType":{"InterimYield":0.02}`
+there are 2 types of `Interest`
+
+  * Fix Rate   :code:`"rateType":{"fix":0.0569}`
+  * Float Rate   :code:`"rateType":{"floater":["SOFAR1Y",-0.0169,"Monthly"]}`
 
 there are 4 types of `Principal` for bonds/tranches
 
@@ -162,14 +268,14 @@ there are 4 types of `Principal` for bonds/tranches
            ,"originBalance":3_650_000_000
            ,"originRate":0.03
            ,"startDate":"2020-01-03"
-           ,"rateType":{"Floater":["LPR5Y",-0.0169,"Monthly"]}
+           ,"rateType":{"Floater":["SOFAR1Y",-0.0169,"Monthly"]}
            ,"bondType":{"Sequential":None} })
       ,("A2",{"balance":5_444_000_000
            ,"rate":0.03
            ,"originBalance":5_444_000_000
            ,"originRate":0.03
            ,"startDate":"2020-01-03"
-           ,"rateType":{"Floater":["LPR5Y",-0.0091,"Monthly"]}
+           ,"rateType":{"Floater":["SOFAR1Y",-0.0091,"Monthly"]}
            ,"bondType":{"Sequential":None} })
       ,("R",{"balance":900_883_783.62
            ,"rate":0.0
@@ -184,12 +290,14 @@ there are 4 types of `Principal` for bonds/tranches
 Waterfall
 ----
 
-Waterfall means a list of `action`` involves cash movement.
+Waterfall means a list of ``action`` involves cash movement.
 
 `action`
+
   * PayFee
 
-    * format ``["PayFee", [{Account}], [<Fees>]]``
+    syntax ``["payFee", [{Account}], [<Fees>]]``
+
       *  ``[{Account}]`` -> Using the available funds of accounts in the list from 1st ,then 2nd ..
       *  ``[<Fees>]`` -> Pay the fees in the list on pro-rata basis
 
@@ -201,27 +309,65 @@ Waterfall means a list of `action`` involves cash movement.
       * ``DueCapAmt`` ,  cap the paid amount to the fee
       ie. ``["PayFeeBy", ["CashAccount"], ["ServiceFee"], {"DuePct":0.1}]``
 
+  * PayFeeResidual
+  
+    * format ``["payFeeResidual", {Account}, {Fee} ]``
+    * format ``["payFeeResidual", {Account}, {Fee}, <Limit> ]``
+
   * PayInt
 
-    * format ``["PayInt", {Account}, [<Bonds>] ]``
+    * format ``["payInt", {Account}, [<Bonds>] ]``
 
   * PayPrin
 
-    * format ``["PayPrin", {Account}, [<Bonds>] ]``
+    * format ``["payPrin", {Account}, [<Bonds>] ]``
+    * format ``["payPrinBy", {Account}, [<Bonds>], <Limit>]``
+  
+  * PayPrinResidual 
+    
+    * format ``["payPrinResidual", {Account}, <Bond> ]``
+  
+  * PayResidual 
+    
+    * format ``["payResidual", {Account}, <Bond> ]``
+    * format ``["payResidual", {Account}, <Bond>, <Limit> ]``
+  
 
   * Transfer
    
-    * format ``["Transfer", {Account}, {Account}]``
+    * format ``["transfer", {Account}, {Account}]``
+  
+  * TransferBy
+   
+    * format ``["transferBy",<limit> , {Account}, {Account}]``
+  
+  * Calc Fee 
+    
+    * format ``["calcFee",<Fee1> , <Fee2> ... ]``
+  
+  * Calc Bond Int
+    
+    * format ``["calcBondInt", <Bond1> , <Bond2> ... ]``
   
   * TransferReserve
    
-    * format ``["TransferReserve", {Account}, {Account}, {satisfy} ]``
+    * format ``["transferReserve", {Account}, {Account}, {satisfy} ]``
       * satisfy = "target" -> transfer till reserve amount of *target* account is met
       * satisfy = "source" -> transfer till reserve amount of *source* account is met
 
   * Liquidation
    
-    * format ``["LiquidatePool", {LiquidationMethod}, {Account}]``
+    * format ``["sellAsset", {LiquidationMethod}, {Account}]``
+    
+  * Liquidity Support
+  
+    * format ``["liqSupport", <liqProvider>,<Account>,<Limit>]``
+    * format ``["liqSupport", <liqProvider>,<Account>]``
+  
+  * Liquidity Repay & Compensation
+    * format ``["liqRepay", <Account>, <liqProvider>]``
+    * format ``["liqRepayResidual", <Account>, <liqProvider>]``
+  
 
 `Waterfall`: there are 3 waterfalls in a deal 
 
