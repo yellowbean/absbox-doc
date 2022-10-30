@@ -4,12 +4,22 @@ Modeling
 .. autosummary::
    :toctree: generated
 
-Deal Modeling is a process to build a deal with descriptive factual data, like:
+Deal modeling is a process to build a deal with descriptive factual data, like:
 
 * Bond info
 * Waterfall info
+  * Describe the priority of payments allocation of
+    * End of pool collection (Optional)
+    * Distribution day for all the bonds and fees 
+    * Event of Default (Optional)
+    * Clean up call (Optional)
 * Dates info
+  * Cutoff day / Closing Date / Next/First payment Date
 * Pools info
+  * Either loan level data
+  * Or forcased pool cashflow 
+* Triggers (Optional)
+* Liquidity Provider (Optional)
 
 `absbox` ships with couple built-in class to accomodate serval deal typs, like Agency MBS or Automobile Loans Deal.
 
@@ -23,32 +33,40 @@ Generic
 
 
 Components
-====
+=========
 Dates
-----
+---------
 
-- `Closing Date`: All pool cashflow after `Closing Date` will be flow into the SPV
+- `Closing Date`: All pool cashflow after `Closing Date` belongs to the SPV
 
-- `Settle Date`: Bond start to accure interest after `Settle Date`
+- `Settle Date`: Bond start to accure interest after `Settle Date`.w
 
 - `First Pay Date` / `Next Pay Date`: First execution of waterfall or next date of executing the waterfall
 
 
 .. code-block:: python
+  {"cutoff":"2022-11-01"
+  ,"closing":"2022-11-15"
+  ,"nextPay":"2022-12-26"
+  ,"stated":"2030-01-01"
+  ,"poolFreq":"MonthEnd"
+  ,"payFreq":["DayOfMonth",20]
+  }
 
-  ("2022-01-01","2022-03-01","2022-05-01")
-  # which means
-  # closing date=2022-01-01
-  # last paid date=2022-03-01
-  # first pay date/next pay date=2022-05-01
+Date Pattern
+^^^^^^^^^^
+
+* "MonthEnd"
+* "QuarterEnd"
+* "YearEnd"
+* "MonthFirst"
+* "QuarterFirst"
+* "YearFirst"
+* ["MonthDayOfYear",M,D]
+* ["DayOfMonth",M]
 
 
-.. code-block:: python
 
-  ("2022-09-01","2022-09-26","2022-10-26")
-  # 2022-09-01, all pool projected cashflow will be follow to SPV after this date
-  # 2022-09-26，all the bonds start to accure interest after this date
-  # 2022-10-26, next payment date
 
 Fee/Expenses
 ----
