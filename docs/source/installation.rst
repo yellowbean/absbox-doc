@@ -60,15 +60,20 @@ Public Server vs Self-hosted
 * If user want to have a self-hosted server 
     * user can build one from source code `Hastructure <https://github.com/yellowbean/Hastructure>`_
     * or using docker 
+
+      .. code-block:: bash
+
+        docker pull yellowbean/hastructure
   
 .. code-block:: bash
 
   docker pull yellowbean/hastructure
   docker run yellowbean/hastructure
+  # by default the server expose its port at 8081
 
 
 .. note ::
-  ``absbox`` uses ``pandas`,``requests`` for data processing and service call.
+  ``absbox`` uses ``pandas`` , ``requests`` for data processing and service call.
 
 .. note ::
   ``absbox`` uses ``pickle`` to store deal files.

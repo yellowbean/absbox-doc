@@ -6,22 +6,28 @@ Modeling
 
 Deal modeling is a process to build a deal with descriptive factual data, like:
 
+* Asset info 
+  
+  Describe the pool asset attributes
 * Bond info
 * Waterfall info
-  * Describe the priority of payments allocation of
+  
+  Describe the priority of payments allocation of
+
     * End of pool collection (Optional)
     * Distribution day for all the bonds and fees 
     * Event of Default (Optional)
     * Clean up call (Optional)
 * Dates info
+  
   * Cutoff day / Closing Date / Next/First payment Date
 * Pools info
+  
   * Either loan level data
   * Or forcased pool cashflow 
 * Triggers (Optional)
 * Liquidity Provider (Optional)
 
-`absbox` ships with couple built-in class to accomodate serval deal typs, like Agency MBS or Automobile Loans Deal.
 
 .. _Generic ABS:
 
@@ -32,30 +38,11 @@ Generic
     from absbox import generic 
 
 
-Components
-=========
-Dates
----------
 
-- `Closing Date`: All pool cashflow after `Closing Date` belongs to the SPV
+DatePattern
+--------
 
-- `Settle Date`: Bond start to accure interest after `Settle Date`.w
-
-- `First Pay Date` / `Next Pay Date`: First execution of waterfall or next date of executing the waterfall
-
-
-.. code-block:: python
-
-    {"cutoff":"2022-11-01"
-    ,"closing":"2022-11-15"
-    ,"nextPay":"2022-12-26"
-    ,"stated":"2030-01-01"
-    ,"poolFreq":"MonthEnd"
-    ,"payFreq":["DayOfMonth",20]
-    }
-
-Date Pattern
-^^^^^^^^^^
+``<DatePattern>`` is used to decrible a series of dates .
 
 * "MonthEnd"
 * "QuarterEnd"
@@ -68,6 +55,7 @@ Date Pattern
 
 Formula 
 ---------
+
 Structured product is using ``formula`` to restructure the cashflow distribution on the liabilities.
 ``absbox`` reuse the concept of ``formula`` in an extreamly powerful way, a ``formula`` can be
 
@@ -95,6 +83,57 @@ Structured product is using ``formula`` to restructure the cashflow distribution
     * substract [<Formula>] -> using 1st of element to substract rest in the list
     * constant <Number>  -> a constant value
     * custom <Name of user define data>
+
+Condition
+----------
+
+condition is a `boolean` type criteria ,
+
+* it can be setup in reserve account to setup different target reserve amount;
+* or in the waterfall to run the distribution action only when the critera is met;
+  
+* [<formula>,">",val] -> true when <formula> greater than a value
+* [<formula>,"<",val] -> true when <formula> less than a value
+* [<formula>,">=",val] -> true when <formula> greater or equals to a value
+* [<formula>,"<=",val] -> true when <formula> less or equals than a value
+* [<formula>,"=",val] -> true when <formula> equals to a value
+* ["all",<condition>,<condition>] -> true if all of <condition> is true
+* ["any",<condition>,<condition>] -> true if any of <condition> is true
+* ["<",date] -> before certain date
+* [">",date] -> after certain date
+* ["<=",date] -> On or beore certain date
+* [">=",date] -> On or after certain Date
+
+Components
+=========
+Dates
+---------
+
+- `Closing Date`: All pool cashflow after `Closing Date` belongs to the SPV
+
+- `Settle Date`: Bond start to accure interest after `Settle Date`.w
+
+- `First Pay Date` / `Next Pay Date`: First execution of waterfall or next date of executing the waterfall
+
+
+.. code-block:: python
+
+    {"cutoff":"2022-11-01"
+    ,"closing":"2022-11-15"
+    ,"nextPay":"2022-12-26"
+    ,"stated":"2030-01-01"
+    ,"poolFreq":"MonthEnd"
+    ,"payFreq":["DayOfMonth",20]
+    }
+
+User are free to feed in a series of custom defined pool collection date / bond payment dates to accomodate holidays etc.
+
+.. code-block:: python
+
+   {"poolCollection":["2023-01-31","2023-02-28"...]
+   ,"distirbution":["2023-02-01","2023-03-01"...]
+   ,"cutoff":"2022-11-21"
+   ,"closing":"2023-01-01"}
 
 
 Fee/Expenses
@@ -261,6 +300,23 @@ there are 4 types of `Principal` for bonds/tranches
   * `Lockout`： Principal won't be paid after lockout date
   * `Equity`：  No interest and shall serve as junior tranche
 
+Sequential 
+^^^^^^^^^^^
+A bond with will receive principal till it's balance reduce to 0.
+
+PAC
+^^^^^^^^^^^
+A bond with target amortize balance, it will stop recieving principal once its balance hit the targeted balance 
+
+Lockout
+^^^^^^^^^^^
+A bond with ``Lockout`` type is used to setup bond with only recieve principal after the `lockout date`
+
+Equity
+^^^^^^^^^^^
+
+``Equity`` type is used to model junior or equity slice of liabilites of the SPV
+
 .. code-block:: python
 
     ("A1",{"balance":3_650_000_000
@@ -292,9 +348,15 @@ Waterfall
 
 Waterfall means a list of ``action`` involves cash movement.
 
-`action`
 
-  * PayFee
+Fee 
+^^^^^^
+
+  * Calc Fee -> calculate the due balance of a fee
+    
+    * format ``["calcFee",<Fee1> , <Fee2> ... ]``
+  
+  * PayFee -> pay to a fee till due balance is 0
 
     syntax ``["payFee", [{Account}], [<Fees>]]``
 
@@ -309,65 +371,83 @@ Waterfall means a list of ``action`` involves cash movement.
       * ``DueCapAmt`` ,  cap the paid amount to the fee
       ie. ``["PayFeeBy", ["CashAccount"], ["ServiceFee"], {"DuePct":0.1}]``
 
-  * PayFeeResidual
-  
+  * PayFeeResidual -> pay to a fee regardless the amount due
+    
     * format ``["payFeeResidual", {Account}, {Fee} ]``
     * format ``["payFeeResidual", {Account}, {Fee}, <Limit> ]``
 
-  * PayInt
+Bond
+^^^^^^
+
+  * Calc Bond Int -> calculate the due balance of a bond
+    
+    * format ``["calcBondInt", <Bond1> , <Bond2> ... ]``
+ 
+  * PayInt -> pay interset to a bond till due int balance is 0
 
     * format ``["payInt", {Account}, [<Bonds>] ]``
 
-  * PayPrin
+  * PayPrin -> pay principal to a bond till due principal balance is 0
 
     * format ``["payPrin", {Account}, [<Bonds>] ]``
     * format ``["payPrinBy", {Account}, [<Bonds>], <Limit>]``
   
-  * PayPrinResidual 
+  * PayPrinResidual -> pay principal to a bond regardless its due principal balance
     
     * format ``["payPrinResidual", {Account}, <Bond> ]``
   
-  * PayResidual 
+  * PayResidual  -> pay interest to a bond regardless its interest due.
     
     * format ``["payResidual", {Account}, <Bond> ]``
     * format ``["payResidual", {Account}, <Bond>, <Limit> ]``
   
+Account
+^^^^^^^
 
-  * Transfer
+  * Transfer -> transfer all the funds to the other account 
    
     * format ``["transfer", {Account}, {Account}]``
   
-  * TransferBy
+  * TransferBy -> transfer funds to the other account by <Limit>
    
-    * format ``["transferBy",<limit> , {Account}, {Account}]``
+    * format ``["transferBy", <limit> , {Account}, {Account}]``
   
-  * Calc Fee 
-    
-    * format ``["calcFee",<Fee1> , <Fee2> ... ]``
-  
-  * Calc Bond Int
-    
-    * format ``["calcBondInt", <Bond1> , <Bond2> ... ]``
-  
-  * TransferReserve
+ 
+  * TransferReserve -> transfer funds to other account till either one of reserve account met the target amount.
    
     * format ``["transferReserve", {Account}, {Account}, {satisfy} ]``
+
       * satisfy = "target" -> transfer till reserve amount of *target* account is met
       * satisfy = "source" -> transfer till reserve amount of *source* account is met
 
-  * Liquidation
+Call
+^^^^^^
+
+  * Liquidation -> sell the assets and deposit the proceeds to the account
    
     * format ``["sellAsset", {LiquidationMethod}, {Account}]``
+      
+Liquidtiy Facility 
+^^^^^^^^^^^
     
-  * Liquidity Support
+  * Liquidity Support -> deposit cash to account from a liquidity provider, subject to its available balance.
   
     * format ``["liqSupport", <liqProvider>,<Account>,<Limit>]``
     * format ``["liqSupport", <liqProvider>,<Account>]``
   
-  * Liquidity Repay & Compensation
+  * Liquidity Repay & Compensation -> pay back to liquidity provider till its balance is 0 or regardless the balance.
+
     * format ``["liqRepay", <Account>, <liqProvider>]``
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
   
+Conditional Action
+^^^^^^^^^^^^^^^^
+
+format : ``[<conditon>,<Action1>,<Action2>....]``
+
+
+waterfall action can be setup only triggered if certain conditon is met.
+
 
 `Waterfall`: there are 3 waterfalls in a deal 
 
@@ -381,11 +461,11 @@ ie：
 .. code-block:: python
 
    {"Normal":[
-       ["PayFee",["acc01"],['trusteeFee']]
-       ,["PayInt","acc01",["A1"]]
-       ,["PayPrin","acc01",["A1"]]
-       ,["PayPrin","acc01",["B"]]
-       ,["PayEquityResidual","acc01","B"]]
+       ["payFee",["acc01"],['trusteeFee']]
+       ,["payInt","acc01",["A1"]]
+       ,["payPrin","acc01",["A1"]]
+       ,["payPrin","acc01",["B"]]
+       ,["payResidual","acc01","B"]]
     ,"CleanUp":[]
     ,"Defaulted":[]
     }

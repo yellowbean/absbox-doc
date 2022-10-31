@@ -19,15 +19,15 @@ Setup a API
 
 
 .. note::
-   user can deploy its own server within his own in-house enviroment.
+   User can pull the docker image to run his/her own in-house environment
 
 
 .. note::
-   the remote engine exposes REST Service ,`absbox` send deal models and cashflow projection assumptions to that server.
+   the remote engine exposes REST Service , ``absbox`` send deal models and cashflow projection assumptions to that server.
    The engine code was hosted at `Hastructure <https://github.com/yellowbean/Hastructure>`_
 
 
-Once the API was instantised call "``run()``" to project cashflow and pricing the bond
+Once the API was instantised ,call ``run()`` to project cashflow and pricing the bond
 
 .. code-block:: python
 

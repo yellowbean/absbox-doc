@@ -27,11 +27,11 @@ test01 = Generic(
              }))
     ,(("trusteeFee",{"type":{"FixFee":30}}),)
     ,{"Normal":[
-         ["PayFee",["acc01"],['trusteeFee']]
-         ,["PayInt","acc01",["A1"]]
-         ,["PayPrin","acc01",["A1"]]
-         ,["PayPrin","acc01",["B"]]
-         ,["PayEquityResidual","acc01","B"]
+         ["payFee",["acc01"],['trusteeFee']]
+         ,["payInt","acc01",["A1"]]
+         ,["payPrin","acc01",["A1"]]
+         ,["payPrin","acc01",["B"]]
+         ,["payResidual","acc01","B"]
      ]}
     ,(["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc01"]
