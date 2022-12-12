@@ -18,6 +18,7 @@ Deal modeling is a process to build a deal with descriptive factual data, like:
     * Distribution day for all the bonds and fees 
     * Event of Default (Optional)
     * Clean up call (Optional)
+
 * Dates info
   
   * Cutoff day / Closing Date / Next/First payment Date
@@ -109,10 +110,12 @@ Components
 Dates
 ---------
 
+Depends on the status of deal, the dates shall be modeled either in `ongoing` or `preclosing`
+
+if it is `preclosing`
+
 - `Closing Date`: All pool cashflow after `Closing Date` belongs to the SPV
-
 - `Settle Date`: Bond start to accure interest after `Settle Date`.w
-
 - `First Pay Date` / `Next Pay Date`: First execution of waterfall or next date of executing the waterfall
 
 
@@ -120,11 +123,23 @@ Dates
 
     {"cutoff":"2022-11-01"
     ,"closing":"2022-11-15"
-    ,"nextPay":"2022-12-26"
+    ,"firstPay":"2022-12-26"
     ,"stated":"2030-01-01"
     ,"poolFreq":"MonthEnd"
     ,"payFreq":["DayOfMonth",20]
     }
+
+if it is `ongoing`, the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
+
+.. code-block:: python
+
+    {"collect":["2022-11-01","2022-12-01"] # [last pool collection date, next pool collection date]
+    ,"pay":["2022-11-15","2022-12-15"] # [last distribution payment date, next distribution date]
+    ,"stated":"2030-01-01"
+    ,"poolFreq":"MonthEnd"
+    ,"payFreq":["DayOfMonth",20]
+    }
+
 
 User are free to feed in a series of custom defined pool collection date / bond payment dates to accomodate holidays etc.
 
