@@ -13,11 +13,11 @@ Deal modeling is a process to build a deal with descriptive factual data, like:
 * Waterfall info
   
   Describe the priority of payments allocation of
-
     * End of pool collection (Optional)
     * Distribution day for all the bonds and fees 
     * Event of Default (Optional)
     * Clean up call (Optional)
+
 * Dates info
   
   * Cutoff day / Closing Date / Next/First payment Date
@@ -109,6 +109,9 @@ Components
 Dates
 ---------
 
+Dates with pattern 
+^^^^^^^^^^^^^^^^^^^
+
 - `Closing Date`: All pool cashflow after `Closing Date` belongs to the SPV
 
 - `Settle Date`: Bond start to accure interest after `Settle Date`.w
@@ -126,6 +129,9 @@ Dates
     ,"payFreq":["DayOfMonth",20]
     }
 
+
+Custom Defined Dates
+^^^^^^^^^^^^^^^^^^^^^
 User are free to feed in a series of custom defined pool collection date / bond payment dates to accomodate holidays etc.
 
 .. code-block:: python
@@ -282,6 +288,14 @@ syntax:
                                  ,"rate":0.05
                                  ,"lastSettleDate":"2022-11-02"}})
 
+  ("InvestmentAccountA",{"balance":0
+                    ,"type":{"fixReserve":1000}
+                    ,"interest":{"period":"QuarterEnd"
+                                 ,"index":"SOFR3M"
+                                 ,"spread":0.001
+                                 ,"lastSettleDate":"2022-11-02"}})
+
+
 
 Bonds/Tranches
 ---------------
@@ -291,7 +305,7 @@ syntax ``({bond/tranche name},{bond/tranche description})`` ,
 there are 2 types of `Interest`
 
   * Fix Rate   :code:`"rateType":{"fix":0.0569}`
-  * Float Rate   :code:`"rateType":{"floater":["SOFAR1Y",-0.0169,"Monthly"]}`
+  * Float Rate   :code:`"rateType":{"floater":["SOFR1Y",-0.0169,"Monthly"]}`
 
 there are 4 types of `Principal` for bonds/tranches
 
@@ -428,7 +442,7 @@ Call
     * format ``["sellAsset", {LiquidationMethod}, {Account}]``
       
 Liquidtiy Facility 
-^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
     
   * Liquidity Support -> deposit cash to account from a liquidity provider, subject to its available balance.
   
@@ -441,7 +455,7 @@ Liquidtiy Facility
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
   
 Conditional Action
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
 format : ``[<conditon>,<Action1>,<Action2>....]``
 
@@ -470,12 +484,20 @@ ie：
     ,"Defaulted":[]
     }
 
+Trigger 
+^^^^^^^^^^
+
+* When to run trigger
+
+* Conditon of a trigger
+
+* Effect of a trigger
 
 Examples
-====
+============
 
 Subordination
-----
+--------------
 
   * Subordination
   * One-off fees
@@ -486,10 +508,10 @@ Subordination
 
 
 Save a deal file
-====
+===============
 
 Save
-----
+------
 using ``save()`` to save a deal file to disk
 
 .. code-block:: python

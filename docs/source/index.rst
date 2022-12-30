@@ -10,7 +10,7 @@ Welcome to  AbsBox Documentation!
 
 * capable of modeling deal via a natureal & structural language way.
     - designed to perform investment analytics or structuring ( pool selection/waterfall design/bond pricing)
-    - using RESTful service behind the scen, easy to integration
+    - using ``RESTful`` service, easy to integration (Docker is ready)
 
 .. note::
 

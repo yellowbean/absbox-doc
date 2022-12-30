@@ -1,32 +1,32 @@
 test01 = Generic(
     "TEST01"
-    ,("2021-03-01","2021-06-15","2021-07-26")
-    ,{"payment":"Monthly","collection":"Monthly"}
+    ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
+     ,"payFreq":["DayOfMonth",20],"poolFreq":"MonthEnd","stated":"2030-01-01"}
     ,{'breakdown':[["Mortgage"
-        ,{"faceValue":120,"originRate":["Fix",0.045],"originTerm":30
-          ,"frequency":"Monthly","originDate":"2021-02-01"}
+        ,{"originBalance":120,"originRate":["Fixed",0.045],"originTerm":30
+          ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
           ,{"currentBalance":120
           ,"currentRate":0.08
-          ,"remainTerms":20
-          ,"status":"current"}]]}
+          ,"remainTerm":20
+          ,"status":"Current"}]]}
     ,(("acc01",{"balance":0}),)
     ,(("A1",{"balance":100
              ,"rate":0.07
              ,"originBalance":100
              ,"originRate":0.07
              ,"startDate":"2020-01-03"
-             ,"rateType":{"Fix":0.08}
+             ,"rateType":{"Fixed":0.08}
              ,"bondType":{"Sequential":None}})
       ,("B",{"balance":20
              ,"rate":0.0
              ,"originBalance":100
              ,"originRate":0.07
              ,"startDate":"2020-01-03"
-             ,"rateType":{"Fix":0.00}
+             ,"rateType":{"Fixed":0.00}
              ,"bondType":{"Equity":None}
              }))
-    ,(("trusteeFee",{"type":{"FixFee":30}}),)
-    ,{"Normal":[
+    ,(("trusteeFee",{"type":{"fixFee":30}}),)
+    ,{"amortizing":[
          ["payFee",["acc01"],['trusteeFee']]
          ,["payInt","acc01",["A1"]]
          ,["payPrin","acc01",["A1"]]
@@ -37,4 +37,5 @@ test01 = Generic(
       ,["CollectedPrincipal","acc01"]
       ,["CollectedPrepayment","acc01"]
       ,["CollectedRecoveries","acc01"])
+    ,None
     ,None)

@@ -5,7 +5,7 @@ Installation
    :toctree: generated
 
 .. warning::
-  `absbox`is heavily using `match clause` which was introduced in Python3.10
+  ``absbox`` is heavily using ``match clause`` which was introduced in Python3.10
   Please make sure you are using *Python3.10* and above
 
 Using pip
