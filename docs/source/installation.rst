@@ -54,7 +54,10 @@ Public Server vs Self-hosted
 .. code-block:: python
 
    from absbox import API
-   localAPI = API("https://deal-bench.xyz/api")
+   localAPI = API("https://absbox.org/api/latest")
+
+   # optinally adding a `english` to enable all resp is translated to English
+   localAPI = API("https://absbox.org/api/latest",'english')
 
 * For public server list, pls visit `absbox.org <https://absbox.org>`_
 * If user want to have a self-hosted server 

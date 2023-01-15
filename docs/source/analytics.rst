@@ -1,5 +1,5 @@
 Analytics
-====
+==============
 
 .. autosummary::
    :toctree: generate
@@ -10,12 +10,15 @@ Analytics
 
 
 Setup a API
------
+----------------
+
+
+here is a list of available servers at `absbox.org <https://absbox.org>`_
 
 .. code-block:: python
 
    from absbox import API
-   localAPI = API("https://deal-bench.xyz/api")
+   localAPI = API("https://absbox.org/api/latest")
 
 
 .. note::
@@ -23,7 +26,7 @@ Setup a API
 
 
 .. note::
-   the remote engine exposes REST Service , ``absbox`` send deal models and cashflow projection assumptions to that server.
+   the remote engine exposes RESTful Service , ``absbox`` send deal models and cashflow projection assumptions to that server.
    The engine code was hosted at `Hastructure <https://github.com/yellowbean/Hastructure>`_
 
 
@@ -40,8 +43,10 @@ Once the API was instantised ,call ``run()`` to project cashflow and pricing the
                read=True)
 
 Getting cashflow
-----
-the `run()` function will return a dict
+------------------
+
+* the `run()` function will return a dict which with keys of components like `bonds` `fees` `accounts` `pool`
+* the first argument to `run()` is an instance of `deal`
 
 .. code-block:: python
 
@@ -53,8 +58,26 @@ the `run()` function will return a dict
                             ,"Curve":[["2020-01-01",0.025]]},
                     read=True)
 
+
+the `runPool()` function will return cashflow for a pool, user need to specify `english` as second parameter to `API` class to enable return header in English
+
+.. code-block:: python
+
+   localAPI = API("http://localhost:8081",'english')
+
+   mypool = {'assets':[
+          ["Lease"
+           ,{"fixRental":1000,"originTerm":12,"freq":["DayOfMonth",12]
+            ,"remainTerm":10,"originDate":"2021-02-01"}]
+            ],
+          'cutoffDate':"2021-04-04"}
+
+   localAPI.runPool(mypool,assumptions=[])
+
+
+
 Bond Cashflow 
-^^^^
+^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -62,15 +85,15 @@ Bond Cashflow
    r['bonds']['A1'] # cashflow for bond `A1`
 
 Fee Cashflow
-^^^^
+^^^^^^^^^^^^^^
 
 .. code-block:: python
 
    r['fees'].keys() # all fee names
    r['fees']['trusteeFee'] 
 
-Account flow
-^^^^
+Account Cashflow
+^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -79,7 +102,7 @@ Account flow
 
 
 Pool Cashflow 
-^^^^
+^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -87,7 +110,7 @@ Pool Cashflow
 
 
 Bond Pricing 
-^^^^
+^^^^^^^^^^^^^
 
 if passing `pricing` in the `run`, then response would have a key `pricing`
 

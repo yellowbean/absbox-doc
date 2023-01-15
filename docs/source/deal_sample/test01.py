@@ -1,3 +1,5 @@
+from absbox.local.generic import Generic
+
 test01 = Generic(
     "TEST01"
     ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
@@ -33,9 +35,9 @@ test01 = Generic(
          ,["payPrin","acc01",["B"]]
          ,["payResidual","acc01","B"]
      ]}
-    ,(["CollectedInterest","acc01"]
+    ,[["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc01"]
       ,["CollectedPrepayment","acc01"]
-      ,["CollectedRecoveries","acc01"])
+      ,["CollectedRecoveries","acc01"]]
     ,None
     ,None)
