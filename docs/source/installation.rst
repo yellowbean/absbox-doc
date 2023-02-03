@@ -16,7 +16,7 @@ Using pip
     pip install absbox
 
 Upgrade `absbox` package to latest
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: console
 
@@ -49,7 +49,7 @@ Documents and sample code in this site are being test against with code from git
 Public Server vs Self-hosted
 -----------------------------
 
-``absbox`` needs to connect a engine behind the scene. User can choose a public one or use it's own if user is looking for more privacy and performance.
+``absbox`` needs to connect a engine behind the scene. User can choose a public one or use it's own if user is keen on privacy and performance.
 
 .. code-block:: python
 
@@ -76,7 +76,9 @@ Public Server vs Self-hosted
 
 
 .. note ::
+  
   ``absbox`` uses ``pandas`` , ``requests`` for data processing and service call.
 
 .. note ::
-  ``absbox`` uses ``pickle`` to store deal files.
+
+  ``absbox`` uses ``pickle`` to store deal files. User have option to save files in JSON as well.

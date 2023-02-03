@@ -1,47 +1,33 @@
 Modeling
-****
+***********
 
 .. autosummary::
    :toctree: generated
 
-Deal modeling is a process to build a deal with descriptive factual data, like:
+Deal modeling is a process to build a deal with descriptive data, like:
 
-* Asset info 
-  
-  Describe the pool asset attributes
-* Bond info
-* Waterfall info
-  
-  Describe the priority of payments allocation of
+* Asset info -> pool asset attributes, loan by loan or repline level data
+* Bond info -> bonds with different types as well as residuel tranche
+* Waterfall info -> Describe the priority of payments allocation of
     * End of pool collection (Optional)
     * Distribution day for all the bonds and fees 
     * Event of Default (Optional)
     * Clean up call (Optional)
-
-
 * Dates info
-  
   * Cutoff day / Closing Date / Next/First payment Date
-* Pools info
-  
-  * Either loan level data
-  * Or forcased pool cashflow 
 * Triggers (Optional)
 * Liquidity Provider (Optional)
-
 
 .. _Generic ABS:
 
 Generic
-====
+===========
 .. code-block:: python
 
     from absbox import generic 
 
-
-
 DatePattern
---------
+-------------
 
 ``<DatePattern>`` is used to decrible a series of dates .
 
@@ -57,13 +43,13 @@ DatePattern
 Formula 
 ---------
 
-Structured product is using ``formula`` to restructure the cashflow distribution on the liabilities.
+Structured product is using ``formula`` to define the amount of account transfer, principal paydown or fee pay limit etc.
 ``absbox`` reuse the concept of ``formula`` in an extreamly powerful way, a ``formula`` can be
 
 * Bond 
     * bondBalance -> sum of all bond balance
     * bondBalanceOf [String] -> sum of balance of specified bonds
-    * originalBondBalance
+    * originalBondBalance -> bond balance at issuance
     * bondFactor
 * Pool 
     * poolBalance
@@ -86,9 +72,9 @@ Structured product is using ``formula`` to restructure the cashflow distribution
     * custom <Name of user define data>
 
 Condition
-----------
+------------
 
-condition is a `boolean` type criteria ,
+condition is a `boolean` type test.
 
 * it can be setup in reserve account to setup different target reserve amount;
 * or in the waterfall to run the distribution action only when the critera is met;
@@ -106,7 +92,8 @@ condition is a `boolean` type criteria ,
 * [">=",date] -> On or after certain Date
 
 Components
-=========
+============
+
 Dates
 ---------
 
@@ -129,7 +116,8 @@ if it is `preclosing`
     ,"payFreq":["DayOfMonth",20]
     }
 
-if it is `ongoing`, the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
+
+if deal is `ongoing`, the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
 
 .. code-block:: python
 
@@ -176,7 +164,6 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
       * like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
 
-
 .. code-block:: python
   
   (("servicer_fee",{"type":{"annualPctFee":["poolBalance",0.02]}})
@@ -194,18 +181,76 @@ a ``Pool`` represents a set of assets ,which generate cashflows to support expen
 * other optional fields like `issuance balance`
 
 Mortgage
-^^^^^^^^
+^^^^^^^^^^^
+
 .. code-block:: python
 
-  [["Mortgage"
-        ,{"faceValue":120,"originRate":["Fix",0.045],"originTerm":30
-          ,"frequency":"Monthly","originDate":"2021-02-01"}
-          ,{"currentBalance":120
-          ,"currentRate":0.08
-          ,"remainTerms":20
-          ,"status":"current"}]]
+  ["Mortgage"
+    ,{"originBalance": 12000.0
+     ,"originRate": ["fix",0.045]
+     ,"originTerm": 120
+     ,"freq": "monthly"
+     ,"type": "level"
+     ,"originDate": "2021-02-01"}
+    ,{"currentBalance": 10000.0
+     ,"currentRate": 0.075
+     ,"remainTerm": 80
+     ,"status": "current"}]
+
+Loan
+^^^^^^^^^^
+
+.. code-block:: python
+
+  ["Loan"
+   ,{"originBalance": 80000
+     ,"originRate": ["floater",0.045,{"index":"SOFR3M","spread":0.01,"reset":["QuarterEnd"]}]
+     ,"originTerm": 60
+     ,"freq": "semiAnnually"
+     ,"type": "i_p"
+     ,"originDate": "2021-03-01"}
+   ,{"currentBalance": 65000
+     ,"currentRate": 0.06
+     ,"remainTerm": 48
+     ,"status": "current"}]
+
+Lease
+^^^^^^^^^
+
+.. code-block:: python
+
+  ["Lease"
+   ,{"fixRental": 12.0
+    ,"originTerm": 96
+    ,"freq": ["DayOfMonth",15]
+    ,"originDate": "2022-01-05"}]
+
+step up type lease which rental will increase by pct after each accrue period
+
+.. code-block:: python
+
+  ["Lease"
+   ,{"initRental": 24.0
+    ,"originTerm": 36
+    ,"freq": ["DayOfMonth",25]
+    ,"originDate": "2023-01-01"
+    ,"accure": ["MonthOfYear",3]
+    ,"pct": 0.05}]
 
 
+Installment
+^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+  ["installment"
+   ,{"originBalance": 1000.0
+    ,"feeRate": 0.12
+    ,"originTerm": 36
+    ,"freq": "Monthly"
+    ,"type": "f_p"
+    ,"originDate": "2023-01-01"}
+    ,{"status": "current"}]
 
 
 Accounts
@@ -226,7 +271,7 @@ Format ``({account name},{account description})``, i.e
    ,("repaymentAccount",{"balance":0}))
 
 Reserve Account
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 There is one extra attribute to set : `type`
 
@@ -372,10 +417,9 @@ Equity
 
 
 Waterfall
-----
+-------------
 
-Waterfall means a list of ``action`` involves cash movement.
-
+Waterfall means a list of ``action`` to be executed at bond payment date.
 
 Fee 
 ^^^^^^
@@ -511,7 +555,7 @@ Examples
 ============
 
 Subordination
---------------
+---------------
 
   * Subordination
   * One-off fees
@@ -525,7 +569,7 @@ Save a deal file
 ===============
 
 Save
-------
+-------------
 using ``save()`` to save a deal file to disk
 
 .. code-block:: python
@@ -536,7 +580,7 @@ using ``save()`` to save a deal file to disk
   save(deal,"path/to/file")
 
 Load
-----
+----------
  ``load()`` to load a deal from disk
 
 .. code-block:: python
