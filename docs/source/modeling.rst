@@ -259,7 +259,7 @@ Accounts
 There are two types of accounts:
 
   * `Bank Account` -> which used to collect money from pool and pay out to fees/bonds
-  * `Reserve Account` -> with one more attribute to `Bank Account` which specifies target reserve amount of the account
+  * `Reserve Account` -> with one addtional attribute to `Bank Account` , specifies target reserve amount of the account
 
 Format ``({account name},{account description})``, i.e
 
@@ -331,12 +331,13 @@ There is one extra attribute to set : `type`
                                            ,{"fixReserve":100}]}
                                     ,{"fixReserve":150}]})
 
-Interest/Investment 
-^^^^^^^^^^^^^^^^^^^
+Interest/Cash investment
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 model the interest or short-term investment income in the account.
 
 syntax: 
+
 ``{"period": <date Pattern>,"rate": <number>,"lastSettleDate":<date>}``
 
 .. code-block:: python

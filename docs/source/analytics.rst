@@ -30,6 +30,9 @@ here is a list of available servers at `absbox.org <https://absbox.org>`_
    The engine code was hosted at `Hastructure <https://github.com/yellowbean/Hastructure>`_
 
 
+Running a deal 
+^^^^^^^^^^^^^^^^^
+
 Once the API was instantised ,call ``run()`` to project cashflow and pricing the bond
 
 .. code-block:: python
@@ -41,6 +44,38 @@ Once the API was instantised ,call ``run()`` to project cashflow and pricing the
                pricing={"PVDay":"2023-06-22"
                        ,"Curve":[["2020-01-01",0.025]]},
                read=True)
+
+Running a Pool 
+^^^^^^^^^^^^^^^^^
+
+user can project cashflow for a pool only, with ability to set pool performance assumption .
+a pool is a map with two keys:
+
+* ``assets`` : a list of ``asset`` objects
+* ``cutoffDate`` : a date which suggests all cf after will be shown
+
+.. code-block:: python
+
+  myPool = {'assets':[
+              ["Mortgage"
+              ,{"originBalance": 12000.0
+               ,"originRate": ["fix",0.045]
+               ,"originTerm": 120
+               ,"freq": "monthly"
+               ,"type": "level"
+               ,"originDate": "2021-02-01"}
+              ,{"currentBalance": 10000.0
+               ,"currentRate": 0.075
+               ,"remainTerm": 80
+               ,"status": "current"}]],
+           'cutoffDate':"2022-03-01"}
+  
+  localAPI.runPool(myPool, 
+                 assumptions=[{"CPR":0.01}  
+                             ,{"CDR":0.01}  
+                             ,{"Recovery":(0.7,18)}],  
+                 read=True)
+
 
 Getting cashflow
 ------------------
@@ -119,3 +154,41 @@ if passing `pricing` in the `run`, then response would have a key `pricing`
    r['pricing']
 
 
+Multi-Scenario
+-----------------
+
+if passing `assumptions` with a dict. Then the key will be treated as `scneario name`, the value shall be same as single scneario cases.
+
+.. code-block:: python
+
+   myAssumption = [{"CPR":0.0}
+                   ,{"CDR":0.00}]
+   
+   myAssumption2 = [{"CPR":0.01}
+                   ,{"CDR":0.1} ]
+   
+   r = localAPI.run(test01
+               ,assumptions={"00":myAssumption,"stressed":myAssumption2}
+               ,read=True)
+
+User shall able to access the each scenario's response by just by `scneario name`
+
+.. code-block:: python
+   
+   r["00"]
+   
+   r["stressed"]
+
+IRR 
+------------------
+
+powered by `pyxirr`, user have option to calculate the IRR of a bond.
+
+* 1st parameter should pass the dataframe of bond flow 
+* 2nd `init` represent `initial invesment` a tuple with first as date of invesment and second as monetary amount of investment
+
+
+.. code-block:: python
+
+   from absbox.local.util import irr
+   irr(r['bonds']['A1'],init=('2021-06-15',-70))
