@@ -31,7 +31,7 @@ here is a list of available servers at `absbox.org <https://absbox.org>`_
 
 
 Setting Assumption
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 Assumptions is composed of three categories:
 
@@ -44,26 +44,24 @@ Assumptions is composed of three categories:
 
 * Deal Aussumption
   
-  Deal level assumption would be like 
-
  * Call Assumption 
    
    .. code-block:: python
    
-   {"CleanUp":[{"poolBalance":200}
-               ,{"bondBalance":100}
-               ,{"poolFactor":0.03}
-               ,{"bondFactor":0.03}
-               ,{"afterDate":0.03}
-               ,{"or":[{"afterDate":0.03}
-                       ,{"poolFactor":0.03}]}
-               ,{"and":[{"afterDate":0.03}
-                       ,{"poolFactor":0.03}]}
-               ,{"and":[{"afterDate":0.03}
-                        ,{"or":
-                           [{"poolFactor":0.03}
-                           ,{"bondBalance":100}]}]}
-   ]}
+     {"CleanUp":[{"poolBalance":200}
+                 ,{"bondBalance":100}
+                 ,{"poolFactor":0.03}
+                 ,{"bondFactor":0.03}
+                 ,{"afterDate":0.03}
+                 ,{"or":[{"afterDate":0.03}
+                         ,{"poolFactor":0.03}]}
+                 ,{"and":[{"afterDate":0.03}
+                         ,{"poolFactor":0.03}]}
+                 ,{"and":[{"afterDate":0.03}
+                          ,{"or":
+                             [{"poolFactor":0.03}
+                             ,{"bondBalance":100}]}]}
+     ]}
    
  * Interest Rate Assumption
    
@@ -80,6 +78,9 @@ Assumptions is composed of three categories:
 * Debug
  * `{stopRun:"2020-01-01"}` -> stop cashflow projection at `2020-01-01`
 
+
+Running
+--------------
 
 Running a deal 
 ^^^^^^^^^^^^^^^^^
