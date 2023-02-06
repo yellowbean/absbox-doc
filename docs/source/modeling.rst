@@ -23,28 +23,29 @@ Deal modeling is a process to build a deal with descriptive data, like:
 Generic
 ===========
 .. code-block:: python
-
-    from absbox import generic 
+    
+    from absbox.local.generic import Generic
 
 DatePattern
 -------------
 
 ``<DatePattern>`` is used to decrible a series of dates .
 
-* "MonthEnd"
-* "QuarterEnd"
-* "YearEnd"
-* "MonthFirst"
-* "QuarterFirst"
-* "YearFirst"
-* ["MonthDayOfYear",M,D]
-* ["DayOfMonth",M]
+* "MonthEnd"  -> Month End ,like Jan 31, Feb 28/29 
+* "QuarterEnd"  -> March 31, Jun 30, Sep 30, Dec 31
+* "YearEnd" -> Dec 31
+* "MonthFirst"  -> Jun 1, May 1
+* "QuarterFirst" -> March 1 , Jun 1 , Sep 1 , Dec 1
+* "YearFirst" -> Jan 1
+* ["MonthDayOfYear",M,D] -> A day of the year, like Feb 14 on every year 
+* ["DayOfMonth",M] -> A day of the month , like 15 on each month
 
 Formula 
 ---------
 
 Structured product is using ``formula`` to define the amount of account transfer, principal paydown or fee pay limit etc.
-``absbox`` reuse the concept of ``formula`` in an extreamly powerful way, a ``formula`` can be
+
+``absbox`` use the concept of ``formula`` in an extreamly powerful way, a ``formula`` can be
 
 * Bond 
     * bondBalance -> sum of all bond balance
@@ -52,8 +53,8 @@ Structured product is using ``formula`` to define the amount of account transfer
     * originalBondBalance -> bond balance at issuance
     * bondFactor
 * Pool 
-    * poolBalance
-    * originalPoolBalance
+    * poolBalance  -> current pool balance
+    * originalPoolBalance  -> pool original balance 
     * poolFactor
 * Accounts
     * accountBalance -> sum of all account balance
@@ -62,8 +63,9 @@ Structured product is using ``formula`` to define the amount of account transfer
 * Due Amount 
     * bondDueInt [String] -> sum of bond interest due
     * feeDue [String] -> sum of fee due
+
 * Combination
-    * factor <Formula> <Number> -> multiply a value to a formula
+    * factor <Formula> <Number> -> multiply <Number> to a formula
     * Max <Formula> <Formula> -> get the higher value
     * Min <Formula> <Formula> -> get the lower value 
     * sum [<Formula>] -> sum of formula value
@@ -175,13 +177,14 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
 Pool
 ---------
 
-a ``Pool`` represents a set of assets ,which generate cashflows to support expenses and liabilities.
+``Pool`` represents a set of assets ,which generate cashflows to support expenses and liabilities.
 
 * it can either has a loan level ``asset`` or ``projected cashflow``
 * other optional fields like `issuance balance`
 
 Mortgage
 ^^^^^^^^^^^
+`Mortgage` is a loan with level pay at each payment period.
 
 .. code-block:: python
 
@@ -199,6 +202,8 @@ Mortgage
 
 Loan
 ^^^^^^^^^^
+`Loan` is type of asset which has interest only and a lump sum principal payment at end
+
 
 .. code-block:: python
 
@@ -216,6 +221,8 @@ Loan
 
 Lease
 ^^^^^^^^^
+
+`Lease` is an asset with have evenly distributed rental as income or step up feature on the rental over the projection timeline.
 
 .. code-block:: python
 
@@ -241,6 +248,8 @@ step up type lease which rental will increase by pct after each accrue period
 Installment
 ^^^^^^^^^^^^^^
 
+`Installment` is an asset which has evenly distributed fee and principal
+
 .. code-block:: python
 
   ["installment"
@@ -256,7 +265,7 @@ Installment
 Accounts
 ---------
 
-There are two types of accounts:
+There are two types of `Account`:
 
   * `Bank Account` -> which used to collect money from pool and pay out to fees/bonds
   * `Reserve Account` -> with one addtional attribute to `Bank Account` , specifies target reserve amount of the account
@@ -331,7 +340,7 @@ There is one extra attribute to set : `type`
                                            ,{"fixReserve":100}]}
                                     ,{"fixReserve":150}]})
 
-Interest/Cash investment
+Interest/Cash Investment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 model the interest or short-term investment income in the account.
