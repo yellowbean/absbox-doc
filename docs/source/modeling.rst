@@ -22,6 +22,9 @@ Deal modeling is a process to build a deal with descriptive data, like:
 
 Generic
 ===========
+
+`Generic` is a class that represent `SPV` which contains the dates/liabilities/assets/waterfall/trigger information.
+
 .. code-block:: python
     
     from absbox.local.generic import Generic
@@ -45,7 +48,7 @@ Formula
 
 Structured product is using ``formula`` to define the amount of account transfer, principal paydown or fee pay limit etc.
 
-``absbox`` use the concept of ``formula`` in an extreamly powerful way, a ``formula`` can be
+``absbox`` use the concept of ``formula`` in an extreamly composible way, a ``formula`` can be a variable reference to deal attributes.
 
 * Bond 
     * bondBalance -> sum of all bond balance
@@ -64,6 +67,8 @@ Structured product is using ``formula`` to define the amount of account transfer
     * bondDueInt [String] -> sum of bond interest due
     * feeDue [String] -> sum of fee due
 
+Or `formula` can be an arithmetic calculation on itselfies.
+
 * Combination
     * factor <Formula> <Number> -> multiply <Number> to a formula
     * Max <Formula> <Formula> -> get the higher value
@@ -76,10 +81,10 @@ Structured product is using ``formula`` to define the amount of account transfer
 Condition
 ------------
 
-condition is a `boolean` type test.
+condition is a `boolean` type test
 
-* it can be setup in reserve account to setup different target reserve amount;
-* or in the waterfall to run the distribution action only when the critera is met;
+* it can be set up in reserve account to define different target reserve amount;
+* or in the waterfall to run the distribution action only when the testing is passing;
   
 * [<formula>,">",val] -> true when <formula> greater than a value
 * [<formula>,"<",val] -> true when <formula> less than a value
@@ -103,9 +108,10 @@ Depends on the status of deal, the dates shall be modeled either in `ongoing` or
 
 if it is `preclosing`
 
-- `Closing Date`: All pool cashflow after `Closing Date` belongs to the SPV
-- `Settle Date`: Bond start to accure interest after `Settle Date`.w
-- `First Pay Date` / `Next Pay Date`: First execution of waterfall or next date of executing the waterfall
+- `Cutoff Date`: All pool cashflow after `Closing Date` belongs to the SPV
+- `Closing Date`:  after `Closing Date` belongs to the SPV
+- `Settle Date`: Bond start to accure interest after `Settle Date`.
+- `First Pay Date`: First execution of payment waterfall
 
 
 .. code-block:: python
@@ -121,10 +127,13 @@ if it is `preclosing`
 
 if deal is `ongoing`, the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
 
+
 .. code-block:: python
 
-    {"collect":["2022-11-01","2022-12-01"] # [last pool collection date, next pool collection date]
-    ,"pay":["2022-11-15","2022-12-15"] # [last distribution payment date, next distribution date]
+    {"collect":["2022-11-01"   # last pool collection date,
+                ,"2022-12-01"] # next pool collection date
+    ,"pay":["2022-11-15"   # last distribution payment date,
+            ,"2022-12-15"] # next distribution date 
     ,"stated":"2030-01-01"
     ,"poolFreq":"MonthEnd"
     ,"payFreq":["DayOfMonth",20]
@@ -161,6 +170,7 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
           * ...
   * annualized fee, 
       * similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
+          * either reference to pool balance  or bond balance , etc....
   * custom fee flow,
       * an user defined date expenses, the date and amount can be customized.
       * like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
@@ -209,7 +219,9 @@ Loan
 
   ["Loan"
    ,{"originBalance": 80000
-     ,"originRate": ["floater",0.045,{"index":"SOFR3M","spread":0.01,"reset":["QuarterEnd"]}]
+     ,"originRate": ["floater",0.045,{"index":"SOFR3M"
+                                      ,"spread":0.01
+                                      ,"reset":"quarterly"}]
      ,"originTerm": 60
      ,"freq": "semiAnnually"
      ,"type": "i_p"
@@ -252,14 +264,16 @@ Installment
 
 .. code-block:: python
 
-  ["installment"
+  ["Installment"
    ,{"originBalance": 1000.0
-    ,"feeRate": 0.12
-    ,"originTerm": 36
+    ,"feeRate": ["fix",0.01]
+    ,"originTerm": 12
     ,"freq": "Monthly"
     ,"type": "f_p"
-    ,"originDate": "2023-01-01"}
-    ,{"status": "current"}]
+    ,"originDate": "2022-01-01"}
+    ,{"status": "current"
+      ,"currentBalance":1000}]
+
 
 
 Accounts
