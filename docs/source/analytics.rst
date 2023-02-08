@@ -35,16 +35,24 @@ Setting Assumption
 
 Assumptions is composed of three categories:
 
-* Asset Performance 
-  
-  Different asset class would need different combination of performance assumptions.
+Asset Performance 
+^^^^^^^^^^^^^^^^^^^
 
- * Mortgage / Loan / Installment
- * Lease 
+Different asset class would need different combination of performance assumptions.
 
-* Deal Aussumption
+* Mortgage / Loan / Installment
+ * Default Rate 
+ * Prepayment Rate 
+ * Reocvery/Recovery Lag 
+
+* Lease 
+ * Rental Increase
+ * Rental Gaps
+
+Deal Aussumption
+^^^^^^^^^^^^^^^^^^^
   
- * Call Assumption 
+* Call Assumption 
    
    .. code-block:: python
    
@@ -63,19 +71,20 @@ Assumptions is composed of three categories:
                              ,{"bondBalance":100}]}]}
      ]}
    
- * Interest Rate Assumption
+* Interest Rate Assumption
    
    .. code-block:: python
    
-   {"Rate":["LIBOR1M":[["2022-01-01",0.05]
-                      ,["2023-01-01",0.06]
-                      ]]}
-   
-   {"Rate":["LIBOR1M":0.05]}
+     {"Rate":["LIBOR1M":[["2022-01-01",0.05]
+                        ,["2023-01-01",0.06]
+                        ]]}
+     
+     {"Rate":["LIBOR1M":0.05]}
 
    
 
 * Debug
+
  * `{stopRun:"2020-01-01"}` -> stop cashflow projection at `2020-01-01`
 
 
