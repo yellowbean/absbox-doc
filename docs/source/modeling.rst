@@ -242,7 +242,9 @@ Lease
    ,{"fixRental": 12.0
     ,"originTerm": 96
     ,"freq": ["DayOfMonth",15]
-    ,"originDate": "2022-01-05"}]
+    ,"originDate": "2022-01-05"
+    ,"status":"Current"
+    ,"remainTerm":80}]
 
 step up type lease which rental will increase by pct after each accrue period
 
@@ -253,8 +255,25 @@ step up type lease which rental will increase by pct after each accrue period
     ,"originTerm": 36
     ,"freq": ["DayOfMonth",25]
     ,"originDate": "2023-01-01"
+    ,"status":"Current"
+    ,"remainTerm":30
     ,"accure": ["MonthOfYear",3]
     ,"pct": 0.05}]
+
+or user can specify the vector for the rental change 
+
+.. code-block:: python
+
+  ["Lease"
+   ,{"initRental": 24.0
+    ,"originTerm": 36
+    ,"freq": ["DayOfMonth",25]
+    ,"originDate": "2023-01-01"
+    ,"status":"Current"
+    ,"remainTerm":30
+    ,"accure": ["MonthOfYear",3]
+    ,"pct": [0.05,0.065,0.06,-0.07]}]
+
 
 
 Installment

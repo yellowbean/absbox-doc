@@ -35,6 +35,12 @@ which shows current version of `absbox`
   :width: 500
   :alt: version
 
+.. warning::
+   Version matters !! as `absbox` is calling RESTful service from `Hastructure`. 
+   The message format for both shall be compatible to each other. i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.5`
+   
+   
+
 Github
 --------------
 
