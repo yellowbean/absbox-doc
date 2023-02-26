@@ -110,7 +110,7 @@ if it is `preclosing`
 
 - `Cutoff Date`: All pool cashflow after `Closing Date` belongs to the SPV
 - `Closing Date`:  after `Closing Date` belongs to the SPV
-- `Settle Date`: Bond start to accure interest after `Settle Date`.
+- `Settle Date`: Bond start to accrue interest after `Settle Date`.
 - `First Pay Date`: First execution of payment waterfall
 
 
@@ -257,7 +257,7 @@ step up type lease which rental will increase by pct after each accrue period
     ,"originDate": "2023-01-01"
     ,"status":"Current"
     ,"remainTerm":30
-    ,"accure": ["MonthOfYear",3]
+    ,"accrue": ["MonthOfYear",3]
     ,"pct": 0.05}]
 
 or user can specify the vector for the rental change 
@@ -271,7 +271,7 @@ or user can specify the vector for the rental change
     ,"originDate": "2023-01-01"
     ,"status":"Current"
     ,"remainTerm":30
-    ,"accure": ["MonthOfYear",3]
+    ,"accrue": ["MonthOfYear",3]
     ,"pct": [0.05,0.065,0.06,-0.07]}]
 
 
