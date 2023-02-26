@@ -198,17 +198,18 @@ Mortgage
 
 .. code-block:: python
 
+
   ["Mortgage"
     ,{"originBalance": 12000.0
-     ,"originRate": ["fix",0.045]
-     ,"originTerm": 120
-     ,"freq": "monthly"
-     ,"type": "level"
-     ,"originDate": "2021-02-01"}
+      ,"originRate": ["Fixed",0.045]
+      ,"originTerm": 120
+      ,"freq": "Monthly"
+      ,"type": "Level"
+      ,"originDate": "2021-02-01"}
     ,{"currentBalance": 10000.0
-     ,"currentRate": 0.075
-     ,"remainTerm": 80
-     ,"status": "current"}]
+      ,"currentRate": 0.075
+      ,"remainTerm": 80
+      ,"status": "Current"}]
 
 Loan
 ^^^^^^^^^^
@@ -217,19 +218,20 @@ Loan
 
 .. code-block:: python
 
+
   ["Loan"
-   ,{"originBalance": 80000
-     ,"originRate": ["floater",0.045,{"index":"SOFR3M"
+    ,{"originBalance": 80000
+      ,"originRate": ["floater",0.045,{"index":"SOFR3M"
                                       ,"spread":0.01
-                                      ,"reset":"quarterly"}]
-     ,"originTerm": 60
-     ,"freq": "semiAnnually"
-     ,"type": "i_p"
-     ,"originDate": "2021-03-01"}
-   ,{"currentBalance": 65000
-     ,"currentRate": 0.06
-     ,"remainTerm": 48
-     ,"status": "current"}]
+                                      ,"reset":"Quarterly"}]
+      ,"originTerm": 60
+      ,"freq": "SemiAnnually"
+      ,"type": "i_p"
+      ,"originDate": "2021-03-01"}
+    ,{"currentBalance": 65000
+      ,"currentRate": 0.06
+      ,"remainTerm": 48
+      ,"status": "Current"}]
 
 Lease
 ^^^^^^^^^
@@ -251,13 +253,13 @@ step up type lease which rental will increase by pct after each accrue period
 .. code-block:: python
 
   ["Lease"
-   ,{"initRental": 24.0
+    ,{"initRental": 24.0
     ,"originTerm": 36
     ,"freq": ["DayOfMonth",25]
     ,"originDate": "2023-01-01"
     ,"status":"Current"
     ,"remainTerm":30
-    ,"accrue": ["MonthOfYear",3]
+    ,"accrue": ["DayOfMonth",1]
     ,"pct": 0.05}]
 
 or user can specify the vector for the rental change 
@@ -271,7 +273,7 @@ or user can specify the vector for the rental change
     ,"originDate": "2023-01-01"
     ,"status":"Current"
     ,"remainTerm":30
-    ,"accrue": ["MonthOfYear",3]
+    ,"accrue": ["DayOfMonth",3]
     ,"pct": [0.05,0.065,0.06,-0.07]}]
 
 
@@ -292,7 +294,6 @@ Installment
     ,"originDate": "2022-01-01"}
     ,{"status": "current"
       ,"currentBalance":1000}]
-
 
 
 Accounts
