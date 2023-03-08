@@ -174,6 +174,8 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
   * custom fee flow,
       * an user defined date expenses, the date and amount can be customized.
       * like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
+  * count type fee,
+      * the fee due equals to a number multiply a unit fee. The number is a formula reference.
 
 
 .. code-block:: python
@@ -182,6 +184,7 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
    ,("bond_service_fee",{"type":{"pctFee":["bondBalance",0.02]}})
    ,("issuance_fee",{"type":{"fixFee":100}})
    ,("rating_fee",{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
+   ,("borrowerFee",{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
   )
 
 Pool
@@ -293,7 +296,8 @@ Installment
     ,"type": "f_p"
     ,"originDate": "2022-01-01"}
     ,{"status": "current"
-      ,"currentBalance":1000}]
+      ,"currentBalance":1000
+      ,"remainTerm",10}]
 
 
 Accounts

@@ -106,8 +106,8 @@ Once the API was instantised ,call ``run()`` to project cashflow and pricing the
                        ,"Curve":[["2020-01-01",0.025]]},
                read=True)
 
-Running a Pool 
-^^^^^^^^^^^^^^^^^
+Running a pool of assets 
+^^^^^^^^^^^^^^^^^^^^^^
 
 user can project cashflow for a pool only, with ability to set pool performance assumption .
 a pool is a map with two keys:
@@ -164,7 +164,7 @@ the `runPool()` function will return cashflow for a pool, user need to specify `
    mypool = {'assets':[
           ["Lease"
            ,{"fixRental":1000,"originTerm":12,"freq":["DayOfMonth",12]
-            ,"remainTerm":10,"originDate":"2021-02-01"}]
+            ,"remainTerm":10,"originDate":"2021-02-01","status":"Current"}]
             ],
           'cutoffDate':"2021-04-04"}
 
@@ -239,6 +239,18 @@ User shall able to access the each scenario's response by just by `scenario name
    r["00"]
    
    r["stressed"]
+
+
+Sensitiviy Analysis
+--------------------------
+
+Given the powerful list comprehension syntax, user can easily create mult demensional sensitivity analysis.
+
+* scenarios vs scenarios
+  
+* deal vs scenarios
+  
+* deal vs deals
 
 
 IRR 
