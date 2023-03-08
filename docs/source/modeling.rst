@@ -590,10 +590,22 @@ Trigger
 ^^^^^^^^^^
 
 * When to run trigger
+  Trigger can run at 4 point of time.
+  * Start/End of Pool Collection Day
+  * Start/End of Distribution Day
 
 * Conditon of a trigger
+  trigger can be fired by:
+  * greater/lower than a threshold
+  * greater/lower than a threshold curve
+  * AND/OR logic with other trigger
 
 * Effect of a trigger
+  Trigger will update the `state` of a deal, like:
+  * convert `revolving` to `amortizing`
+  * convert `amortizing` to `accelerated`
+  * convert `amortizing` to `defaulted`
+  * or any `state` between
 
 Examples
 ============
