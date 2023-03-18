@@ -590,23 +590,24 @@ ie：
     ,"Defaulted":[]
     }
 
-Trigger 
-^^^^^^^^^^
+
+Trigger(to be tested) 
+^^^^^^^^^^^^^^^^^^^^^^^
 
 * When to run trigger
   
   Trigger can run at 4 point of time.
   
-  * Start/End of Pool Collection Day
-  * Start/End of Distribution Day
+  * Start/End of each Pool Collection Day
+  * Start/End of each Distribution Day
 
 * Conditon of a trigger
   
-  trigger can be fired by:
+  trigger can be fired by comparing a `Formula` with :
   
-  * greater/lower than a threshold
-  * greater/lower than a threshold curve
-  * AND/OR logic with other trigger
+  * greater/lower than a threshold/ value 
+  * greater/lower than a threshold curve/ values associated with dates
+  * AND/OR logic with other triggers
 
 * Effect of a trigger
   
@@ -616,6 +617,56 @@ Trigger
   * convert `amortizing` to `accelerated`
   * convert `amortizing` to `defaulted`
   * or between any `state` , once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
+  * accure some certain fee 
+  * create a new trigger 
+  * a list of above
+
+
+Examples  
+
+
+.. code-block:: python
+
+    "trigger":{
+      "BeforeCollect":[]
+      ,"AfterCollect":[
+        (["cumPoolDefaultedRate",">",0.05]
+          ,("newStatus","Defaulted"))
+      ]
+      ,"BeforeDistribution":[
+        ([">=","2025-01-01"]
+          ,("newStatus","Defaulted"))
+      ]
+      ,"AfterDistribution":[
+        (["bondFactor","<=",0.1]
+         ,("newStatus","Accelerated"))
+      ]
+      }
+    }
+
+    #a list of triggers effects
+    "trigger":{
+      "AfterCollect":[
+        (["cumPoolDefaultedRate",">",0.05]
+          ,("Effects"
+            ,("newStatus","Defaulted")
+            ,("accrueFees","feeA","feeB")))
+      ]
+    }
+
+    # ALL and ANY logic of triggers ( and they can nested toghter ! )
+    "trigger":{
+      "AfterCollect":[
+        (["any"
+           ,["cumPoolDefaultedRate",">",0.05]
+           ,[("accountBalance","Acc01"),"<",5000]]
+          ,("Effects"
+            ,("newStatus","Defaulted")
+            ,("accrueFees","feeA","feeB")))
+      ]
+    }
+
+
 
 Examples
 ============
