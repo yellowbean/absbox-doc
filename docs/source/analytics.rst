@@ -98,13 +98,14 @@ Once the API was instantised ,call ``run()`` to project cashflow and pricing the
 
 .. code-block:: python
 
-  localAPI.run(test01, 
-               assumptions=[{"CPR":0.01}  
-                           ,{"CDR":0.01}  
-                           ,{"Recovery":(0.7,18)}],  
-               pricing={"PVDay":"2023-06-22"
-                       ,"Curve":[["2020-01-01",0.025]]},
-               read=True)
+  localAPI.run(test01,
+             assumptions=[{"CPR":0.01}
+                         ,{"CDR":0.01}
+                         ,{"Recovery":(0.7,18)}],
+             pricing={"PVDate":"2021-08-22"
+                      ,"PVCurve":[["2021-01-01",0.025]
+                                 ,["2024-08-01",0.025]]},
+             read=True)
 
 Running a pool of assets 
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -150,8 +151,8 @@ Getting cashflow
                     assumptions=[{"CPR":0.01}  
                                 ,{"CDR":0.01}  
                                 ,{"Recovery":(0.7,18)}],  
-                    pricing={"PVDay":"2023-06-22"
-                            ,"Curve":[["2020-01-01",0.025]]},
+                    pricing={"PVDate":"2023-06-22"
+                            ,"PVCurve":[["2020-01-01",0.025]]},
                     read=True)
 
 
@@ -239,18 +240,6 @@ User shall able to access the each scenario's response by just by `scenario name
    r["00"]
    
    r["stressed"]
-
-
-Sensitiviy Analysis
---------------------------
-
-Given the powerful list comprehension syntax, user can easily create mult demensional sensitivity analysis.
-
-* scenarios vs scenarios
-  
-* deal vs scenarios
-  
-* deal vs deals
 
 
 IRR 

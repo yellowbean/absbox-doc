@@ -5,23 +5,23 @@ test01 = Generic(
     ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
      ,"payFreq":["DayOfMonth",20],"poolFreq":"MonthEnd","stated":"2030-01-01"}
     ,{'assets':[["Mortgage"
-        ,{"originBalance":120,"originRate":["fix",0.045],"originTerm":30
+        ,{"originBalance":2200,"originRate":["fix",0.045],"originTerm":30
           ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
-          ,{"currentBalance":120
+          ,{"currentBalance":2200
           ,"currentRate":0.08
           ,"remainTerm":20
           ,"status":"current"}]]}
     ,(("acc01",{"balance":0}),)
-    ,(("A1",{"balance":100
+    ,(("A1",{"balance":1000
              ,"rate":0.07
-             ,"originBalance":100
+             ,"originBalance":1000
              ,"originRate":0.07
              ,"startDate":"2020-01-03"
              ,"rateType":{"Fixed":0.08}
              ,"bondType":{"Sequential":None}})
-      ,("B",{"balance":20
+      ,("B",{"balance":1000
              ,"rate":0.0
-             ,"originBalance":100
+             ,"originBalance":1000
              ,"originRate":0.07
              ,"startDate":"2020-01-03"
              ,"rateType":{"Fixed":0.00}
