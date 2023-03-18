@@ -18,6 +18,30 @@ Deal modeling is a process to build a deal with descriptive data, like:
 * Triggers (Optional)
 * Liquidity Provider (Optional)
 
+
+Structure of a `Generic` deal 
+
+.. code-block:: python
+
+    from absbox.local.generic import Generic
+    
+    generalDeal = Generic(
+        "Deal Name"
+        ,<Dates>
+        ,<Asset/Pool Info>
+        ,<Account info>
+        ,<Bonds Info>
+        ,<Fee Info>
+        ,<Waterfall Info>
+        ,<Collection Rule>
+        ,<Call settings>
+        ,<liquidation facilities>
+        ,<custom data/formula here>
+        ,<triggers>
+    )
+
+
+
 .. _Generic ABS:
 
 Generic
@@ -630,7 +654,7 @@ Examples
     "trigger":{
       "BeforeCollect":[]
       ,"AfterCollect":[
-        (["cumPoolDefaultedRate",">",0.05]
+        ([("cumPoolDefaultedRate",),">",0.05]
           ,("newStatus","Defaulted"))
       ]
       ,"BeforeDistribution":[
@@ -638,7 +662,7 @@ Examples
           ,("newStatus","Defaulted"))
       ]
       ,"AfterDistribution":[
-        (["bondFactor","<=",0.1]
+        ([("bondFactor",),"<=",0.1]
          ,("newStatus","Accelerated"))
       ]
       }
@@ -647,7 +671,7 @@ Examples
     #a list of triggers effects
     "trigger":{
       "AfterCollect":[
-        (["cumPoolDefaultedRate",">",0.05]
+        ([("cumPoolDefaultedRate",),">",0.05]
           ,("Effects"
             ,("newStatus","Defaulted")
             ,("accrueFees","feeA","feeB")))
@@ -658,7 +682,7 @@ Examples
     "trigger":{
       "AfterCollect":[
         (["any"
-           ,["cumPoolDefaultedRate",">",0.05]
+           ,[("cumPoolDefaultedRate",),">",0.05]
            ,[("accountBalance","Acc01"),"<",5000]]
           ,("Effects"
             ,("newStatus","Defaulted")
@@ -679,6 +703,21 @@ Subordination
   
 .. literalinclude:: deal_sample/test01.py
    :language: python
+
+Multiple Waterfalls
+---------------
+
+There can be multiple waterfalls which corresponding to `status`
+
+* amortizing
+* revolving
+* accelerated
+* defaulted 
+* clean up 
+  
+.. literalinclude:: deal_sample/test02.py
+   :language: python
+
 
 
 

@@ -1,45 +1,47 @@
-test02 = 信贷ABS(
-     "TEST02"
-     ,("2021-03-01","2021-05-01","2021-06-26")
-     ,"每月"
-     ,{'清单':[["按揭贷款"
-         ,{"放款金额":120,"放款利率":["固定",0.0485],"初始期限":30
-           ,"频率":"每月","类型":"等额本金","放款日":"2020-06-01"}
-           ,{"当前余额":120
-           ,"当前利率":0.08
-           ,"剩余期限":10
-           ,"状态":"正常"}]],
+from absbox.local.generic import Generic
+
+test01 = Generic(
+    "TEST01"
+    ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
+     ,"payFreq":["DayOfMonth",20],"poolFreq":"MonthEnd","stated":"2030-01-01"}
+    ,{'assets':[["Mortgage"
+        ,{"originBalance":2200,"originRate":["fix",0.045],"originTerm":30
+          ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
+          ,{"currentBalance":2200
+          ,"currentRate":0.08
+          ,"remainTerm":20
+          ,"status":"current"}]]}
+    ,(("acc01",{"balance":0}),)
+    ,(("A1",{"balance":1000
+             ,"rate":0.07
+             ,"originBalance":1000
+             ,"originRate":0.07
+             ,"startDate":"2020-01-03"
+             ,"rateType":{"Fixed":0.08}
+             ,"bondType":{"Sequential":None}})
+      ,("B",{"balance":1000
+             ,"rate":0.0
+             ,"originBalance":1000
+             ,"originRate":0.07
+             ,"startDate":"2020-01-03"
+             ,"rateType":{"Fixed":0.00}
+             ,"bondType":{"Equity":None}
+             }))
+    ,(("trusteeFee",{"type":{"fixFee":30}}),)
+    ,{"amortizing":[
+         ["payFee",["acc01"],['trusteeFee']]
+         ,["payInt","acc01",["A1"]]
+         ,["payPrin","acc01",["A1"]]
+         ,["payPrin","acc01",["B"]]
+         ,["payResidual","acc01","B"]]
+      ,"cleanUp":[]
+      ,"endOfCollection":[]       # execute when collect money from pool
+      ,("amortizing","defaulted"):[]   #execute when deal is `defaulted`
+      ,("amortizing","accelerated"):[] #execute when deal is `accelerated`
       }
-     ,(("账户01",{"余额":0}),)
-     ,(("A1",{"当前余额":100
-              ,"当前利率":0.07
-              ,"初始余额":100
-              ,"初始利率":0.07
-              ,"起息日":"2020-01-03"
-              ,"利率":{"固定":0.08}
-              ,"债券类型":{"固定摊还":[["2021-06-26",80]
-                                     ,["2021-07-26",70]
-                                     ,["2021-09-26",0]]}
-              })
-       ,("B",{"当前余额":20
-              ,"当前利率":0.0
-              ,"初始余额":100
-              ,"初始利率":0.07
-              ,"起息日":"2020-01-03"
-              ,"利率":{"固定":0.00}
-              ,"债券类型":{"权益":None}
-              }))
-     ,tuple()
-     ,{"未违约":[
-          ["支付利息","账户01",["A1"]]
-          ,["支付本金","账户01",["A1"]]
-          ,["支付本金","账户01",["B"]]
-          ,["支付收益","账户01","B"]
-     ]
-      ,"回款后":[]}
-     ,(["利息回款","账户01"]
-       ,["本金回款","账户01"]
-       ,["早偿回款","账户01"]
-       ,["回收回款","账户01"])
-     ,None
- )
+    ,[["CollectedInterest","acc01"]
+      ,["CollectedPrincipal","acc01"]
+      ,["CollectedPrepayment","acc01"]
+      ,["CollectedRecoveries","acc01"]]
+    ,None
+    ,None)
