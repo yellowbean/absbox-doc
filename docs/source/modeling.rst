@@ -651,7 +651,7 @@ Examples
 
 .. code-block:: python
 
-    "trigger":{
+    {
       "BeforeCollect":[]
       ,"AfterCollect":[
         ([("cumPoolDefaultedRate",),">",0.05]
@@ -669,7 +669,7 @@ Examples
     }
 
     #a list of triggers effects
-    "trigger":{
+    {
       "AfterCollect":[
         ([("cumPoolDefaultedRate",),">",0.05]
           ,("Effects"
@@ -679,7 +679,7 @@ Examples
     }
 
     # ALL and ANY logic of triggers ( and they can nested toghter ! )
-    "trigger":{
+    {
       "AfterCollect":[
         (["any"
            ,[("cumPoolDefaultedRate",),">",0.05]
