@@ -238,7 +238,6 @@ User shall able to access the each scenario's response by just by `scenario name
 .. code-block:: python
    
    r["00"]
-   
    r["stressed"]
 
 
@@ -255,3 +254,26 @@ powered by `pyxirr`, user have option to calculate the IRR of a bond.
 
    from absbox.local.util import irr
    irr(r['bonds']['A1'],init=('2021-06-15',-70))
+
+
+Status During Run
+--------------------
+
+it is not uncommon that `triggers` may changed deal status between `accelerated` `defaulted` `amorting` `revolving`.
+user can check the `status` chang log via :
+
+.. code-block:: python
+   
+   r["result"]["status"]
+
+or user can cross check by review the account logs by (if changing deal status will trigger selecting different waterfall) :
+
+.. code-block:: python
+   
+   r["accounts"]["<account name>"].loc["<date before deal status change>"]
+   r["accounts"]["<account name>"].loc["<date after deal status change>"]
+
+
+
+
+

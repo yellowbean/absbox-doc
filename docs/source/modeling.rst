@@ -26,7 +26,7 @@ Structure of a `Generic` deal
     from absbox.local.generic import Generic
     
     generalDeal = Generic(
-        "Deal Name"
+        "Deal Name/Description"
         ,<Dates>
         ,<Asset/Pool Info>
         ,<Account info>
@@ -36,7 +36,7 @@ Structure of a `Generic` deal
         ,<Collection Rule>
         ,<Call settings>
         ,<liquidation facilities>
-        ,<custom data/formula here>
+        ,<custom data/formula>
         ,<triggers>
     )
 
@@ -704,10 +704,11 @@ Subordination
 .. literalinclude:: deal_sample/test01.py
    :language: python
 
-Multiple Waterfalls
----------------
+Multiple Waterfalls with triggers
+------------------------------------
 
-There can be multiple waterfalls which corresponding to `status`
+There can be multiple waterfalls which corresponding to `status`.
+a acceleration/turbo event could be triggered and changing the payment sequence
 
 * amortizing
 * revolving
@@ -717,7 +718,6 @@ There can be multiple waterfalls which corresponding to `status`
   
 .. literalinclude:: deal_sample/test02.py
    :language: python
-
 
 
 
