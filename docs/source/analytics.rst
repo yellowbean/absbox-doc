@@ -12,7 +12,6 @@ Analytics
 Setup a API
 ----------------
 
-
 here is a list of available servers at `absbox.org <https://absbox.org>`_
 
 .. code-block:: python
@@ -33,7 +32,7 @@ here is a list of available servers at `absbox.org <https://absbox.org>`_
 Setting Assumption
 --------------------
 
-Assumptions is composed of three categories:
+Assumptions fall into three categories:
 
 Asset Performance 
 ^^^^^^^^^^^^^^^^^^^
@@ -49,7 +48,7 @@ Different asset class would need different combination of performance assumption
  * Rental Increase
  * Rental Gaps
 
-Deal Aussumption
+Deal Assumption
 ^^^^^^^^^^^^^^^^^^^
   
 * Call Assumption 
@@ -80,7 +79,6 @@ Deal Aussumption
                         ]]}
      
      {"Rate":["LIBOR1M":0.05]}
-
    
 
 * Debug
@@ -94,7 +92,7 @@ Running
 Running a deal 
 ^^^^^^^^^^^^^^^^^
 
-Once the API was instantised ,call ``run()`` to project cashflow and pricing the bond
+Once the API was instantised ,call ``run()`` to project cashflow and price the bonds
 
 .. code-block:: python
 
@@ -107,8 +105,11 @@ Once the API was instantised ,call ``run()`` to project cashflow and pricing the
                                  ,["2024-08-01",0.025]]},
              read=True)
 
+passing `read` with `True`, it will try it best to parse the result into `DataFrame`
+
+
 Running a pool of assets 
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 user can project cashflow for a pool only, with ability to set pool performance assumption .
 a pool is a map with two keys:

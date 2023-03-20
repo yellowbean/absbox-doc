@@ -18,6 +18,8 @@ Using pip
 Upgrade `absbox` package to latest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+``absbox`` is rapidly evolving rapidly, pls make sure you are using the latest one. 
+
 .. code-block:: console
 
     pip install -U absbox
@@ -37,8 +39,8 @@ which shows current version of `absbox`
 
 .. warning::
    Version matters !! as `absbox` is calling RESTful service from `Hastructure`. 
-   The message format for both shall be compatible to each other. i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.5`
-   
+   The message format for both shall be compatible to each other. i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.5`.
+   A general rule is that the "MINOR" part shall be same.
    
 
 Github
@@ -55,30 +57,26 @@ Documents and sample code in this site are being test against with code from git
 Public Server vs Self-hosted
 -----------------------------
 
-``absbox`` needs to connect a engine behind the scene. User can choose a public one or use it's own if user is keen on privacy and performance.
+``absbox`` needs to connect an engine behind the scene. User can choose a public one or use it's own if user is keen on privacy and performance.
 
 .. code-block:: python
 
    from absbox import API
    localAPI = API("https://absbox.org/api/latest")
 
-   # optinally adding a `english` to enable all resp is translated to English
+   # optinally adding a `english` to enable all responces are represented in English
    localAPI = API("https://absbox.org/api/latest",'english')
 
 * For public server list, pls visit `absbox.org <https://absbox.org>`_
 * If user want to have a self-hosted server 
     * user can build one from source code `Hastructure <https://github.com/yellowbean/Hastructure>`_
-    * or using docker 
+    * or using docker by one-line solution
 
       .. code-block:: bash
 
         docker pull yellowbean/hastructure
-  
-.. code-block:: bash
-
-  docker pull yellowbean/hastructure
-  docker run yellowbean/hastructure
-  # by default the server expose its port at 8081
+        docker run yellowbean/hastructure
+        # by default the server expose its port at 8081
 
 
 .. note ::

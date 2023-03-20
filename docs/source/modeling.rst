@@ -4,17 +4,17 @@ Modeling
 .. autosummary::
    :toctree: generated
 
-Deal modeling is a process to build a deal with descriptive data, like:
+Deal modeling is a process to build a deal with descriptive data, with components :
 
-* Asset info -> pool asset attributes, loan by loan or repline level data
-* Bond info -> bonds with different types as well as residuel tranche
-* Waterfall info -> Describe the priority of payments allocation of
+* Asset info -> pool asset attributes, loan by loan or repline level data or projected cashflow as input
+* Bond info -> bonds with different types as well as residule tranche
+* Waterfall info -> Describe the priority of payments when:
     * End of pool collection (Optional)
     * Distribution day for all the bonds and fees 
     * Event of Default (Optional)
     * Clean up call (Optional)
 * Dates info
-  * Cutoff day / Closing Date / Next/First payment Date
+  * Cutoff day / Closing Date / Next/First payment Date or series of custom dates
 * Triggers (Optional)
 * Liquidity Provider (Optional)
 
@@ -40,8 +40,6 @@ Structure of a `Generic` deal
         ,<triggers>
     )
 
-
-
 .. _Generic ABS:
 
 Generic
@@ -53,17 +51,21 @@ Generic
     
     from absbox.local.generic import Generic
 
+
+During the modelling, there are 3 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, all of them are being used in different components.
+
+
 DatePattern
 -------------
 
 ``<DatePattern>`` is used to decrible a series of dates .
 
-* "MonthEnd"  -> Month End ,like Jan 31, Feb 28/29 
-* "QuarterEnd"  -> March 31, Jun 30, Sep 30, Dec 31
-* "YearEnd" -> Dec 31
 * "MonthFirst"  -> Jun 1, May 1
+* "MonthEnd"  -> Month End ,like Jan 31, Feb 28/29 
 * "QuarterFirst" -> March 1 , Jun 1 , Sep 1 , Dec 1
+* "QuarterEnd"  -> March 31, Jun 30, Sep 30, Dec 31
 * "YearFirst" -> Jan 1
+* "YearEnd" -> Dec 31
 * ["MonthDayOfYear",M,D] -> A day of the year, like Feb 14 on every year 
 * ["DayOfMonth",M] -> A day of the month , like 15 on each month
 
@@ -109,6 +111,7 @@ condition is a `boolean` type test
 
 * it can be set up in reserve account to define different target reserve amount;
 * or in the waterfall to run the distribution action only when the testing is passing;
+* or it can be used in trigger to describle whether it will be triggered or not.
   
 * [<formula>,">",val] -> true when <formula> greater than a value
 * [<formula>,"<",val] -> true when <formula> less than a value
@@ -136,7 +139,9 @@ if it is `preclosing`
 - `Closing Date`:  after `Closing Date` belongs to the SPV
 - `Settle Date`: Bond start to accrue interest after `Settle Date`.
 - `First Pay Date`: First execution of payment waterfall
-
+- `stated` : legal maturity date of the deal.
+- `poolFeq` : describle the dates that collect cashflow from pool
+- `payFeq` : describle the dates that distribution funds to fees and bonds.
 
 .. code-block:: python
 
