@@ -1,8 +1,5 @@
 from absbox.local.generic import Generic
 
-
-from absbox.local.generic import Generic
-
 test01 = Generic(
     "Multiple Waterfall"
     ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
