@@ -1,4 +1,4 @@
-Modeling
+Modelling
 ***********
 
 .. autosummary::
@@ -496,7 +496,7 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``action`` to be executed at bond payment date.
+Waterfall means a list of ``action`` to be executed at bond payment day or pool collection day.
 
 Fee 
 ^^^^^^
@@ -598,18 +598,20 @@ format : ``[<conditon>,<Action1>,<Action2>....]``
 waterfall action can be setup only triggered if certain conditon is met.
 
 
-`Waterfall`: there are 3 waterfalls in a deal 
+`Waterfall`: there are couple waterfalls in a deal 
 
-  * ``Normal``, executing when deal is *not defaulted*
-  * ``CollectionEnd``, executing at end of pool collection period
+  * ``"amortizing"``, executing when deal is *not defaulted*
+  * ``("amortizing","accelerated")``, executing when deal is *accelerated*
+  * ``("amortizing","defaulted")``, executing when deal is *defaulted*
+  * ``EndOfPoolCollection``, executing at end of pool collection period
+  * ``closingDay``, executing only when the deal reach to closing day
   * ``CleanUp``, executing when deal is being *clean up*
-
 
 ie：
 
 .. code-block:: python
 
-   {"Normal":[
+   {"amortizing":[
        ["payFee",["acc01"],['trusteeFee']]
        ,["payInt","acc01",["A1"]]
        ,["payPrin","acc01",["A1"]]
@@ -621,7 +623,7 @@ ie：
 
 
 Trigger(to be tested) 
-^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 * When to run trigger
   
