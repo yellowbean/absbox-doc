@@ -226,7 +226,14 @@ Pool
 
 Mortgage
 ^^^^^^^^^^^
+
 `Mortgage` is a loan with level pay at each payment period.
+
+`type` field can be used to define either its `Annuity` type or `Linear` Type
+
+* `Level` -> `Annuity`
+* `Even` -> `Linear`
+
 
 .. code-block:: python
 
