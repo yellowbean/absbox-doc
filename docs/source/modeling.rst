@@ -630,7 +630,7 @@ ie：
 
 
 Trigger
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------
 
 * When to run trigger
   
