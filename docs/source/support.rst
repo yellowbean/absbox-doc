@@ -21,10 +21,6 @@ API Integration
     - ``docker run -p 5000:8081 yellowbean/hastructure``
     - the server runs at port ``8081``
 
-Slack
-----
-Welcome to join our `Slack channel <https://join.slack.com/t/asset-backed/shared_invite/zt-1fyplipki-QLKhjbmLT2rRnQhcMkUu4w>`_  !  
-
 
 Email
 -----

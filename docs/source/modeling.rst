@@ -620,7 +620,7 @@ ie：
     }
 
 
-Trigger(to be tested) 
+Trigger
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 * When to run trigger
@@ -636,6 +636,7 @@ Trigger(to be tested)
   
   * greater/lower than a threshold/ value 
   * greater/lower than a threshold curve/ values associated with dates
+  * after a predefined date
   * AND/OR logic with other triggers
 
 * Effect of a trigger
@@ -650,9 +651,7 @@ Trigger(to be tested)
   * create a new trigger 
   * a list of above
 
-
 Examples  
-
 
 .. code-block:: python
 
@@ -684,16 +683,17 @@ Examples
     }
 
     # ALL and ANY logic of triggers ( and they can nested toghter ! )
-    {
-      "AfterCollect":[
-        (["any"
+    ,{"AfterCollect":[
+         (["any"
            ,[("cumPoolDefaultedRate",),">",0.05]
-           ,[("accountBalance","Acc01"),"<",5000]]
-          ,("Effects"
-            ,("newStatus","Defaulted")
-            ,("accrueFees","feeA","feeB")))
-      ]
-    }
+           ,[">","2021-09-15"]]
+           ,("newStatus","Accelerated"))]}
+
+    ,{"AfterCollect":[
+         (["all"
+           ,[("cumPoolDefaultedRate",),">",0.05]
+           ,[">","2021-09-15"]]
+           ,("newStatus","Accelerated"))]}
 
 
 
