@@ -731,8 +731,12 @@ a acceleration/turbo event could be triggered and changing the payment sequence
 Save a deal file
 ===============
 
-Save
+Binary
 -------------
+
+Save
+^^^^^^^
+
 using ``save()`` to save a deal file to disk
 
 .. code-block:: python
@@ -743,11 +747,42 @@ using ``save()`` to save a deal file to disk
   save(deal,"path/to/file")
 
 Load
-----------
- ``load()`` to load a deal from disk
+^^^^^^^^
+
+``load()`` to load a deal from disk
 
 .. code-block:: python
 
   ...
   from absbox.local.generic import Generic
   Generic.load("path/to/file")
+
+JSON
+----------
+
+A deal object can be converted into json format via a properity field `.json`
+
+.. code-block:: python
+   
+   #Assuming 
+
+   test.json  
+
+   #{'tag': 'MDeal',
+   # 'contents': {'dates': {'tag': 'PreClosingDates',
+   #   'contents': ['2021-03-01',
+   #    '2021-06-15',
+   #    None,
+   #    '2030-01-01',
+   #    ['2021-06-15', {'tag': 'MonthEnd'}],
+   #    ['2021-07-26', {'tag': 'DayOfMonth', 'contents': 20}]]},
+   #  'name': 'Multiple Waterfall',
+   #  'status': {'tag': 'Amortizing'},
+   #  'pool': {'assets': [{'tag': 'Mortgage',
+   #     'contents': [{'originBalanc
+
+ 
+
+
+
+
