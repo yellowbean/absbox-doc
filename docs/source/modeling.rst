@@ -734,6 +734,20 @@ a acceleration/turbo event could be triggered and changing the payment sequence
    :language: python
 
 
+Define Conditional Action
+------------------------------------
+
+User can specify a condtional clause in the waterfall.
+
+Only the conditions were met, actions following will be executed.
+
+  
+.. literalinclude:: deal_sample/test03.py
+   :language: python
+
+
+
+
 
 Save a deal file
 ===============
