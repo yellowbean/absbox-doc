@@ -1,4 +1,4 @@
-Modeling
+Modelling
 ***********
 
 .. autosummary::
@@ -226,7 +226,14 @@ Pool
 
 Mortgage
 ^^^^^^^^^^^
+
 `Mortgage` is a loan with level pay at each payment period.
+
+`type` field can be used to define either its `Annuity` type or `Linear` Type
+
+* `Level` -> `Annuity`
+* `Even` -> `Linear`
+
 
 .. code-block:: python
 
@@ -496,7 +503,7 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``action`` to be executed at bond payment date.
+Waterfall means a list of ``action`` to be executed at bond payment day or pool collection day.
 
 Fee 
 ^^^^^^
@@ -598,18 +605,20 @@ format : ``[<conditon>,<Action1>,<Action2>....]``
 waterfall action can be setup only triggered if certain conditon is met.
 
 
-`Waterfall`: there are 3 waterfalls in a deal 
+`Waterfall`: there are couple waterfalls in a deal 
 
-  * ``Normal``, executing when deal is *not defaulted*
-  * ``CollectionEnd``, executing at end of pool collection period
+  * ``"amortizing"``, executing when deal is *not defaulted*
+  * ``("amortizing","accelerated")``, executing when deal is *accelerated*
+  * ``("amortizing","defaulted")``, executing when deal is *defaulted*
+  * ``EndOfPoolCollection``, executing at end of pool collection period
+  * ``closingDay``, executing only when the deal reach to closing day
   * ``CleanUp``, executing when deal is being *clean up*
-
 
 ie：
 
 .. code-block:: python
 
-   {"Normal":[
+   {"amortizing":[
        ["payFee",["acc01"],['trusteeFee']]
        ,["payInt","acc01",["A1"]]
        ,["payPrin","acc01",["A1"]]
@@ -729,8 +738,12 @@ a acceleration/turbo event could be triggered and changing the payment sequence
 Save a deal file
 ===============
 
-Save
+Binary
 -------------
+
+Save
+^^^^^^^
+
 using ``save()`` to save a deal file to disk
 
 .. code-block:: python
@@ -741,11 +754,42 @@ using ``save()`` to save a deal file to disk
   save(deal,"path/to/file")
 
 Load
-----------
- ``load()`` to load a deal from disk
+^^^^^^^^
+
+``load()`` to load a deal from disk
 
 .. code-block:: python
 
   ...
   from absbox.local.generic import Generic
   Generic.load("path/to/file")
+
+JSON
+----------
+
+A deal object can be converted into json format via a properity field `.json`
+
+.. code-block:: python
+   
+   #Assuming 
+
+   test.json  
+
+   #{'tag': 'MDeal',
+   # 'contents': {'dates': {'tag': 'PreClosingDates',
+   #   'contents': ['2021-03-01',
+   #    '2021-06-15',
+   #    None,
+   #    '2030-01-01',
+   #    ['2021-06-15', {'tag': 'MonthEnd'}],
+   #    ['2021-07-26', {'tag': 'DayOfMonth', 'contents': 20}]]},
+   #  'name': 'Multiple Waterfall',
+   #  'status': {'tag': 'Amortizing'},
+   #  'pool': {'assets': [{'tag': 'Mortgage',
+   #     'contents': [{'originBalanc
+
+ 
+
+
+
+
