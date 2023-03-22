@@ -44,6 +44,27 @@ Different asset class would need different combination of performance assumption
  * Prepayment Rate 
  * Reocvery/Recovery Lag 
 
+User are able to set a constant value 
+
+.. code-block:: python
+
+  localAPI.run(test01,
+             assumptions=[{"CPR":0.01}
+                         ,{"CDR":0.01}
+                         ,{"Recovery":(0.7,18)}],
+             read=True)
+
+User are able to set assumptions by curves
+
+.. code-block:: python
+
+  localAPI.run(test01,
+             assumptions=[{"CPR":[0.02,0.02,0.03]}
+                         ,{"CDR":[0.01,0.015,0.021]}
+                         ,{"Recovery":(0.7,18)}],
+             read=True)
+
+
 * Lease 
  * Rental Increase
  * Rental Gaps
@@ -59,12 +80,12 @@ Deal Assumption
                  ,{"bondBalance":100}
                  ,{"poolFactor":0.03}
                  ,{"bondFactor":0.03}
-                 ,{"afterDate":0.03}
-                 ,{"or":[{"afterDate":0.03}
+                 ,{"afterDate":"2023-06-01"}
+                 ,{"or":[{"afterDate":"2023-06-01"}
                          ,{"poolFactor":0.03}]}
-                 ,{"and":[{"afterDate":0.03}
+                 ,{"and":[{"afterDate":"2023-06-01"}
                          ,{"poolFactor":0.03}]}
-                 ,{"and":[{"afterDate":0.03}
+                 ,{"and":[{"afterDate":"2023-06-01"}
                           ,{"or":
                              [{"poolFactor":0.03}
                              ,{"bondBalance":100}]}]}
