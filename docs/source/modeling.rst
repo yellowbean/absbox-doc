@@ -443,7 +443,7 @@ syntax:
 Bonds/Tranches
 ---------------
 
-syntax ``({bond/tranche name},{bond/tranche description})`` ,
+syntax ``({bond/tranche name},{bond/tranche description})``
 
 there are 2 types of `Interest`
 
@@ -461,19 +461,6 @@ Sequential
 ^^^^^^^^^^^
 A bond with will receive principal till it's balance reduce to 0.
 
-PAC
-^^^^^^^^^^^
-A bond with target amortize balance, it will stop recieving principal once its balance hit the targeted balance 
-
-Lockout
-^^^^^^^^^^^
-A bond with ``Lockout`` type is used to setup bond with only recieve principal after the `lockout date`
-
-Equity
-^^^^^^^^^^^
-
-``Equity`` type is used to model junior or equity slice of liabilites of the SPV
-
 .. code-block:: python
 
     ("A1",{"balance":3_650_000_000
@@ -483,14 +470,52 @@ Equity
            ,"startDate":"2020-01-03"
            ,"rateType":{"Floater":["SOFAR1Y",-0.0169,"Monthly"]}
            ,"bondType":{"Sequential":None} })
-      ,("A2",{"balance":5_444_000_000
-           ,"rate":0.03
-           ,"originBalance":5_444_000_000
-           ,"originRate":0.03
-           ,"startDate":"2020-01-03"
-           ,"rateType":{"Floater":["SOFAR1Y",-0.0091,"Monthly"]}
-           ,"bondType":{"Sequential":None} })
-      ,("R",{"balance":900_883_783.62
+ 
+PAC
+^^^^^^^^^^^
+A bond with target amortize balances, it will stop recieving principal once its balance hit the targeted balance 
+
+
+.. code-block:: python
+ 
+  ("A1",{"balance":1000
+       ,"rate":0.07
+       ,"originBalance":1000
+       ,"originRate":0.07
+       ,"startDate":"2020-01-03"
+       ,"rateType":{"Fixed":0.08}
+       ,"bondType":{"PAC":
+                     [["2021-07-20",800]
+                     ,["2021-08-20",710]
+                     ,["2021-09-20",630]
+                     ,["2021-10-20",0]
+                     ]}})
+
+Lockout
+^^^^^^^^^^^
+A bond with ``Lockout`` type is used to setup bond with only recieve principal after the `lockout date`
+
+This bond only get principal repayed starting at `2021-09-20`
+
+.. code-block:: python
+
+  ("A1",{"balance":1000
+        ,"rate":0.07
+        ,"originBalance":1000
+        ,"originRate":0.07
+        ,"startDate":"2020-01-03"
+        ,"rateType":{"Fixed":0.08}
+        ,"bondType":{"Lockout":"2021-09-20"}})
+ 
+Equity
+^^^^^^^^^^^
+
+``Equity`` type is used to model junior or equity slice of liabilites of the SPV
+
+          
+.. code-block:: python
+
+     ,("R",{"balance":900_883_783.62
            ,"rate":0.0
            ,"originBalance":2_123_875_534.53
            ,"originRate":0.00
@@ -705,7 +730,6 @@ Examples
            ,("newStatus","Accelerated"))]}
 
 
-
 Examples
 ============
 
@@ -717,6 +741,7 @@ Subordination
   
 .. literalinclude:: deal_sample/test01.py
    :language: python
+   :emphasize-lines: 30,33-36
 
 Multiple Waterfalls with triggers
 ------------------------------------
@@ -732,6 +757,7 @@ a acceleration/turbo event could be triggered and changing the payment sequence
   
 .. literalinclude:: deal_sample/test02.py
    :language: python
+   :emphasize-lines: 38-55
 
 
 Define Conditional Action
@@ -744,7 +770,16 @@ Only the conditions were met, actions following will be executed.
   
 .. literalinclude:: deal_sample/test03.py
    :language: python
+   :emphasize-lines: 42-44
 
+Split income by percentage 
+----------------------------
+
+The deal docs may split income from pools by pct% to another account 
+
+.. literalinclude:: deal_sample/test04.py
+   :language: python
+   :emphasize-lines: 14,32
 
 
 
