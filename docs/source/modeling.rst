@@ -186,25 +186,48 @@ Fee/Expenses
 
 syntax: ``({fee name} , {fee description} )``, fees fall into types:
 
-  * one-off
-      * with a balance and will be paid off once it paid down to zero
-  * recurrance fee
-      * a fix amount fee which occurs by defined ``Date Pattern``
-  * pecentage fee, a fee type which the due amount depends on a percentage of ``Formula``
-      * like a fee is base on 
-          * percentage of `pool balance`
-          * a percentage of pool collection `interest`
-          * a higher/lower amount of two `formula`
-          * a sum of `formula` 
-          * ...
-  * annualized fee, 
-      * similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
-          * either reference to pool balance  or bond balance , etc....
-  * custom fee flow,
-      * an user defined date expenses, the date and amount can be customized.
-      * like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
-  * count type fee,
-      * the fee due equals to a number multiply a unit fee. The number is a formula reference.
+one-off fee
+=========
+
+with a balance and will be paid off once it paid down to zero
+
+recurrance fee
+===================
+
+a fix amount fee which occurs by defined ``Date Pattern``
+
+
+percentage fee
+==================
+pecentage fee, a fee type which the due amount depends on a percentage of ``Formula``
+
+like a fee is base on 
+
+  * percentage of `pool balance`
+  * a percentage of pool collection `interest`
+  * a higher/lower amount of two `formula`
+  * a sum of `formula` 
+  * ...
+
+annualized fee
+===================
+
+similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
+either reference to pool balance  or bond balance , etc....
+
+
+custom fee flow
+==================
+
+an user defined date expenses, the date and amount can be customized.
+
+like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
+
+
+count type fee
+==================
+
+the fee due equals to a number multiply a unit fee. The number is a formula reference.
 
 
 .. code-block:: python
@@ -215,6 +238,7 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
    ,("rating_fee",{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
    ,("borrowerFee",{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
   )
+
 
 Pool
 ---------
@@ -657,14 +681,16 @@ ie：
 Trigger
 -----------
 
-* When to run trigger
+When to run trigger
+=====================
   
   Trigger can run at 4 point of time.
   
   * Start/End of each Pool Collection Day
   * Start/End of each Distribution Day
 
-* Conditon of a trigger
+Conditons of a trigger
+=======================
   
   trigger can be fired by comparing a `Formula` with :
   
@@ -673,7 +699,8 @@ Trigger
   * after a predefined date
   * AND/OR logic with other triggers
 
-* Effect of a trigger
+Effects/Consequence of a trigger
+=======================
   
   Trigger will update the `state` of a deal, like:
 
@@ -684,6 +711,8 @@ Trigger
   * accure some certain fee 
   * create a new trigger 
   * a list of above
+
+  Trigger can also accrue fees of a deal 
 
 Examples  
 
@@ -780,6 +809,15 @@ The deal docs may split income from pools by pct% to another account
 .. literalinclude:: deal_sample/test04.py
    :language: python
    :emphasize-lines: 14,32
+
+Fees by Bond Balance
+----------------------------
+
+
+.. literalinclude:: deal_sample/test05.py
+   :language: python
+   :emphasize-lines: 14,32
+
 
 
 
