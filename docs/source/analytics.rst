@@ -32,7 +32,7 @@ here is a list of available servers at `absbox.org <https://absbox.org>`_
 Setting Assumption
 --------------------
 
-Assumptions fall into three categories:
+Assumpitions are just a *LIST*,  Assumptions fall into three categories:
 
 Asset Performance 
 ^^^^^^^^^^^^^^^^^^^
@@ -43,6 +43,10 @@ Different asset class would need different combination of performance assumption
  * Default Rate 
  * Prepayment Rate 
  * Reocvery/Recovery Lag 
+
+* Lease 
+ * Rental increase curve 
+ * Rental gap in months 
 
 User are able to set a constant value 
 
@@ -76,16 +80,16 @@ Deal Assumption
    
    .. code-block:: python
    
-     {"CleanUp":[{"poolBalance":200}
-                 ,{"bondBalance":100}
-                 ,{"poolFactor":0.03}
-                 ,{"bondFactor":0.03}
-                 ,{"afterDate":"2023-06-01"}
-                 ,{"or":[{"afterDate":"2023-06-01"}
+     {"CleanUp":[{"poolBalance":200} # clean up when pool balance below 200
+                 ,{"bondBalance":100} # clean  up when bond balance below 100
+                 ,{"poolFactor":0.03} # clean up when pool factor below 0.03
+                 ,{"bondFactor":0.03} # clean up when bond factor below 0.03
+                 ,{"afterDate":"2023-06-01"} # clean up after date 2023-6-1
+                 ,{"or":[{"afterDate":"2023-06-01"} # clean up any of them met
                          ,{"poolFactor":0.03}]}
-                 ,{"and":[{"afterDate":"2023-06-01"}
+                 ,{"and":[{"afterDate":"2023-06-01"} # clean up all of them met
                          ,{"poolFactor":0.03}]}
-                 ,{"and":[{"afterDate":"2023-06-01"}
+                 ,{"and":[{"afterDate":"2023-06-01"} # nested !! 
                           ,{"or":
                              [{"poolFactor":0.03}
                              ,{"bondBalance":100}]}]}
@@ -95,16 +99,23 @@ Deal Assumption
    
    .. code-block:: python
    
+     # vectorized/curve based assumption
      {"Rate":["LIBOR1M":[["2022-01-01",0.05]
                         ,["2023-01-01",0.06]
                         ]]}
      
+     # constant assumption
      {"Rate":["LIBOR1M":0.05]}
    
 
-* Debug
+Debug
+^^^^^^^^^^
 
- * `{stopRun:"2020-01-01"}` -> stop cashflow projection at `2020-01-01`
+* Stop Run By Date
+
+   .. code-block:: python
+      # stop cashflow projection at `2020-01-01`
+      {stopRun:"2020-01-01"} 
 
 
 Running
