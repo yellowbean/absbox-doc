@@ -114,6 +114,7 @@ Debug
 * Stop Run By Date
 
    .. code-block:: python
+      
       # stop cashflow projection at `2020-01-01`
       {stopRun:"2020-01-01"} 
 
