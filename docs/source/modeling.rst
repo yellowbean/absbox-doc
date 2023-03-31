@@ -187,18 +187,18 @@ Fee/Expenses
 syntax: ``({fee name} , {fee description} )``, fees fall into types:
 
 one-off fee
-=========
+^^^^^^^^^^^^^^^^^^
 
 with a balance and will be paid off once it paid down to zero
 
 recurrance fee
-===================
+^^^^^^^^^^^^^^^^
 
 a fix amount fee which occurs by defined ``Date Pattern``
 
 
 percentage fee
-==================
+^^^^^^^^^^^^^^^^^^^
 pecentage fee, a fee type which the due amount depends on a percentage of ``Formula``
 
 like a fee is base on 
@@ -210,14 +210,14 @@ like a fee is base on
   * ...
 
 annualized fee
-===================
+^^^^^^^^^^^^^^^^
 
 similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
 either reference to pool balance  or bond balance , etc....
 
 
 custom fee flow
-==================
+^^^^^^^^^^^^^^^^^^^
 
 an user defined date expenses, the date and amount can be customized.
 
@@ -225,7 +225,7 @@ like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
 
 count type fee
-==================
+^^^^^^^^^^^^^^^^^^^
 
 the fee due equals to a number multiply a unit fee. The number is a formula reference.
 
@@ -682,7 +682,7 @@ Trigger
 -----------
 
 When to run trigger
-=====================
+^^^^^^^^^^^^^^^^^^^^^^
   
   Trigger can run at 4 point of time.
   
@@ -690,7 +690,7 @@ When to run trigger
   * Start/End of each Distribution Day
 
 Conditons of a trigger
-=======================
+^^^^^^^^^^^^^^^^^^^^^^^^^
   
   trigger can be fired by comparing a `Formula` with :
   
@@ -700,7 +700,7 @@ Conditons of a trigger
   * AND/OR logic with other triggers
 
 Effects/Consequence of a trigger
-=======================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   
   Trigger will update the `state` of a deal, like:
 
