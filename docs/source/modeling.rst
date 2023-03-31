@@ -60,14 +60,14 @@ DatePattern
 
 ``<DatePattern>`` is used to decrible a series of dates .
 
-* "MonthFirst"  -> Jun 1, May 1
-* "MonthEnd"  -> Month End ,like Jan 31, Feb 28/29 
-* "QuarterFirst" -> March 1 , Jun 1 , Sep 1 , Dec 1
-* "QuarterEnd"  -> March 31, Jun 30, Sep 30, Dec 31
-* "YearFirst" -> Jan 1
-* "YearEnd" -> Dec 31
-* ["MonthDayOfYear",M,D] -> A day of the year, like Feb 14 on every year 
-* ["DayOfMonth",M] -> A day of the month , like 15 on each month
+* ``MonthFirst``  -> Jun 1, May 1
+* ``MonthEnd``  -> Month End ,like Jan 31, Feb 28/29 
+* ``QuarterFirst`` -> March 1 , Jun 1 , Sep 1 , Dec 1
+* ``QuarterEnd``  -> March 31, Jun 30, Sep 30, Dec 31
+* ``YearFirst`` -> Jan 1
+* ``YearEnd`` -> Dec 31
+* ``["MonthDayOfYear",M,D]`` -> A day of the year, like Feb 14 on every year 
+* ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month
 
 Formula 
 ---------
@@ -77,32 +77,32 @@ Structured product is using ``formula`` to define the amount of account transfer
 ``absbox`` use the concept of ``formula`` in an extreamly composible way, a ``formula`` can be a variable reference to deal attributes.
 
 * Bond 
-    * bondBalance -> sum of all bond balance
-    * bondBalanceOf [String] -> sum of balance of specified bonds
-    * originalBondBalance -> bond balance at issuance
-    * bondFactor
+    * ``bondBalance`` -> sum of all bond balance
+    * ``bondBalanceOf [String]`` -> sum of balance of specified bonds
+    * ``originalBondBalance`` -> bond balance at issuance
+    * ``bondFactor``
 * Pool 
-    * poolBalance  -> current pool balance
-    * originalPoolBalance  -> pool original balance 
-    * poolFactor
+    * ``poolBalance``  -> current pool balance
+    * ``originalPoolBalance``  -> pool original balance 
+    * ``poolFactor``
 * Accounts
-    * accountBalance -> sum of all account balance
-    * accountBalance [String] -> sum of specified account balance
-    * reserveGap [String] -> sum of shortfall of reserve amount of specified accounts
+    * ``accountBalance`` -> sum of all account balance
+    * ``accountBalance [String]`` -> sum of specified account balance
+    * ``reserveGap [String]`` -> sum of shortfall of reserve amount of specified accounts
 * Due Amount 
-    * bondDueInt [String] -> sum of bond interest due
-    * feeDue [String] -> sum of fee due
+    * ``bondDueInt [String]`` -> sum of bond interest due
+    * ``feeDue [String]`` -> sum of fee due
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
 * Combination
-    * factor <Formula> <Number> -> multiply <Number> to a formula
-    * Max <Formula> <Formula> -> get the higher value
-    * Min <Formula> <Formula> -> get the lower value 
-    * sum [<Formula>] -> sum of formula value
-    * substract [<Formula>] -> using 1st of element to substract rest in the list
-    * constant <Number>  -> a constant value
-    * custom <Name of user define data>
+    * ``factor <Formula> <Number>`` -> multiply <Number> to a formula
+    * ``Max <Formula> <Formula>`` -> get the higher value
+    * ``Min <Formula> <Formula>`` -> get the lower value 
+    * ``sum [<Formula>]`` -> sum of formula value
+    * ``substract [<Formula>]`` -> using 1st of element to substract rest in the list
+    * ``constant <Number>``  -> a constant value
+    * ``custom <Name of user define data>``
 
 Condition
 ------------
@@ -113,17 +113,17 @@ condition is a `boolean` type test
 * or in the waterfall to run the distribution action only when the testing is passing;
 * or it can be used in trigger to describle whether it will be triggered or not.
   
-* [<formula>,">",val] -> true when <formula> greater than a value
-* [<formula>,"<",val] -> true when <formula> less than a value
-* [<formula>,">=",val] -> true when <formula> greater or equals to a value
-* [<formula>,"<=",val] -> true when <formula> less or equals than a value
-* [<formula>,"=",val] -> true when <formula> equals to a value
-* ["all",<condition>,<condition>] -> true if all of <condition> is true
-* ["any",<condition>,<condition>] -> true if any of <condition> is true
-* ["<",date] -> before certain date
-* [">",date] -> after certain date
-* ["<=",date] -> On or beore certain date
-* [">=",date] -> On or after certain Date
+* ``[<formula>,">",val]`` -> true when <formula> greater than a value
+* ``[<formula>,"<",val]`` -> true when <formula> less than a value
+* ``[<formula>,">=",val]`` -> true when <formula> greater or equals to a value
+* ``[<formula>,"<=",val]`` -> true when <formula> less or equals than a value
+* ``[<formula>,"=",val]`` -> true when <formula> equals to a value
+* ``["all",<condition>,<condition>]`` -> true if all of <condition> is true
+* ``["any",<condition>,<condition>]`` -> true if any of <condition> is true
+* ``["<",date]`` -> before certain date
+* ``[">",date]`` -> after certain date
+* ``["<=",date]`` -> On or beore certain date
+* ``[">=",date]`` -> On or after certain Date
 
 Components
 ============
@@ -686,8 +686,8 @@ When to run trigger
   
   Trigger can run at 4 point of time.
   
-  * Start/End of each Pool Collection Day
-  * Start/End of each Distribution Day
+  * Start/End of each Pool Collection Day -> ``BeforeCollect`` / ``AfterCollect``
+  * Start/End of each Distribution Day    -> ``BeforeDistribution`` / ``AfterDistribution``
 
 Conditons of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^
