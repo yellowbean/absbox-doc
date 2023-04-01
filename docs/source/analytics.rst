@@ -116,7 +116,7 @@ Debug
    .. code-block:: python
       
       # stop cashflow projection at `2020-01-01`
-      {stopRun:"2020-01-01"} 
+      {"stopRun":"2020-01-01"} 
 
 
 Running
@@ -273,6 +273,45 @@ User shall able to access the each scenario's response by just by `scenario name
    
    r["00"]
    r["stressed"]
+
+
+Inspecting Numbers
+------------------------
+
+Transperncy matters ! For the users who are not satisfied with cashflow numbers but also having curiosity of the intermediary numbers, like `bond balance`, `pool factor` .
+
+User can add following dict with key ``Inspect``  into `assumptions` list.
+The value of the dict is a list of tuple ``(<Date Pattern>,<Deal Status/Formula>)`` , then the run result will carry the ``<Formula>`` value at the dates of observation.
+
+.. code-block:: python
+   
+   r = localAPI.run(test03
+                  ,assumptions=[{"Inspect":[("MonthEnd",("poolBalance",))
+                                             ,("MonthFirst",("bondBalance",))]}]
+                  ,read=True)
+
+To view these data as map, with formula as key and a dataframe with time series as value. 
+
+.. code-block:: python
+   
+    # A map 
+    r['result']['inspect'] 
+
+    # a dataframe
+    r['result']['inspect']['<CurrentBondBalance>'] 
+
+But, the values are a dataframe with single column, how to view all the variables in a single dataframe ? Here is the answer :
+
+.. code-block:: python
+   
+   from absbox.local.util import unifyTs
+
+   unifyTs(r['result']['inspect'].values())
+
+
+.. image:: img/inspect_unified.png
+  :width: 400
+  :alt: inspect_unified
 
 
 IRR 
