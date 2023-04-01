@@ -278,7 +278,7 @@ User shall able to access the each scenario's response by just by `scenario name
 Inspecting Numbers
 ------------------------
 
-Transperncy matters ! For the users who are not satisfied with cashflow numbers but also having curiosity of the intermediary numbers, like `bond balance`, `pool factor` .
+Transparency matters ! For the users who are not satisfied with cashflow numbers but also having curiosity of the intermediary numbers, like `bond balance`, `pool factor` .
 
 User can add following dict with key ``Inspect``  into `assumptions` list.
 The value of the dict is a list of tuple ``(<Date Pattern>,<Deal Status/Formula>)`` , then the run result will carry the ``<Formula>`` value at the dates of observation.
