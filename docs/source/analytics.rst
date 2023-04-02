@@ -250,33 +250,14 @@ if passing `pricing` in the `run`, then response would have a key `pricing`
    r['pricing']
 
 
-Multi-Scenario
------------------
 
-if passing `assumptions` with a dict. Then the key will be treated as `secnario name`, the value shall be same as single scneario cases.
+Getting Results
+---------------
 
-.. code-block:: python
-
-   myAssumption = [{"CPR":0.0}
-                   ,{"CDR":0.00}]
-   
-   myAssumption2 = [{"CPR":0.01}
-                   ,{"CDR":0.1} ]
-   
-   r = localAPI.run(test01
-               ,assumptions={"00":myAssumption,"stressed":myAssumption2}
-               ,read=True)
-
-User shall able to access the each scenario's response by just by `scenario name`
-
-.. code-block:: python
-   
-   r["00"]
-   r["stressed"]
-
+``r['result']`` save the run result other than cashflow.
 
 Inspecting Numbers
-------------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Transparency matters ! For the users who are not satisfied with cashflow numbers but also having curiosity of the intermediary numbers, like `bond balance`, `pool factor` .
 
@@ -313,24 +294,8 @@ But, the values are a dataframe with single column, how to view all the variable
   :width: 400
   :alt: inspect_unified
 
-
-IRR 
-------------------
-
-powered by `pyxirr`, user have option to calculate the IRR of a bond.
-
-* 1st parameter should pass the dataframe of bond flow 
-* 2nd `init` represent `initial invesment` a tuple with first as date of invesment and second as monetary amount of investment
-
-
-.. code-block:: python
-
-   from absbox.local.util import irr
-   irr(r['bonds']['A1'],init=('2021-06-15',-70))
-
-
 Status During Run
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 it is not uncommon that `triggers` may changed deal status between `accelerated` `defaulted` `amorting` `revolving`.
 user can check the `status` chang log via :
@@ -346,6 +311,47 @@ or user can cross check by review the account logs by (if changing deal status w
    r["accounts"]["<account name>"].loc["<date before deal status change>"]
    r["accounts"]["<account name>"].loc["<date after deal status change>"]
 
+
+Multi-Scenario
+-----------------
+
+if passing `assumptions` with a dict. Then the key will be treated as `secnario name`, the value shall be same as single scneario cases.
+
+.. code-block:: python
+
+   myAssumption = [{"CPR":0.0}
+                   ,{"CDR":0.00}]
+   
+   myAssumption2 = [{"CPR":0.01}
+                   ,{"CDR":0.1} ]
+   
+   r = localAPI.run(test01
+               ,assumptions={"00":myAssumption,"stressed":myAssumption2}
+               ,read=True)
+
+User shall able to access the each scenario's response by just by `scenario name`
+
+.. code-block:: python
+   
+   r["00"]
+   r["stressed"]
+
+
+
+
+IRR 
+------------------
+
+powered by `pyxirr`, user have option to calculate the IRR of a bond.
+
+* 1st parameter should pass the dataframe of bond flow 
+* 2nd `init` represent `initial invesment` a tuple with first as date of invesment and second as monetary amount of investment
+
+
+.. code-block:: python
+
+   from absbox.local.util import irr
+   irr(r['bonds']['A1'],init=('2021-06-15',-70))
 
 
 
