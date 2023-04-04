@@ -60,14 +60,16 @@ DatePattern
 
 ``<DatePattern>`` is used to decrible a series of dates .
 
-* ``MonthFirst``  -> Jun 1, May 1
-* ``MonthEnd``  -> Month End ,like Jan 31, Feb 28/29 
-* ``QuarterFirst`` -> March 1 , Jun 1 , Sep 1 , Dec 1
-* ``QuarterEnd``  -> March 31, Jun 30, Sep 30, Dec 31
-* ``YearFirst`` -> Jan 1
-* ``YearEnd`` -> Dec 31
+* ``"MonthFirst"``  -> Jun 1, May 1
+* ``"MonthEnd"``  -> Month End ,like Jan 31, Feb 28/29 
+* ``"QuarterFirst"`` -> March 1 , Jun 1 , Sep 1 , Dec 1
+* ``"QuarterEnd"``  -> March 31, Jun 30, Sep 30, Dec 31
+* ``"YearFirst"`` -> Jan 1
+* ``"YearEnd"`` -> Dec 31
 * ``["MonthDayOfYear",M,D]`` -> A day of the year, like Feb 14 on every year 
 * ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month
+* ``["CustomDate","YYYYMMDD1","YYYYMMDD2"]`` -> a series of user defined dates
+* ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date patterns
 
 Formula 
 ---------
