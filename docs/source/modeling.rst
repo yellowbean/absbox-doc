@@ -58,18 +58,18 @@ During the modelling, there are 3 reusable building blocks: ``<DatePattern>``, `
 DatePattern
 -------------
 
-``<DatePattern>`` is used to decrible a series of dates .
+``<DatePattern>`` is used to describe a series of dates .
 
-* ``"MonthFirst"``  -> Jun 1, May 1
-* ``"MonthEnd"``  -> Month End ,like Jan 31, Feb 28/29 
-* ``"QuarterFirst"`` -> March 1 , Jun 1 , Sep 1 , Dec 1
-* ``"QuarterEnd"``  -> March 31, Jun 30, Sep 30, Dec 31
-* ``"YearFirst"`` -> Jan 1
-* ``"YearEnd"`` -> Dec 31
-* ``["MonthDayOfYear",M,D]`` -> A day of the year, like Feb 14 on every year 
-* ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month
+* ``"MonthFirst"``  -> Every Jun 1, May 1 during the projection
+* ``"MonthEnd"``  ->Every  Month End ,like Jan 31, Feb 28/29  during the projection
+* ``"QuarterFirst"`` -> Every March 1 , Jun 1 , Sep 1 , Dec 1 during the projection
+* ``"QuarterEnd"``  -> Every March 31, Jun 30, Sep 30, Dec 31 during the projection
+* ``"YearFirst"`` -> Every Jan 1 during the projection
+* ``"YearEnd"`` -> Every Dec 31 during the projection
+* ``["MonthDayOfYear",M,D]`` -> Every a day of the year , like Feb 14 on every year during the projection
+* ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month during the projectionh
 * ``["CustomDate","YYYYMMDD1","YYYYMMDD2"]`` -> a series of user defined dates
-* ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date patterns
+* ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection
 
 Formula 
 ---------
@@ -79,32 +79,39 @@ Structured product is using ``formula`` to define the amount of account transfer
 ``absbox`` use the concept of ``formula`` in an extreamly composible way, a ``formula`` can be a variable reference to deal attributes.
 
 * Bond 
-    * ``bondBalance`` -> sum of all bond balance
-    * ``bondBalanceOf [String]`` -> sum of balance of specified bonds
-    * ``originalBondBalance`` -> bond balance at issuance
-    * ``bondFactor``
+    * ``("bondBalance",)`` -> sum of all bond balance
+    * ``("bondBalance","A","B")`` -> sum of balance of bond A and bond B
+    * ``("originalBondBalance",)`` -> bond balance at issuance
+    * ``("bondFactor",)``  -> bond factor
+    * ``("bondDueInt","A","B")``  -> bond due interest for bond A and bond B
+    * ``("lastBondIntPaid","A")``  -> bond last paid interest
+    * ``("behindTargetBalance","A")``  -> difference of target balance with current balance for the bond A
+    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
 * Pool 
-    * ``poolBalance``  -> current pool balance
-    * ``originalPoolBalance``  -> pool original balance 
-    * ``poolFactor``
+    * ``("poolBalance",)``  -> current pool balance
+    * ``("originalPoolBalance",)``  -> pool original balance 
+    * ``("currentPoolDefaultedBalance",)``  -> pool defaulted balance 
+    * ``("cumPoolDefaultedBalance",)``  -> pool cumulative defaulted balance 
+    * ``("poolFactor",)`` -> pool factor
+    * ``("borrowerNumber",)`` -> number of borrower
 * Accounts
-    * ``accountBalance`` -> sum of all account balance
-    * ``accountBalance [String]`` -> sum of specified account balance
-    * ``reserveGap [String]`` -> sum of shortfall of reserve amount of specified accounts
-* Due Amount 
-    * ``bondDueInt [String]`` -> sum of bond interest due
-    * ``feeDue [String]`` -> sum of fee due
+    * ``("accountBalance",)`` -> sum of all account balance
+    * ``("accountBalance","A","B")`` -> sum of account balance for "A" and "B"
+    * ``("reserveGap","A","B")`` -> sum of shortfall of reserve amount of specified accounts
+* Expense
+    * ``("feeDue","F1","F2")`` -> sum of fee due for fee "F1","F2"
+    * ``("lastFeePaid","F1","F2")`` -> sum of fee last paid for fee "F1","F2"
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
 * Combination
-    * ``factor <Formula> <Number>`` -> multiply <Number> to a formula
-    * ``Max <Formula> <Formula>`` -> get the higher value
-    * ``Min <Formula> <Formula>`` -> get the lower value 
-    * ``sum [<Formula>]`` -> sum of formula value
-    * ``substract [<Formula>]`` -> using 1st of element to substract rest in the list
-    * ``constant <Number>``  -> a constant value
-    * ``custom <Name of user define data>``
+    * ``("factor", <Formula>,<Number>)`` -> multiply <Number> to a formula
+    * ``("Max", <Formula>, <Formula>)`` -> get the higher value
+    * ``("Min", <Formula>, <Formula>)`` -> get the lower value 
+    * ``("sum", [<Formula>])`` -> sum of formula value
+    * ``("substract", [<Formula>])`` -> using 1st of element to substract rest in the list
+    * ``("constant", <Number>)``  -> a constant value
+    * ``("custom", <Name of user define data>)`` -> use a custom data
 
 Condition
 ------------
