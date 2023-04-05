@@ -65,12 +65,12 @@ we can extract the corresponding fields from the loan tape.
    * - "LoanTerm"
      - originTerm
      -
-   * - "Monthly"
+   * -
      - freq
-     -
+     - hard code to "Monthly"
    * - "Amortization Type"
      - type
-     -
+     - hard code to "Fix"
    * - "First Payment Date"
      - originDate 
      - Need to push "First Payment Date" back by a month
@@ -122,9 +122,9 @@ Once we have the mapping table ready, the next step will be building a mapping f
   current_fields = set(['currentBalance', 'currentRate', 'remainTerm', 'status'])
   
   mortgages = [["Mortgage"
-            ,{k:v for k,v in x.items() if k in origin_fields}
-            ,{k:v for k,v in x.items() if k in current_fields}]
-            for x in mapped_df.to_dict(orient="records")]
+                ,{k:v for k,v in x.items() if k in origin_fields}
+                ,{k:v for k,v in x.items() if k in current_fields}]
+                   for x in mapped_df.to_dict(orient="records")]
 
 Happy running
 ^^^^^^^^^^^^^^^
@@ -171,6 +171,41 @@ Then, project the cashflow with:
 .. warning::
   if the `run()` call was slow, probably it is caused by network IO or CPU on the server, pls consider using a local docker image instead.
 
+Conclusion
+^^^^^^^^^^^^^^
+
+There are numerious format carrying loan level data, it is recommended to wrap the your own function to accomodate.
+
+in this case, we just need one funciton:
+
+.. code-block:: python
+
+  def read_freddie_mac(file_path:str):
+      loan_tape = pd.read_csv(file_path,sep="|",dtype={'First Payment Date':str})
+      d = loan_tape[['Mortgage Loan Amount','Current Investor Loan UPB','Amortization Type','Original Interest Rate','First Payment Date'
+            ,'Loan Term','Remaining Months to Maturity','Index','Current Interest Rate','Days Delinquent']]
+
+      mapped_df = pd.DataFrame()
+      mapped_df['originBalance'] = d['Mortgage Loan Amount']
+      mapped_df['originRate'] = [["fix",_/100] for _ in d['Original Interest Rate'].to_list() ]
+      mapped_df['originTerm'] = d['Loan Term']
+      mapped_df['freq'] = "Monthly"
+      mapped_df['type'] = "Level"
+      mapped_df['originDate'] = (pd.to_datetime(d['First Payment Date']) - pd.DateOffset(months=1)).map(lambda x: x.strftime("%Y-%m-%d"))
+      mapped_df['currentBalance'] = d['Current Investor Loan UPB']
+      mapped_df['currentRate'] = d['Current Interest Rate']/100
+      mapped_df['remainTerm'] = d['Remaining Months to Maturity']
+      mapped_df['status'] =  d['Days Delinquent'].map(lambda x: "Current" if x=='Current' else "Defaulted")
+
+      origin_fields = set(['originBalance', 'originRate', 'originTerm', 'freq', 'type', 'originDate'])
+      current_fields = set(['currentBalance', 'currentRate', 'remainTerm', 'status'])
+      
+      mortgages = [["Mortgage"
+                    ,{k:v for k,v in x.items() if k in origin_fields}
+                    ,{k:v for k,v in x.items() if k in current_fields}]
+                      for x in mapped_df.to_dict(orient="records")]
+
+      return mortgages
 
 
 How to structuring a deal<WIP>
