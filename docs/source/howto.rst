@@ -22,13 +22,16 @@ Loading data
 
 Freddie Mac disclose its loan level data in form of tabular data in text file.The hardway is using built-in funciton `open` to read each rows, the easy way will be load it via `pandas`.
 
+Sample file :download: `3132H3EE9 <files/U90133_3132H3EE9_COLLAT_CURRENT.txt>`
+
 .. code-block:: python
 
   import pandas as pd
-  
-  loan_tape = pd.read_csv("~/Downloads/U90133_3132H3EE9_COLLAT_CURRENT.txt",sep="|")
 
-here is couple fields we are interested in :
+  loan_tape = pd.read_csv("~/Downloads/U90133_3132H3EE9_COLLAT_CURRENT.txt",sep="|",dtype={'First Payment Date':str})
+
+
+Here is couple fields we are interested in :
 
 .. code-block:: python
  
@@ -40,15 +43,14 @@ here is couple fields we are interested in :
       ,"remainTerm":20
      ,"status":"current"}]
 
-the plain `mortgage` asset has two parts: (1) Origin information (2) Current Status, each of them were represent in form of a dict.
+The plain `mortgage` asset has two parts: (1) Origin information (2) Current Status, each of them were represented in form of a dict.
 
 we can extract the corresponding fields from the loan tape.
 
 .. warning::
     This mapping table only demostrate the how mapping works but not indicate the correct mapping!
 
-
-.. list-table:: Title
+.. list-table:: Map source fields
    :header-rows: 1
 
    * - source fields
@@ -90,8 +92,7 @@ Now we have the fields required, let's subset the dataframe with :
 .. code-block:: python
 
     d = loan_tape[['Mortgage Loan Amount','Current Investor Loan UPB','Amortization Type','Original Interest Rate','First Payment Date'
-                ,'Loan Term','Remaining Months to Maturity','Index', 'Origination Mortgage Loan Amount','Origination Interest Rate'
-                ,'Current Interest Rate','Origination Loan Term','Days Delinquent']]
+                ,'Loan Term','Remaining Months to Maturity','Index', ,'Current Interest Rate','Days Delinquent']]
 
 
 Mapping fields
@@ -107,11 +108,11 @@ Source data may not be consist with format required, we need preprocessing the d
   mapped_df['originTerm'] = d['Loan Term']
   mapped_df['freq'] = "Monthly" 
   mapped_df['type'] = "Level"
-  mapped_df['originDate'] = (pd.to_datetime(d['First Payment Date']) - pd.DateOffset(months=1))
+  mapped_df['originDate'] = (pd.to_datetime(d['First Payment Date']) - pd.DateOffset(months=1)).map(lambda x: x.strftime("%Y-%m-%d"))
   mapped_df['currentBalance'] = d['Current Investor Loan UPB']
   mapped_df['currentRate'] = d['Current Interest Rate']/100
   mapped_df['remainTerm'] = d['Remaining Months to Maturity']
-  mapped_df['status'] =  d['Days Delinquent'].map(lambda x: "Current" if x=='Current' else ["Defautled",None])
+  mapped_df['status'] =  d['Days Delinquent'].map(lambda x: "Current" if x=='Current' else "Defaulted")
 
 Once we have the mapping table ready, the next step will be building a mapping function to convert loan tape data into `absbox` compliant style.
 
@@ -123,7 +124,7 @@ Once we have the mapping table ready, the next step will be building a mapping f
   loans = [["Mortgage"
             ,{k:v for k,v in x.items() if k in origin_fields}
             ,{k:v for k,v in x.items() if k in current_fields}]
-            for x in  mapped_df.to_dict(orient="records")]
+            for x in mapped_df.to_dict(orient="records")]
 
 Happy running
 ^^^^^^^^^^^^^^^
@@ -166,6 +167,7 @@ Then, project the cashflow with:
 
   r['pool']['flow'] # Now you shall able to view the loan level cashflow ! 
 
+if the `run()` call was slow, probably it is caused by network IO or CPU on the server, pls consider using a local docker image instead.
 
 How to structuring a deal<WIP>
 -------------------------------------------
