@@ -6,10 +6,14 @@ Welcome to  AbsBox Documentation!
 
 .. image:: https://img.shields.io/pypi/dm/absbox
 
-**AbsBox** is a python library pertains to structured finance analytics.
+**AbsBox** is a python based library pertains to structured finance analytics.
 
 * capable of modeling deal via a natureal & structural language way.
-    - designed to perform investment analytics or structuring ( pool selection/waterfall design/bond pricing)
+    - designed to perform investment analytics 
+      - setting pool level assumptions: default, prepayment
+      - setting deal level assumptions: trigger, call
+      - view the projected pool and bond cashflow , pricing the cashflow to get IRR / WAL / Duration and PV
+    - or structuring ( pool selection/waterfall design/bond pricing)
     - using ``RESTful`` service, easy to integration (Docker is ready)
 
 .. note::
@@ -29,6 +33,7 @@ Content
    installation
    modeling
    analytics
+   howto
    support
 
 
