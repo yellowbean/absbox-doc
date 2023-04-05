@@ -132,6 +132,7 @@ Happy running
 Once we have built the loan level data `loans` , we can just plug it into the _dummy_ deal:
 
 .. code-block:: python
+
   ### <<Dummy Deal>>
   loan_level_deal = Generic(
       "loan_level_deal"
