@@ -22,7 +22,7 @@ Loading data
 
 Freddie Mac disclose its loan level data in form of tabular data in text file.The hardway is using built-in funciton `open` to read each rows, the easy way will be load it via `pandas`.
 
-Sample file :download: `3132H3EE9 <files/U90133_3132H3EE9_COLLAT_CURRENT.txt>`
+Sample file :download:`3132H3EE9 <files/U90133_3132H3EE9_COLLAT_CURRENT.txt>`
 
 .. code-block:: python
 
@@ -167,7 +167,10 @@ Then, project the cashflow with:
 
   r['pool']['flow'] # Now you shall able to view the loan level cashflow ! 
 
-if the `run()` call was slow, probably it is caused by network IO or CPU on the server, pls consider using a local docker image instead.
+.. warning::
+  if the `run()` call was slow, probably it is caused by network IO or CPU on the server, pls consider using a local docker image instead.
+
+
 
 How to structuring a deal<WIP>
 -------------------------------------------
