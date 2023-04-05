@@ -92,7 +92,7 @@ Now we have the fields required, let's subset the dataframe with :
 .. code-block:: python
 
     d = loan_tape[['Mortgage Loan Amount','Current Investor Loan UPB','Amortization Type','Original Interest Rate','First Payment Date'
-                ,'Loan Term','Remaining Months to Maturity','Index', ,'Current Interest Rate','Days Delinquent']]
+                ,'Loan Term','Remaining Months to Maturity','Index','Current Interest Rate','Days Delinquent']]
 
 
 Mapping fields
@@ -121,7 +121,7 @@ Once we have the mapping table ready, the next step will be building a mapping f
   origin_fields = set(['originBalance', 'originRate', 'originTerm', 'freq', 'type', 'originDate'])
   current_fields = set(['currentBalance', 'currentRate', 'remainTerm', 'status'])
   
-  loans = [["Mortgage"
+  mortgages = [["Mortgage"
             ,{k:v for k,v in x.items() if k in origin_fields}
             ,{k:v for k,v in x.items() if k in current_fields}]
             for x in mapped_df.to_dict(orient="records")]
