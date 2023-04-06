@@ -224,7 +224,7 @@ Strucuring a deal may looks intimidating, while the process is simple:
 Build components
 ^^^^^^^^^^^^^^^^^^
 
-Assume we have already a base line model called :ref:`test01 <exmaple-01>` , now we want to see how differnt issuance size and issuance rate of the bonds would affect the pricing/bond cashflow.
+Assume we have already a base line model called :ref:`<exmaple-01>` , now we want to see how differnt issuance size and issuance rate of the bonds would affect the pricing/bond cashflow.
 (rationale : the smaller issuance size would require lower interest rate as short WAL)
 
 .. code-block:: python
