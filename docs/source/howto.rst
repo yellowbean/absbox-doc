@@ -208,20 +208,18 @@ in this case, we just need one funciton:
       return mortgages
 
 
-How to structuring a deal<WIP>
+<WIP> How to structuring a deal
 -------------------------------------------
 
 Strucuring a deal may looks intimidating, while the process is simple: 
 
 1. Given a base line deal, user run it and keep the result of interest:
-   A. Maybe bond cashflow 
+   
+   A. Maybe bond cashflow
    B. Maybe bond pricing result
    C. Maybe trigger event 
 
 2. User create a bunch of new components and swap them into the deal, run the deal again and compare the new result of interest with ones generated from baseline model.
-
-
-
 
 
 Build a base model
@@ -229,16 +227,19 @@ Build a base model
 
 It is recommended to build a base model to be serve as a baseline for furthur analysis.
 
-Tweaking by running
-^^^^^^^^^^^^^^^^^^^^
+Setup Mutiple Structuring Plan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Swap and Run
+^^^^^^^^^^^^^^^^^^^^^^^
+
 
 User can either setup deal model by tweaking one component or mutiple components.
 Once these new components were setup, user can `replace` these new components to the deals ,resulting multiple instance of deals.
 Run these deals with engine and compare the resuls. The difference shows how variuos captial structure or trigger /waterfall component would impact on the result of interest.
 
 
-
-
-How to stress pool by stratification <WIP>
+<WIP> How to stress pool by stratification 
 -------------------------------------------
 TODO
