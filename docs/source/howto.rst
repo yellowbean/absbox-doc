@@ -208,38 +208,100 @@ in this case, we just need one funciton:
       return mortgages
 
 
-<WIP> How to structuring a deal
+How to structuring a deal
 -------------------------------------------
 
-Strucuring a deal may looks intimidating, while the process is simple: 
+Structuring
+  `Structuring` may have different meanings for different people, in this context, `structuring` means using different deal components to see what is most desired reuslt (like bond price, WAL ,duration, credit event ) for issuance purpose
+  `Modelling` / `Reverse Engineering` means using data(bond,trigger,repline pool,waterfall) from offering memorandum to build a deal, the goal is to get best possible bond cashflow/pool cashflow for trading purpose
 
-1. Given a base line deal, user run it and keep the result of interest:
-   
-   A. Maybe bond cashflow
-   B. Maybe bond pricing result
-   C. Maybe trigger event 
+Strucuring a deal may looks intimidating, while the process is simple:
 
-2. User create a bunch of new components and swap them into the deal, run the deal again and compare the new result of interest with ones generated from baseline model.
+1. Given a base deal, create a bunch of new components 
+2. Swap them into the deal, build the multiple deals
+3. Compare the new result of interest,back to Step 2 if result is not desired.
 
+Build components
+^^^^^^^^^^^^^^^^^^
 
-Build a base model
-^^^^^^^^^^^^^^^^^^^
+Assume we have already a base line model called `test01`, now we want to see how differnt issuance size and issuance rate of the bonds would affect the pricing/bond cashflow.
+(rationale : the smaller issuance size would require lower interest rate as short WAL)
 
-It is recommended to build a base model to be serve as a baseline for furthur analysis.
+.. code-block:: python
 
-Setup Mutiple Structuring Plan
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   # if senior balance = 1100, then rate is 7%
+   # if senior balance = 1500, then rate is 8%
+   issuance_plan = [ (1100,0.07),(1500,0.08) ]
+   total_issuance_bal = 2000
 
+   bond_plan = [ {"bonds":(("A1",{"balance":senior_bal
+                             ,"rate":senior_r
+                             ,"originBalance":senior_bal
+                             ,"originRate":0.07
+                             ,"startDate":"2020-01-03"
+                             ,"rateType":{"Fixed":0.08}
+                             ,"bondType":{"Sequential":None}})
+                      ,("B",{"balance":(total_issuance_bal - senior_bal)
+                             ,"rate":0.0
+                             ,"originBalance":(total_issuance_bal - senior_bal)
+                             ,"originRate":0.07
+                             ,"startDate":"2020-01-03"
+                             ,"rateType":{"Fixed":0.00}
+                             ,"bondType":{"Equity":None}
+                             }))}
+        for senior_bal,senior_r in issuance_plan ]
 
-Swap and Run
+Now we have ``bond_plan`` which has two bonds components, represents two different liability sizing structure.
+
+Build multiple deals
 ^^^^^^^^^^^^^^^^^^^^^^^
 
+1. Now we need to build a dict with named key.
+2. Call ``mkDealsBy`` ,which takes a base deal, and a dict which will be swaped into the base deal. It will return a map with same key of `bond_plan`, with new deals as value.
+3. User can inspect ``differentDeals`` the reuslt via key.
 
-User can either setup deal model by tweaking one component or mutiple components.
-Once these new components were setup, user can `replace` these new components to the deals ,resulting multiple instance of deals.
-Run these deals with engine and compare the resuls. The difference shows how variuos captial structure or trigger /waterfall component would impact on the result of interest.
+.. code-block:: python
+
+  bond_plan_with_name = dict(zip(["SmallSenior","HighSenior"],bond_plan))
+
+  from absbox.local.util import mkDealsBy
+
+  differentDeals = mkDealsBy(test01,bond_plan_with_name)
+  
+  differentDeals['HighSenior']
 
 
-<WIP> How to stress pool by stratification 
--------------------------------------------
-TODO
+Set Assumption & Get Result 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To run mulitple deal with same assumptions ,use ``runStructs()``
+
+.. code-block:: python
+
+  from absbox import API
+  localAPI = API("https://absbox.org/api/latest")
+
+  r = localAPI.runStructs(differentDeals
+                          ,read=True
+                          ,pricing= {"PVDate":"2021-08-22"
+                                    ,"PVCurve":[["2021-01-01",0.025]
+                                              ,["2024-08-01",0.025]]}
+                          ,assumptions=[{"CPR":[0.02,0.02,0.03]}
+                                      ,{"CDR":[0.01,0.015,0.021]}
+                                      ,{"Recovery":(0.7,18)}]
+                          )
+
+Now the ``r`` is a map with key of "SmallSenior" and "HighSenior", value as cashflow of bond/pool/account/fee and a pricing.
+
+.. image:: img/multi-pricing.png
+  :width: 500
+  :alt: pricing result 
+
+
+.. code-block:: python
+
+  #get A1 cashflow of each structure
+  r['HighSenior']['bonds']['A1']
+  r['SmallSenior']['bonds']['A1']
+
+Whooray !

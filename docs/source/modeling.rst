@@ -377,7 +377,8 @@ There are two types of `Account`:
   * `Bank Account` -> which used to collect money from pool and pay out to fees/bonds
   * `Reserve Account` -> with one addtional attribute to `Bank Account` , specifies target reserve amount of the account
 
-Format ``({account name},{account description})``, i.e
+syntax   ``({account name},{account description})``, i.e
+
 
 * Bank Account
 
