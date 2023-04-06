@@ -773,7 +773,6 @@ Examples
 ============
 
 .. _exmaple-01:
-
 Subordination
 ---------------
 
