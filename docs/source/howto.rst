@@ -252,6 +252,9 @@ Assume we have already a base line model called :ref:`subordination exmaple <exm
         for senior_bal,senior_r in issuance_plan ]
 
 Now we have ``bond_plan`` which has two bonds components, represents two different liability sizing structure.
+(Same method applies to swapping different ``pool`` as well, user can swap different pool plans to structuring deals)
+
+
 
 Build multiple deals
 ^^^^^^^^^^^^^^^^^^^^^^^
