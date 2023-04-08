@@ -644,15 +644,24 @@ Call
       
 Liquidtiy Facility 
 ^^^^^^^^^^^^^^^^^^^
+
+Liquidity Facility 
+  it behaves like a 3rd party entity which support the cashflow distirbution in case of shortgage. It can depoit cash to account via ``liqSupport``, with optinal a ``limit``.
     
   * Liquidity Support -> deposit cash to account from a liquidity provider, subject to its available balance.
   
-    * format ``["liqSupport", <liqProvider>,<Account>,<Limit>]``
     * format ``["liqSupport", <liqProvider>,<Account>]``
   
-  * Liquidity Repay & Compensation -> pay back to liquidity provider till its balance is 0 or regardless the balance.
+  * Or, only deposit to account with shortage amount described by ``<Limit>`` ,which can be a ``formula``
+
+    * format ``["liqSupport", <liqProvider>,<Account>,<Limit>]``
+
+  * Liquidity Repay & Compensation -> pay back to liquidity provider till its balance is 0
 
     * format ``["liqRepay", <Account>, <liqProvider>]``
+  
+  * Or, pay all the residual cash back to the provider 
+  
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
   
 Conditional Action
@@ -822,20 +831,28 @@ The deal docs may split income from pools by pct% to another account
    :language: python
    :emphasize-lines: 14,32
 
-Fees by Bond Balance
-----------------------------
+Liquidation Provider /Insurance / Ganrantee
+----------------------------------------------
 
+Liquidation provider will deposit the gap amount of interest due against the account available balance.
+And it will start to be repaid if both A1 and B tranche were paid off
+
+Fixed amount with interest accured.
 
 .. literalinclude:: deal_sample/test05.py
    :language: python
-   :emphasize-lines: 14,32
+   :emphasize-lines: 34-38,44-45,52-54
 
+Using a formula to cap the support amount.
 
+.. literalinclude:: deal_sample/test06.py
+   :language: python
+   :emphasize-lines: 33-37,43-44,51-53
 
 
 
 Save a deal file
-===============
+===================
 
 Binary
 -------------
@@ -862,6 +879,7 @@ Load
   ...
   from absbox.local.generic import Generic
   Generic.load("path/to/file")
+
 
 JSON
 ----------
