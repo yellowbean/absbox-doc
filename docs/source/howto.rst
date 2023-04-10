@@ -352,7 +352,4 @@ Run with candy function
   :width: 500
   :alt: yield_table
 
-
-
 You have it !
-^^^^^^^^^^^^^^
