@@ -108,6 +108,26 @@ Deal Assumption
      {"Rate":["LIBOR1M":0.05]}
    
 
+Pricing Assumption
+^^^^^^^^^^^^^^^^^^^^^
+
+User can provide a pricing curve and a pricing data ,which all future bond cashflow will be discounted at that date with the curve provided.
+
+
+   .. code-block:: python
+      :emphasize-lines: 6-8
+
+      localAPI.run(test01,
+           assumptions=[{"CPR":0.01}
+                       ,{"CDR":0.01}
+                       ,{"Recovery":(0.7,18)}],
+           pricing={"PVDate":"2021-08-22"
+                    ,"PVCurve":[["2021-01-01",0.025]
+                               ,["2024-08-01",0.025]]},
+           read=True)   
+
+
+
 Debug
 ^^^^^^^^^^
 

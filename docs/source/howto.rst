@@ -308,3 +308,51 @@ Now the ``r`` is a map with key of "SmallSenior" and "HighSenior", value as cash
   r['SmallSenior']['bonds']['A1']
 
 Whooray !
+
+
+How to run a yield table
+----------------------------
+
+Prerequisite
+^^^^^^^^^^^^^
+
+* need a deal modeled
+* pool performance assumption in a dict
+* pricing assumption 
+
+.. code-block:: python
+   
+  # pool performance  
+  pool_assumps = {
+       "CPR15":[{"CPR":0.15}]
+      ,"CPR20":[{"CPR":0.20}]
+      ,"CPR25":[{"CPR":0.25}]
+  }
+  # pricing curves and PV date
+  pricing_assumps = {"PVDate":"2021-08-22"
+                    ,"PVCurve":[["2021-01-01",0.025]
+                               ,["2024-08-01",0.025]]}
+  
+
+Run with candy function
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. code-block:: python
+
+  # impor the candy function
+  from absbox.analytics import run_yield_table
+
+  # test01 is a deal object
+  
+  run_yield_table(localAPI, test01, "A1", pool_assumps, pricing_assumps )
+
+
+.. image:: img/yield_table.png
+  :width: 500
+  :alt: yield_table
+
+
+
+You have it !
+^^^^^^^^^^^^^^
