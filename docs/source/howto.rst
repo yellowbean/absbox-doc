@@ -341,10 +341,13 @@ Run with candy function
 .. code-block:: python
 
   # impor the candy function
-  from absbox.analytics import run_yield_table
+  from absbox.local.analytics import run_yield_table
+
+  from absbox import API
+  localAPI = API("https://absbox.org/api/latest")
+
 
   # test01 is a deal object
-  
   run_yield_table(localAPI, test01, "A1", pool_assumps, pricing_assumps )
 
 
