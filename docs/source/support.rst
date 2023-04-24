@@ -21,7 +21,7 @@ API Integration
     - ``docker run -p 5000:8081 yellowbean/hastructure``
     - the server runs at port ``8081``
 
-.. image:: img/intergration.png
+.. image:: img/Intergration.png
   :width: 600
   :alt: intergration-landscape
 
