@@ -4,7 +4,7 @@ Modelling
 .. autosummary::
    :toctree: generated
 
-Deal modeling is a process to build a deal with descriptive data, with components :
+Deal modeling is a process to build a deal with descriptive data, with components follows:
 
 * Asset info -> pool asset attributes, loan by loan or repline level data or projected cashflow as input
 * Bond info -> bonds with different types as well as residule tranche
@@ -40,19 +40,22 @@ Structure of a `Generic` deal
         ,<triggers>
     )
 
+
+
+
 .. _Generic ABS:
 
 Generic
 ===========
 
-`Generic` is a class that represent `SPV` which contains the dates/liabilities/assets/waterfall/trigger information.
+`Generic` is a class that represent `SPV` which contains the dates/liabilities/assets/waterfall/trigger/hedge information.
 
 .. code-block:: python
     
     from absbox.local.generic import Generic
 
 
-During the modelling, there are 3 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, all of them are being used in different components.
+There are 3 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, all of them are being used in different components.
 
 
 DatePattern
@@ -112,6 +115,18 @@ Or `formula` can be an arithmetic calculation on itselfies.
     * ``("substract", [<Formula>])`` -> using 1st of element to substract rest in the list
     * ``("constant", <Number>)``  -> a constant value
     * ``("custom", <Name of user define data>)`` -> use a custom data
+
+`formula` can be used to refer to  Integer/Bool/Ratio type data as well
+
+* Integer 
+  * ``("borrowerNumber",)`` -> number of borrower
+* Ratio
+  * ``("bondFactor",)`` -> factor of bond
+  * ``("poolFactor",)`` -> factor of pool
+  * ``("cumulativePoolDefaultRate",)`` -> cumulative default rate of pool
+* Bool 
+  * trigger status -> to be implement
+
 
 Condition
 ------------
