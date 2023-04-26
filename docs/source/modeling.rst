@@ -55,7 +55,7 @@ Generic
     from absbox.local.generic import Generic
 
 
-There are 3 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, all of them are being used in different components.
+There are 4 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, ``<Curve>``, all of them are being used in different components.
 
 
 DatePattern
@@ -148,6 +148,18 @@ condition is a `boolean` type test
 * ``[">",date]`` -> after certain date
 * ``["<=",date]`` -> On or beore certain date
 * ``[">=",date]`` -> On or after certain Date
+
+Curve
+----------
+``Curve`` was an abstract type of a series time-depend data points, which are being used in couple components:
+
+* Bond Schedule Amortization balance
+* Interest Rate assumpition 
+* An curve for tartget reserve balance for account
+* Threshold curve for trigger , like cumulative default rate
+* A curve in custom data component.
+
+
 
 Components
 ============
