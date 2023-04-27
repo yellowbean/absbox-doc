@@ -456,7 +456,7 @@ There is one extra attribute to set : `type`
       ("ReserveAccountA",{"balance":0
                          ,"type":{"fixReserve":1000}})
 
-  * Formula： the target reserve amount is derived from a formula, like 2% of pool balance
+  * Formula： the target reserve amount is derived from a `Formula`_ , like 2% of pool balance
   
     .. code-block:: python
 
@@ -465,7 +465,7 @@ There is one extra attribute to set : `type`
 
   * Nested Formula, the target reserve amount is base on higher or lower of two formula 
 
-  * Conditional amount, the target reserve amount depends on ``condition``:
+  * Conditional amount starts with ``"When"``, the target reserve amount depends on `Condition`_:
     
     * certain <formula> value is above or below certain value
     * satisfy all of ``condition`` s 
@@ -674,7 +674,7 @@ Bond
     * format ``["payResidual", {Account}, <Bond>, <Limit> ]``
   
 Account
-^^^^^^^
+^^^^^^^^^
 
   * Transfer -> transfer all the funds to the other account 
    
@@ -722,12 +722,12 @@ Liquidity Facility
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
   
 Conditional Action
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 format : ``[<conditon>,<Action1>,<Action2>....]``
 
 
-waterfall action can be setup only triggered if certain conditon is met.
+waterfall action can be setup only triggered if certain `Condtion`_ is met.
 
 
 `Waterfall`: there are couple waterfalls in a deal 
@@ -758,10 +758,11 @@ Trigger
 -----------
 
 There are 3 components in Triggers:
-* <Condition> -> it will fire the trigger effects, when <conditions> are met
-* <Effects> -> what would happen if the trigger is fired
-* <Status> -> it is triggered or not 
-* <Curable> -> whether the trigger is curable
+
+  * <Condition> -> it will fire the trigger effects, when <conditions> are met
+  * <Effects> -> what would happen if the trigger is fired
+  * <Status> -> it is triggered or not 
+  * <Curable> -> whether the trigger is curable
 
 When to run trigger
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -790,7 +791,6 @@ Effects/Consequence of a trigger
   * create a new trigger 
   * a list of above
 
-  Trigger can also accrue fees of a deal 
 
 Examples  
 
