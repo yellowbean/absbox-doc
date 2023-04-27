@@ -136,18 +136,48 @@ condition is a `boolean` type test
 * it can be set up in reserve account to define different target reserve amount;
 * or in the waterfall to run the distribution action only when the testing is passing;
 * or it can be used in trigger to describle whether it will be triggered or not.
-  
+
+There are couple type of ``Condition`` to perform :
+
+Compare with a number 
+^^^^^^^^^^^^^^^^^^^^^^^
+
 * ``[<formula>,">",val]`` -> true when <formula> greater than a value
 * ``[<formula>,"<",val]`` -> true when <formula> less than a value
 * ``[<formula>,">=",val]`` -> true when <formula> greater or equals to a value
 * ``[<formula>,"<=",val]`` -> true when <formula> less or equals than a value
 * ``[<formula>,"=",val]`` -> true when <formula> equals to a value
-* ``["all",<condition>,<condition>]`` -> true if all of <condition> is true
-* ``["any",<condition>,<condition>]`` -> true if any of <condition> is true
+
+Compare with a curve
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* ``[<formula>,">",curve]`` -> true when <formula> greater than a curve
+* ``[<formula>,"<",curve]`` -> true when <formula> less than a curve
+* ``[<formula>,">=",curve]`` -> true when <formula> greater or equals to a curve
+* ``[<formula>,"<=",curve]`` -> true when <formula> less or equals than a curve
+* ``[<formula>,"=",curve]`` -> true when <formula> equals to a curve
+
+Date Based Condition
+^^^^^^^^^^^^^^^^^^^^
 * ``["<",date]`` -> before certain date
 * ``[">",date]`` -> after certain date
 * ``["<=",date]`` -> On or beore certain date
 * ``[">=",date]`` -> On or after certain Date
+
+Deal Status 
+^^^^^^^^^^^^^^^^^^^^
+* ``["status", "Amortizing"]`` -> true if current status is `Amortizing`
+* ``["status", "Revolving"]`` -> true if current status is `Revolving`
+* ``["status", "Accelerated"]`` -> true if current status is `Accelerated`
+* ``["status", "Defaulted"]`` -> true if current status is `Defaulted`
+* ``["status", "PreClosing"]`` -> true if current status is `PreClosing`
+* ``["status", "Ended"]`` -> true if current status is `Ended`
+
+
+Nested Condition
+^^^^^^^^^^^^^^^^^^^^
+* ``["all",<condition>,<condition>]`` -> true if all of <condition> is true
+* ``["any",<condition>,<condition>]`` -> true if any of <condition> is true
 
 Components
 ============
@@ -715,6 +745,12 @@ ie：
 Trigger
 -----------
 
+There are 3 components in Triggers:
+* <Condition> -> it will fire the trigger effects, when <conditions> are met
+* <Effects> -> what would happen if the trigger is fired
+* <Status> -> it is triggered or not 
+* <Curable> -> whether the trigger is curable
+
 When to run trigger
 ^^^^^^^^^^^^^^^^^^^^^^
   
@@ -725,13 +761,9 @@ When to run trigger
 
 Conditons of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-  
-  trigger can be fired by comparing a `Formula` with :
-  
-  * greater/lower than a threshold/ value 
-  * greater/lower than a threshold curve/ values associated with dates
-  * after a predefined date
-  * AND/OR logic with other triggers
+
+Magically, it just a `Condition`_ from the very begining ! We just reuse that component.
+
 
 Effects/Consequence of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -755,16 +787,22 @@ Examples
     {
       "BeforeCollect":[]
       ,"AfterCollect":[
-        ([("cumPoolDefaultedRate",),">",0.05]
-          ,("newStatus","Defaulted"))
+        {"condition":[("cumPoolDefaultedRate",),">",0.05]
+        ,"effects":("newStatus","Defaulted")
+        ,"status":False
+        ,"curable":False}
       ]
       ,"BeforeDistribution":[
-        ([">=","2025-01-01"]
-          ,("newStatus","Defaulted"))
+        {"condition":[">=","2025-01-01"]
+        ,"effects":("newStatus","Defaulted")
+        ,"status":False
+        ,"curable":False}
       ]
       ,"AfterDistribution":[
-        ([("bondFactor",),"<=",0.1]
-         ,("newStatus","Accelerated"))
+        {"condition":[("bondFactor",),"<=",0.1]
+        ,"effects":("newStatus","Accelerated")
+        ,"status":False
+        ,"curable":False}
       ]
       }
     }
@@ -772,25 +810,33 @@ Examples
     #a list of triggers effects
     {
       "AfterCollect":[
-        ([("cumPoolDefaultedRate",),">",0.05]
-          ,("Effects"
-            ,("newStatus","Defaulted")
-            ,("accrueFees","feeA","feeB")))
+        {"condition":[("cumPoolDefaultedRate",),">",0.05]
+        ,"effects":("Effects"
+                    ,("newStatus","Defaulted")
+                    ,("accrueFees","feeA","feeB"))
+        ,"status":False
+        ,"curable":False}
       ]
     }
 
     # ALL and ANY logic of triggers ( and they can nested toghter ! )
     ,{"AfterCollect":[
-         (["any"
-           ,[("cumPoolDefaultedRate",),">",0.05]
-           ,[">","2021-09-15"]]
-           ,("newStatus","Accelerated"))]}
+        {"condition":["any"
+                       ,[("cumPoolDefaultedRate",),">",0.05]
+                       ,[">","2021-09-15"]]
+        ,"effects":("newStatus","Accelerated")
+        ,"status":False
+        ,"curable":False}
+        ]}
 
     ,{"AfterCollect":[
-         (["all"
-           ,[("cumPoolDefaultedRate",),">",0.05]
-           ,[">","2021-09-15"]]
-           ,("newStatus","Accelerated"))]}
+        {"condition":["all"
+                      ,[("cumPoolDefaultedRate",),">",0.05]
+                      ,[">","2021-09-15"]]
+        ,"effects":("newStatus","Accelerated")
+        ,"status":False
+        ,"curable":False}
+        ]}
 
 
 Examples

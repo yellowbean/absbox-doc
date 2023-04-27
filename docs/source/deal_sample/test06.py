@@ -40,14 +40,13 @@ test01 = Generic(
          ,["payPrin","acc02",["B"]]
          ,[[("bondBalance","A1","B"),"=",0]
            ,["payInt","acc02",["A1","B"]]
-           ,["liqRepay","acc01","insuranceProvider"]
-           ,["liqRepay","acc02","insuranceProvider"]]
+           ,["liqRepay","bal","acc01","insuranceProvider"]
+           ,["liqRepay","bal","acc02","insuranceProvider"]]
      ]}
     ,[["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc02"]
       ,["CollectedPrepayment","acc02"]
       ,["CollectedRecoveries","acc02"]]
-    ,None
     ,{"insuranceProvider":
          {"lineOfCredit":100,"start":"2021-06-15"
           ,"type":{"Reset":"MonthEnd","Formula":("bondBalance",),"Pct":0.0015}}

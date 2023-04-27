@@ -16,6 +16,7 @@ API Integration
 - `absbox` can be used as a Python library embeded in other Python based application
 - or building webservice layer with `absbox` to intergate with other system
 - or using the `RESTful service <https://github.com/yellowbean/Hastructure>`_  directly with anyother language.
+    - ``Swagger.json`` file is ready for integration.
 - Docker 
     - ``docker pull yellowbean/hastructure:latest``
     - ``docker run -p 5000:8081 yellowbean/hastructure``
