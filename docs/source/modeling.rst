@@ -328,7 +328,6 @@ Mortgage
 
 .. code-block:: python
 
-
   ["Mortgage"
     ,{"originBalance": 12000.0
       ,"originRate": ["Fixed",0.045]
@@ -340,6 +339,29 @@ Mortgage
       ,"currentRate": 0.075
       ,"remainTerm": 80
       ,"status": "Current"}]
+
+ARM 
+^^^^^^^^
+
+`ARM` is a type of `Mortgage` that has one more field `arm` to describe the rate adjust behavior of the loan.
+
+.. code-block:: python
+
+
+    ["AdjustRateMortgage"
+    ,{"originBalance": 240.0
+      ,"originRate": ["floater"
+                      ,0.03
+                      ,{"index":"LIBOR1M"
+                        ,"spread":0.01
+                        ,"reset":["EveryNMonth","2023-11-01",2]}]
+      ,"originTerm": 30 ,"freq": "monthly","type": "level"
+      ,"originDate": "2023-05-01"
+      ,"arm":{"initPeriod":6,"firstCap":0.015} }
+    ,{"currentBalance": 240.0
+      ,"currentRate": 0.08
+      ,"remainTerm": 19
+      ,"status": "current"}]
 
 Loan
 ^^^^^^^^^^
