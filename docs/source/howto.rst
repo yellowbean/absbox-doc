@@ -356,3 +356,52 @@ Run with candy function
   :alt: yield_table
 
 You have it !
+
+
+How to model cashflow for ARM Mottgage 
+---------------------------------------------
+
+``absbox`` support ``ARM`` mortgage in verison ``0.15``
+
+with features like:
+
+* initPeriod (required) -> fix rate in first N periods 
+* initial reset cap (optional) -> maxium spread can be jump at first reset date.
+* periodic reset cap (optional)-> maxium spread can be jump at rest reset dates.
+* life cap (optional) -> maxium rate during the whole mortgage life cycle
+* life floor (optional) -> minium rate during the whole mortgage life cycle
+
+.. code-block:: python 
+
+  myPool = {'assets':[
+            ["AdjustRateMortgage"  
+            ,{"originBalance": 240.0
+             ,"originRate": ["floater"
+                             ,0.03  ## initial rate 
+                             ,{"index":"LIBOR1M"
+                               ,"spread":0.01
+                               ,"reset":["EveryNMonth","2023-11-01",2]
+                              }]
+             ,"originTerm": 30 ,"freq": "monthly","type": "level"
+             ,"originDate": "2023-05-01"
+             ,"arm":{"initPeriod":6
+                    ,"firstCap":0.015
+                    ,"periodicCap":0.01
+                    ,"lifeCap":0.09
+                    ,"lifeFloor":0.02}
+             }
+            ,{"currentBalance": 240.0
+             ,"currentRate": 0.08
+             ,"remainTerm": 19
+             ,"status": "current"}]],
+         'cutoffDate':"2021-03-01"}
+
+  localAPI.runPool(myPool,
+                assumptions=[{"Rate":["LIBOR1M"
+                                      ,["2023-05-01",0.03]
+                                      ,["2023-09-01",0.06]
+                                      ,["2023-12-15",0.07]
+                                      ,["2024-03-15",0.10]
+                                      ,["2024-10-15",0.12]            
+                                      ]}],
+                read=True)

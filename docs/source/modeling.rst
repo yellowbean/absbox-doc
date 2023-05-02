@@ -71,7 +71,8 @@ DatePattern
 * ``"YearEnd"`` -> Every Dec 31 during the projection
 * ``["MonthDayOfYear",M,D]`` -> Every a day of the year , like Feb 14 on every year during the projection
 * ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month during the projectionh
-* ``["CustomDate","YYYYMMDD1","YYYYMMDD2"]`` -> a series of user defined dates
+* ``["CustomDate","YYYY-MM-DD1","YYYY-MM-DD2"]`` -> a series of user defined dates
+* ``["EveryNMonth","YYYY-MM-DD",N]`` -> a seriers day start with "YYYY-MM-DD", then every other N months afterwards
 * ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection
 
 Formula 
@@ -724,7 +725,7 @@ Liquidity Facility
 Conditional Action
 ^^^^^^^^^^^^^^^^^^^^
 
-format : ``[<conditon>,<Action1>,<Action2>....]``
+format : ``["If",<conditon>,<Action1>,<Action2>....]``
 
 
 waterfall action can be setup only triggered if certain `Condtion`_ is met.

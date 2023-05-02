@@ -100,9 +100,7 @@ Deal Assumption
    .. code-block:: python
    
      # vectorized/curve based assumption
-     {"Rate":["LIBOR1M":[["2022-01-01",0.05]
-                        ,["2023-01-01",0.06]
-                        ]]}
+     {"Rate":["LIBOR1M",["2022-01-01",0.05],["2023-01-01",0.06]]}
      
      # constant assumption
      {"Rate":["LIBOR1M":0.05]}
