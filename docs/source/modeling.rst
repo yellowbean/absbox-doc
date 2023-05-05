@@ -45,8 +45,8 @@ Structure of a `Generic` deal
 
 .. _Generic ABS:
 
-Generic
-===========
+Building Blocks 
+==================
 
 `Generic` is a class that represent `SPV` which contains the dates/liabilities/assets/waterfall/trigger/hedge information.
 
@@ -120,13 +120,13 @@ Or `formula` can be an arithmetic calculation on itselfies.
 `formula` can be used to refer to  Integer/Bool/Ratio type data as well
 
 * Integer 
-  * ``("borrowerNumber",)`` -> number of borrower
+    * ``("borrowerNumber",)`` -> number of borrower
 * Ratio
-  * ``("bondFactor",)`` -> factor of bond
-  * ``("poolFactor",)`` -> factor of pool
-  * ``("cumulativePoolDefaultRate",)`` -> cumulative default rate of pool
+    * ``("bondFactor",)`` -> factor of bond
+    * ``("poolFactor",)`` -> factor of pool
+    * ``("cumulativePoolDefaultRate",)`` -> cumulative default rate of pool
 * Bool 
-  * trigger status -> to be implement
+    * trigger status -> to be implement
 
 
 Condition
@@ -190,6 +190,9 @@ Curve
 * Threshold curve for trigger , like cumulative default rate
 * A curve in custom data component.
 
+To build a ``Curve`` , just a list of 2-element list 
+
+``[["2022-01-01",150],["2022-02-01",200]]``
 
 
 Components
@@ -345,6 +348,13 @@ ARM
 
 `ARM` is a type of `Mortgage` that has one more field `arm` to describe the rate adjust behavior of the loan.
 
+* initPeriod -> Required
+* firstCap -> Optional
+* periodicCap -> Optional
+* lifeCap -> Optional
+* lifeFloor -> Optional
+
+
 .. code-block:: python
 
 
@@ -357,7 +367,7 @@ ARM
                         ,"reset":["EveryNMonth","2023-11-01",2]}]
       ,"originTerm": 30 ,"freq": "monthly","type": "level"
       ,"originDate": "2023-05-01"
-      ,"arm":{"initPeriod":6,"firstCap":0.015} }
+      ,"arm":{"initPeriod":6,"firstCap":0.015,"periodicCap":0.01,"lifeCap":0.1,"lifeFloor":0.15} }
     ,{"currentBalance": 240.0
       ,"currentRate": 0.08
       ,"remainTerm": 19
@@ -780,12 +790,12 @@ ie：
 Trigger
 -----------
 
-There are 3 components in Triggers:
+There are 4 components in Triggers:
 
-  * <Condition> -> it will fire the trigger effects, when <conditions> are met
-  * <Effects> -> what would happen if the trigger is fired
-  * <Status> -> it is triggered or not 
-  * <Curable> -> whether the trigger is curable
+  * ``Condition`` -> it will fire the trigger effects, when <conditions> are met
+  * ``Effects`` -> what would happen if the trigger is fired
+  * ``Status`` -> it is triggered or not 
+  * ``Curable`` -> whether the trigger is curable
 
 When to run trigger
 ^^^^^^^^^^^^^^^^^^^^^^
