@@ -34,8 +34,8 @@ Setting Assumption
 
 Assumpitions are just a *LIST*,  Assumptions fall into three categories:
 
-Asset Performance 
-^^^^^^^^^^^^^^^^^^^
+Asset Performance(Performing Asset) 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Different asset class would need different combination of performance assumptions.
 
@@ -72,6 +72,47 @@ User are able to set assumptions by curves
 * Lease 
  * Rental Increase
  * Rental Gaps
+
+
+Asset Performance(Non-Performing Asset) 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+if an asset is in ``Defautled`` status, user can set recovery assumption :
+
+    {"DefaultedRecovery":[0.5,4,[0.5,0.2,0.3]]}
+
+which says
+
+* the recovery percentage is 50% of current balance
+* the recovery starts at 4 periods after defaulted date
+* the recovery distribution is 50%,20% and 30%
+
+
+.. code-block:: python
+
+
+    from absbox import API
+    localAPI = API("https://absbox.org/api/latest")
+    
+    mypool = {'assets':[["Installment"
+                     ,{"originBalance": 1000.0
+                      ,"feeRate": ["fix",0.01]
+                      ,"originTerm": 12
+                      ,"freq": "Monthly"
+                      ,"type": "f_p"
+                      ,"originDate": "2022-01-01"}
+                      ,{"status": ("defaulted","2022-07-01")
+                        ,"currentBalance":418
+                        ,"remainTerm":6}]
+               ],
+              'cutoffDate':"2022-01-04"}
+    
+    myAssump = [{"DefaultedRecovery":[0.5,4,[0.5,0.2,0.3]]}]
+    
+    p = localAPI.runPool(mypool,assumptions=myAssump)
+    p
+
+
 
 Deal Assumption
 ^^^^^^^^^^^^^^^^^^^

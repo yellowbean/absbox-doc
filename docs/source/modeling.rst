@@ -192,7 +192,9 @@ Curve
 
 To build a ``Curve`` , just a list of 2-element list 
 
-``[["2022-01-01",150],["2022-02-01",200]]``
+.. code-block:: python
+
+  ``[["2022-01-01",150],["2022-02-01",200]]``
 
 
 Components
