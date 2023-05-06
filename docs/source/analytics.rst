@@ -79,6 +79,8 @@ Asset Performance(Non-Performing Asset)
 
 if an asset is in ``Defautled`` status, user can set recovery assumption :
 
+.. code-block:: python
+
     {"DefaultedRecovery":[0.5,4,[0.5,0.2,0.3]]}
 
 which says
@@ -89,7 +91,6 @@ which says
 
 
 .. code-block:: python
-
 
     from absbox import API
     localAPI = API("https://absbox.org/api/latest")
