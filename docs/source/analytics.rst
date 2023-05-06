@@ -113,6 +113,34 @@ which says
     p = localAPI.runPool(mypool,assumptions=myAssump)
     p
 
+Setting Assumption on Asset Level
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As suggested above, the assumption would apply to all the asset of deals. But user has the abliity to set assumption on asset level.
+
+
+.. code-block:: python
+   
+   #syntax 
+   ["ByIndex"
+     ,[([<asset id>],[<assumptioin>]),.....]
+     ,[<Deal Level Assumption1>,<Deal Level Assumption2>...]]
+
+
+.. code-block:: python
+
+  Asset01Assump = [{"CPR":0.1} ,{"CDR":0.0}]
+  
+  Asset02Assump = [{"CPR":0.1} ,{"CDR":0.01}]
+  
+  myAssumption = ["ByIndex",
+                  ,[([0],Asset01Assump),([1],Asset02Assump)]
+                  ,[]]
+  
+  
+  r = localAPI.run(test01
+               ,assumptions=myAssumption
+               ,read=True)
 
 
 Deal Assumption
