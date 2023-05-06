@@ -25,7 +25,7 @@ intersphinx_mapping = {
 }
 
 html_theme_options = {
-    'navigation_depth':4
+    'navigation_depth':-1
 }
 
 
