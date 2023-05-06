@@ -27,7 +27,8 @@ intersphinx_mapping = {
 html_theme_options = {
     'navigation_depth':-1,
     "show_nav_level": 2,
-    "collapse_navigation": True
+    "collapse_navigation": True,
+    "titles_only":True
 }
 
 
