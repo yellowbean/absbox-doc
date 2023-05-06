@@ -29,7 +29,6 @@ Content
 --------
 
 .. toctree::
-  :maxdepth: 4
 
    installation
    modeling
