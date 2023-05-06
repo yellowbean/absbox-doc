@@ -385,7 +385,7 @@ Loan
     ,{"originBalance": 80000
       ,"originRate": ["floater",0.045,{"index":"SOFR3M"
                                       ,"spread":0.01
-                                      ,"reset":"Quarterly"}]
+                                      ,"reset":"QuarterEnd"}]
       ,"originTerm": 60
       ,"freq": "SemiAnnually"
       ,"type": "i_p"
@@ -456,7 +456,7 @@ Installment
     ,"originDate": "2022-01-01"}
     ,{"status": "current"
       ,"currentBalance":1000
-      ,"remainTerm",10}]
+      ,"remainTerm":10}]
 
 
 Accounts
