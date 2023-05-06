@@ -3,6 +3,7 @@ Modelling
 
 .. autosummary::
    :toctree: generated
+   :maxdepth: 3
 
 Deal modeling is a process to build a deal with descriptive data, with components follows:
 
