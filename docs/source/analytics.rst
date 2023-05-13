@@ -173,7 +173,7 @@ Deal Assumption
      {"Rate":["LIBOR1M",["2022-01-01",0.05],["2023-01-01",0.06]]}
      
      # constant assumption
-     {"Rate":["LIBOR1M":0.05]}
+     {"Rate":["LIBOR1M",0.05]}
    
 
 Pricing Assumption

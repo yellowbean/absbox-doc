@@ -72,7 +72,8 @@ DatePattern
 * ``["MonthDayOfYear",M,D]`` -> Every a day of the year , like Feb 14 on every year during the projection
 * ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month during the projectionh
 * ``["CustomDate","YYYY-MM-DD1","YYYY-MM-DD2"]`` -> a series of user defined dates
-* ``["EveryNMonth","YYYY-MM-DD",N]`` -> a seriers day start with "YYYY-MM-DD", then every other N months afterwards
+* ``["EveryNMonth","YYYY-MM-DD",N]`` -> a seriers day starts with "YYYY-MM-DD", then every other N months afterwards
+* ``["After","YYYY-MM-DD",<datepattern>]`` -> a <datapattern> after "YYYY-MM-DD"(exclusive)
 * ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection
 
 Formula 
@@ -212,8 +213,8 @@ if it is `preclosing`
 - `Settle Date`: Bond start to accrue interest after `Settle Date`.
 - `First Pay Date`: First execution of payment waterfall
 - `stated` : legal maturity date of the deal.
-- `poolFeq` : describle the dates that collect cashflow from pool
-- `payFeq` : describle the dates that distribution funds to fees and bonds.
+- `poolFeq` : a `date pattern` , describle the dates that collect cashflow from pool
+- `payFeq` : a `date pattern` , describle the dates that distribution funds to fees and bonds.
 
 .. code-block:: python
 
@@ -571,10 +572,11 @@ Bonds/Tranches
 
 syntax ``({bond/tranche name},{bond/tranche description})``
 
-there are 2 types of `Interest`
+there are 3 types of `Interest` settings for bonds
 
   * Fix Rate   :code:`"rateType":{"fix":0.0569}`
-  * Float Rate   :code:`"rateType":{"floater":["SOFR1Y",-0.0169,"Monthly"]}`
+  * Float Rate   :code:`"rateType":{"floater":["SOFR1Y",-0.0169,"MonthEnd"]}`
+  * Step-Up Rate :code:`"rateType":{"StepUp":0.06,"Spread":0.01,"When":["After","2023-05-01","YearEnd"]}`
 
 there are 4 types of `Principal` for bonds/tranches
 
@@ -594,7 +596,7 @@ A bond with will receive principal till it's balance reduce to 0.
            ,"originBalance":3_650_000_000
            ,"originRate":0.03
            ,"startDate":"2020-01-03"
-           ,"rateType":{"Floater":["SOFAR1Y",-0.0169,"Monthly"]}
+           ,"rateType":{"Floater":["SOFAR1Y",-0.0169,"MonthEnd"]}
            ,"bondType":{"Sequential":None} })
  
 PAC
@@ -616,6 +618,7 @@ A bond with target amortize balances, it will stop recieving principal once its 
                      ,["2021-09-20",630]
                      ,["2021-10-20",0]
                      ]}})
+
 
 Lockout
 ^^^^^^^^^^^
@@ -956,6 +959,15 @@ Using a formula to cap the support amount.
 .. literalinclude:: deal_sample/test06.py
    :language: python
    :emphasize-lines: 33-37,43-44,51-53
+
+Step-Up coupon 
+----------------------------------------------
+
+User can model a step up bond which start to increase a spread after a certain day by an interval specified by <datepattern>
+
+.. literalinclude:: deal_sample/stepup_sample.py
+   :language: python
+   :emphasize-lines: 20
 
 
 
