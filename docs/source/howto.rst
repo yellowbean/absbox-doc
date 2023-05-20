@@ -375,3 +375,82 @@ with features like:
 .. literalinclude:: deal_sample/arm_sample.py
    :language: python
    :emphasize-lines: 6,8-12,15
+
+
+How to view projected quasi Financial Reports ?
+-----------------------------------------------------
+
+After the deal was run, user can view the cashflow of `pool`/ `bonds` `fees` etc  or transaction logs from `accounts`
+
+.. code-block:: python
+
+    r = localAPI.run(test01,
+                     assumptions=[{"CDR":0.01},{"Recovery":(0.5,4)}],
+                     read=True)
+
+    #view result of bonds
+    r['bonds']
+
+    #transaction logs of accounts
+    r['accounts']
+
+    #pool cashflow 
+    r['pool']['flow']
+
+    #expenses
+    r['fee']
+
+For the users who is not patient enough or who want to take a high level view of how the deal was changing during the future.
+`absbox` support `Financial Reports` since version `0.17.0`.
+
+Syntax
+^^^^^^^^^^
+
+To query the `financial reports` , user need to add a dict in the list of `assumptions`.
+
+.. code:: python 
+   
+    {"FinancialReports":{"dates":<DatePattern>}
+
+the `<DatePattern>` will be used to describe `Financial Report Date`.
+
+Example:
+
+.. code-block:: python 
+
+    r = localAPI.run(test01,
+                     assumptions=[{"FinancialReports":{"dates":"MonthEnd"}}
+                        ,{"CDR":0.01}
+                        ,{"Recovery":(0.5,4)}],
+                     read=True)
+
+Cash Report 
+^^^^^^^^^^^^
+
+Cash Report will list a cash inflows and outflows of the deal. Report was compiled against transaction logs of `accounts`.
+
+
+.. code-block:: python 
+
+    r['result']['report']['cash']
+
+.. image:: img/cash_report.png
+  :width: 500
+  :alt: cash_report
+
+
+
+
+Balancesheet Report
+^^^^^^^^^^^^^^^^^^^^
+
+Balancesheet Report will take a `snapshot` of the deal on the dates describled in `DatePattern`.
+It will also include the bond interest accured or fee accured as both of them are `Payable` in the balance sheet .
+
+.. code-block:: python 
+
+    r['result']['report']['balanceSheet']
+
+.. image:: img/balance.png
+  :width: 500
+  :alt: balance
