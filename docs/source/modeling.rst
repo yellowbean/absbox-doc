@@ -73,8 +73,15 @@ DatePattern
 * ``["DayOfMonth",M]`` -> A day of the month , like 15 on each month during the projectionh
 * ``["CustomDate","YYYY-MM-DD1","YYYY-MM-DD2"]`` -> a series of user defined dates
 * ``["EveryNMonth","YYYY-MM-DD",N]`` -> a seriers day starts with "YYYY-MM-DD", then every other N months afterwards
+
+Composite <DatePattern>
+
+DatePatterns can be composed together:
+
 * ``["After","YYYY-MM-DD",<datepattern>]`` -> a <datapattern> after "YYYY-MM-DD"(exclusive)
-* ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection
+* ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection, like sum of dates
+* ``["ExcludeDatePattern",<datepattern1>,<datepattern2>.....]`` -> build dates from 1st <datepattern1> and exclude dates from <datepattern2>，<datepattern3>... 
+* ``["OffsetDattern",<datepattern>,N]`` ->  build dates from <datepattern> and offset days by N ( positive N move dates to future) , negative N will move dates to past ) 
 
 Formula 
 ---------
@@ -127,7 +134,7 @@ Or `formula` can be an arithmetic calculation on itselfies.
     * ``("poolFactor",)`` -> factor of pool
     * ``("cumulativePoolDefaultRate",)`` -> cumulative default rate of pool
 * Bool 
-    * trigger status -> to be implement
+    * ``("trigger", loc ,idx)`` -> trigger with index at ``idx`` at ``loc`` status ->
 
 
 Condition
