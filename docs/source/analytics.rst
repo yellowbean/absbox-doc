@@ -206,6 +206,30 @@ Debug
       # stop cashflow projection at `2020-01-01`
       {"stopRun":"2020-01-01"} 
 
+Inspects Variables
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Users are able to query values from any point of time 
+
+* values -> annoate by ``<formula>``
+* any point of time -> annoate by ``<DatePattern>``
+
+.. code-block:: python
+
+   {"Inspect":[("MonthEnd",("poolBalance",))
+              ,("MonthFirst",("bondBalance",))]}      
+
+
+
+Build quasi Financial Statements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+User just need to specify the dates of financial statement by ``<DatePattern>``
+
+.. code-block:: python
+      
+   {"FinancialReports":{"dates":"MonthEnd"}
+
 
 Running
 --------------
