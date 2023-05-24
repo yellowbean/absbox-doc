@@ -81,7 +81,7 @@ DatePatterns can be composed together:
 * ``["After","YYYY-MM-DD",<datepattern>]`` -> a <datapattern> after "YYYY-MM-DD"(exclusive)
 * ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection, like sum of dates
 * ``["ExcludeDatePattern",<datepattern1>,<datepattern2>.....]`` -> build dates from 1st <datepattern1> and exclude dates from <datepattern2>，<datepattern3>... 
-* ``["OffsetDattern",<datepattern>,N]`` ->  build dates from <datepattern> and offset days by N ( positive N move dates to future) , negative N will move dates to past ) 
+* ``["OffsetDateDattern",<datepattern>,N]`` ->  build dates from <datepattern> and offset days by N ( positive N move dates to future) , negative N will move dates to past ) 
 
 Formula 
 ---------
