@@ -204,7 +204,7 @@ Debug
    .. code-block:: python
       
       # stop cashflow projection at `2020-01-01`
-      {"stopRun":"2020-01-01"} 
+      {"StopAt":"2020-01-01"} 
 
 Inspects Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^
