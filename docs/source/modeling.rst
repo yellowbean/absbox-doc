@@ -765,18 +765,38 @@ Liquidity Facility
   * Or, pay all the residual cash back to the provider 
   
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
+
+Revolving
+^^^^^^^^^^^^^^
+
+  * Buy Asset 
   
+    * format ``["buyAsset",<pricing method>, <Account>, <limit>]``
+
+
 Conditional Action
 ^^^^^^^^^^^^^^^^^^^^
 
+There are two types of `Conditional Action`, which are same in with "IF" / "IF-ELSE" clause in programming language
+
 format : ``["If",<conditon>,<Action1>,<Action2>....]``
 
+waterfall actions follows will be executed if certain `Condtion`_ is met.
 
-waterfall action can be setup only triggered if certain `Condtion`_ is met.
+format : ``["IfElse",<conditon>
+                    ,[<Action1>,<Action2>....]
+                    ,[<Action1>,<Action2>....]
+                    ]
+                    ``
+first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
+
+Different Waterfalls in Deal
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 `Waterfall`: there are couple waterfalls in a deal 
 
+  * ``default``, a default waterfall of deal, which is being executed if no other waterfall match deal current status.
   * ``"amortizing"``, executing when deal is *not defaulted*
   * ``("amortizing","accelerated")``, executing when deal is *accelerated*
   * ``("amortizing","defaulted")``, executing when deal is *defaulted*
