@@ -783,11 +783,12 @@ format : ``["If",<conditon>,<Action1>,<Action2>....]``
 
 waterfall actions follows will be executed if certain `Condtion`_ is met.
 
-format : ``["IfElse",<conditon>
-                    ,[<Action1>,<Action2>....]
-                    ,[<Action1>,<Action2>....]
-                    ]
-                    ``
+
+format : ``["IfElse",<conditon>``
+                    ``,[<Action1>,<Action2>....]``
+                    ``,[<Action1>,<Action2>....]``
+                    ``]``
+                    
 first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
 
 Different Waterfalls in Deal
