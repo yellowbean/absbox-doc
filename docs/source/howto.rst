@@ -530,8 +530,7 @@ Syntax:
 
 <PricingMethod>:
 
-* price an asset with balance factor `["Current|Defaulted",0.95,0]` means , if the asset has a current balance of 100, then the price would be 100*
-0.95 = 95
+* price an asset with balance factor `["Current|Defaulted",0.95,0]` means , if the asset has a current balance of 100, then the price would be 100*0.95 = 95
 
 * price an asset with curve, with a pricing curve supplied, price an asset by discount cashflow of the asset
 
