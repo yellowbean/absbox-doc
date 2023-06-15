@@ -204,6 +204,15 @@ To build a ``Curve`` , just a list of 2-element list
 
   ``[["2022-01-01",150],["2022-02-01",200]]``
 
+Pricing Method
+----------------
+``<Pricing Method>`` was an annotation used to price an ``Asset`` when waterfall action trying to liquidate assets or buy revolving assets.
+
+there are couple ways of pricing
+
+* Pricing by current balance 
+* Pricing by PV of future cashflow of assets 
+
 
 Components
 ============
