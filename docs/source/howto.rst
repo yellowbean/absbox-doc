@@ -461,7 +461,7 @@ Model a revolving deal (BMW Auto)
 
 Modelling a revolving deal is quite chanllenge , here is an real transaction which highlights the key components 
 
-The whole model can be referred to here <>
+The whole model can be referred to here :ref:`BMW Auto Deal 2023-01`
 
 Revolving Period
 ^^^^^^^^^^^^^^^^^^^
@@ -529,8 +529,10 @@ Syntax:
     ["buyAsset",<PricingMethod>,<Account>,None]
 
 <PricingMethod>:
+
 * price an asset with balance factor `["Current|Defaulted",0.95,0]` means , if the asset has a current balance of 100, then the price would be 100*
 0.95 = 95
+
 * price an asset with curve, with a pricing curve supplied, price an asset by discount cashflow of the asset
 
 .. code-block:: python 
