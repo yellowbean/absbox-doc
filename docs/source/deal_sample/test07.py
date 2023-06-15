@@ -96,22 +96,22 @@ BMW202301 = Generic(
          ,["payInt","distAcc",["A"]]
          ,["payInt","cashReserve",["A"]]
         
-         ,["runTrigger",0]
+         ,["runTrigger",0] # update the trigger status during the waterfall
         
          ,["If"
-          ,[("trigger","InDistribution",0),False] 
-          ,["transferReserve","distAcc",'cashReserve',"Target"]]
+          ,[("trigger","InDistribution",0),False]  # if it was triggered 
+          ,["transferReserve","distAcc",'cashReserve',"Target"]] # trasnfer amt to cash reserver account
         
-         ,["IfElse"  # 循环期条件
-           ,["status","Revolving"]
+         ,["IfElse"  
+           ,["status","Revolving"] # acitons in the revolving period
            ,[["transferBy",{"formula":("substract",("bondBalance",),("poolBalance",))}
                           ,"distAcc",'revolBuyAcc']
-            ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None]
+            ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None] # buy asset with 1:1 if asset with performing
             ,["payResidual","distAcc","Sub"] ]
-           ,[["payPrin","distAcc",["A"]]
+           ,[["payPrin","distAcc",["A"]] # actions if deal is in Amortizing status
             ,["payPrin","distAcc",["Sub"]]
             ,["payFeeResidual", "distAcc", "bmwFee"]]]]
-     ,"endOfCollection":[["calcFee","serviceFee"]]
+     ,"endOfCollection":[["calcFee","serviceFee"]] # accure fee by end of collection period
      ,"cleanUp":[["sellAsset", ["Current|Defaulted",1.0,0], "distAcc"]
                  ,["payInt","distAcc",["A"]]
                  ,["payPrin","distAcc",["A"]]
@@ -134,10 +134,10 @@ BMW202301 = Generic(
         ,"curable":False}]
      ,"InDistribution":[
         {"condition":[("accountBalance","distAcc"),">",("bondBalance","A")]
-        ,"effects":("newReserveBalance","cashReserve",{"fixReserve":0})
+        ,"effects":("newReserveBalance","cashReserve",{"fixReserve":0}) # if was triggered, change reserve account amount to 0
         ,"status":False
         ,"curable":False}
      ]
      }
-    ,"Revolving"
+    ,"Revolving"  # start deal with "Revolving" status
 )

@@ -454,3 +454,99 @@ It will also include the bond interest accured or fee accured as both of them ar
 .. image:: img/balance.png
   :width: 500
   :alt: balance
+
+
+Model a revolving deal (BMW Auto)
+-----------------------------------
+
+Modelling a revolving deal is quite chanllenge , here is an real transaction which highlights the key components 
+
+The whole model can be referred to here <>
+
+Revolving Period
+^^^^^^^^^^^^^^^^^^^
+The revolving period usually was set like first 12/24 months of the projection. While the transaction may impose some other condition to enter `Amortization` stage when certain criteria was met, like pool cumulative default rate.
+
+In this case, we model such event of `entering amortizating` with a trigger : if deal date was later than `2024-05-26` OR pool cumulative defaulted rate greater than 1.6%, then change the deal status from `Revolving` to `Amortizing`
+
+.. code-block:: python 
+
+  {"condition":["any"
+                 ,[">=","2024-05-26"]
+                 ,[("cumPoolDefaultedRate",),">",0.016]]
+   ,"effects":("newStatus","Amortizing")
+   ,"status":False
+   ,"curable":False}
+
+once the deal enter a new status `Amortizing`, then in the waterfall acitons would branch on status :
+
+.. code-block:: python 
+
+  ["IfElse"  
+    ,["status","Revolving"] # the predicate
+    ,[["transferBy",{"formula":("substract",("bondBalance",),("poolBalance",))} # list of actions if predicate is True ()
+                   ,"distAcc",'revolBuyAcc']
+     ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None]
+     ,["payResidual","distAcc","Sub"] ]
+    ,[["payPrin","distAcc",["A"]] # list of actions if predicate is False
+     ,["payPrin","distAcc",["Sub"]]
+     ,["payFeeResidual", "distAcc", "bmwFee"]]]]
+
+
+Revolving Asset 
+^^^^^^^^^^^^^^^^^^
+
+Asset to be bought in the future isn't really part of deal data, thus we are going to supply these `dummy` asset in the `Assumption` 
+Pls noted:
+
+* revolving assets to be bought can be a `portfolio` which means a `list` of assets .
+* user can set up a snapshot curve to simulatie different assets at points of time in the future to be bought.
+* user can set different pool performance assumption on the revolving pool 
+
+.. code-block:: python 
+
+  revol_asset = ["Mortgage"
+                  ,{"originBalance":220,"originRate":["fix",0.043],"originTerm":48
+                    ,"freq":"Monthly","type":"Level","originDate":"2021-07-01"}
+                    ,{"currentBalance":220
+                    ,"currentRate":0.043
+                    ,"remainTerm":36
+                    ,"status":"current"}]
+  
+  r = localAPI.run(BMW202301,
+             assumptions=[{"RevolvingAssets":[["constant",[revol_asset]]  # revolving pool can be a list of assets 
+                                              ,[{"CDR":0.01}]]}   # revolving pool may have different pool performance assumption
+                         ,{"CDR":0.0012}],
+             read=True)
+
+Revolving Buy
+^^^^^^^^^^^^^^^
+
+Pricing an revolving asset would have a huge impact on the pool cashflow . 
+
+Syntax:
+
+    ["buyAsset",<PricingMethod>,<Account>,None]
+
+<PricingMethod>:
+* price an asset with balance factor `["Current|Defaulted",0.95,0]` means , if the asset has a current balance of 100, then the price would be 100*
+0.95 = 95
+* price an asset with curve, with a pricing curve supplied, price an asset by discount cashflow of the asset
+
+.. code-block:: python 
+
+  ["IfElse"  # 
+   ,["status","Revolving"]
+   ,[["transferBy",{"formula":("substract",("bondBalance",),("poolBalance",))}
+                  ,"distAcc",'revolBuyAcc']
+    ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None] 
+    ,["payResidual","distAcc","Sub"] ]
+   ,[["payPrin","distAcc",["A"]]
+    ,["payPrin","distAcc",["Sub"]]
+    ,["payFeeResidual", "distAcc", "bmwFee"]]]]
+
+
+
+
+
+
