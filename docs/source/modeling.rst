@@ -976,6 +976,18 @@ User can model a step up bond which start to increase a spread after a certain d
    :language: python
    :emphasize-lines: 20
 
+BMW Auto Deal 2023-01
+--------------------------
+
+* Revolving structure with revolving asset perf assumption / pricing method 
+* Formula based way to transfer cash between accounts
+* Conditional action base on trigger 
+* IF-ELSE clause in waterfall action
+* Pay residual value to a fee
+* Buy/Sell asset via a pricing method
+
+.. literalinclude:: deal_sample/test07.py
+   :language: python
 
 
 Save a deal file
