@@ -746,13 +746,18 @@ Account
       * satisfy = "target" -> transfer till reserve amount of *target* account is met
       * satisfy = "source" -> transfer till reserve amount of *source* account is met
 
-Call
-^^^^^^
+Buy & Sell Assets 
+^^^^^^^^^^^^^^^^^^^^^^^
 
   * Liquidation -> sell the assets and deposit the proceeds to the account
    
-    * format ``["sellAsset", {LiquidationMethod}, {Account}]``
+    * format ``["sellAsset", {pricing method}, {Account}]``
       
+  * Buy Asset -> use cash from an account to buy assets.
+  
+    * format ``["buyAsset",{pricing method}, {Account}, {limit}]``
+      
+
 Liquidtiy Facility 
 ^^^^^^^^^^^^^^^^^^^
 
@@ -775,12 +780,6 @@ Liquidity Facility
   
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
 
-Revolving
-^^^^^^^^^^^^^^
-
-  * Buy Asset 
-  
-    * format ``["buyAsset",<pricing method>, <Account>, <limit>]``
 
 
 Conditional Action
