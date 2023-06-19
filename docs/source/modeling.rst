@@ -211,8 +211,11 @@ Pricing Method
 there are couple ways of pricing
 
 * Pricing by current balance 
+  * ``["Current|Defaulted", a, b]``  -> Applies ``a`` as factor to current balance of a performing asset; ``b`` as factor to current balance of a defaulted asset
+  * ``["Cuurent|Delinquent|Defaulted", a, b, c]`` -> same as above ,but with a ``b`` applies to an asset in deliquency.
+  * ``["PV|Defaulted", a, b]`` ->  using ``a`` as pricing curve to discount future cashflow of performing asset while use ``b`` as factor to current balance of defautled asset.
 * Pricing by PV of future cashflow of assets 
-
+  * ``["PVCurve", ts]`` -> using `ts` as pricing curve to discount future cashflow of all assets.
 
 Components
 ============
@@ -222,7 +225,7 @@ Dates
 
 Depends on the status of deal, the dates shall be modeled either in `ongoing` or `preclosing`
 
-if it is `preclosing`
+if it is `preclosing` stage ( the deal has not been issued yet )
 
 - `Cutoff Date`: All pool cashflow after `Closing Date` belongs to the SPV
 - `Closing Date`:  after `Closing Date` belongs to the SPV
@@ -239,11 +242,10 @@ if it is `preclosing`
     ,"firstPay":"2022-12-26"
     ,"stated":"2030-01-01"
     ,"poolFreq":"MonthEnd"
-    ,"payFreq":["DayOfMonth",20]
-    }
+    ,"payFreq":["DayOfMonth",20]}
 
 
-if deal is `ongoing`, the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
+if deal is `ongoing` ( which has been issued ), the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
 
 
 .. code-block:: python
@@ -278,13 +280,12 @@ syntax: ``({fee name} , {fee description} )``, fees fall into types:
 one-off fee
 ^^^^^^^^^^^^^^^^^^
 
-with a balance and will be paid off once it paid down to zero
+with a oustanding balance and will be paid off once it paid down to zero
 
 recurrance fee
 ^^^^^^^^^^^^^^^^
 
 a fix amount fee which occurs by defined ``Date Pattern``
-
 
 percentage fee
 ^^^^^^^^^^^^^^^^^^^
@@ -302,13 +303,13 @@ annualized fee
 ^^^^^^^^^^^^^^^^
 
 similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
-either reference to pool balance  or bond balance , etc....
+either reference to pool balance  or bond balance , etc.... it will accure type fee, which if not being paid, it will increase the due amount.
 
 
 custom fee flow
 ^^^^^^^^^^^^^^^^^^^
 
-an user defined date expenses, the date and amount can be customized.
+A user defined time series expenses, the date and amount can be customized.
 
 like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
@@ -318,14 +319,21 @@ count type fee
 
 the fee due equals to a number multiply a unit fee. The number is a formula reference.
 
-
 .. code-block:: python
   
-  (("servicer_fee",{"type":{"annualPctFee":["poolBalance",0.02]}})
-   ,("bond_service_fee",{"type":{"pctFee":["bondBalance",0.02]}})
-   ,("issuance_fee",{"type":{"fixFee":100}})
-   ,("rating_fee",{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
-   ,("borrowerFee",{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
+  (("servicer_fee"
+    ,{"type":{"annualPctFee":["poolBalance",0.02]}})
+   ,("bond_service_fee"
+    ,{"type":{"pctFee":["bondBalance",0.02]}})
+   ,("issuance_fee"
+    ,{"type":{"fixFee":100}})
+   ,("rating_fee"
+    ,{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
+   ,("borrowerFee"
+    ,{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
+   ,("irregulargfee"
+    ,{"type":{"customFee":[["2024-01-01",100]
+                          ,["2024-03-15",50]}})
   )
 
 
@@ -335,7 +343,7 @@ Pool
 ``Pool`` represents a set of assets ,which generate cashflows to support expenses and liabilities.
 
 * it can either has a loan level ``asset`` or ``projected cashflow``
-* other optional fields like `issuance balance`
+* other optional fields like ``issuance balance``, which will be supplimental to calculate certain value , like ``Pool Factor``
 
 Mortgage
 ^^^^^^^^^^^
@@ -346,7 +354,6 @@ Mortgage
 
 * `Level` -> `Annuity`
 * `Even` -> `Linear`
-
 
 .. code-block:: python
 

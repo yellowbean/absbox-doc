@@ -53,20 +53,20 @@ User are able to set a constant value
 .. code-block:: python
 
   localAPI.run(test01,
-             assumptions=[{"CPR":0.01}
-                         ,{"CDR":0.01}
-                         ,{"Recovery":(0.7,18)}],
-             read=True)
+               assumptions=[{"CPR":0.01}
+                           ,{"CDR":0.01}
+                           ,{"Recovery":(0.7,18)}],
+               read=True)
 
 User are able to set assumptions by curves
 
 .. code-block:: python
 
   localAPI.run(test01,
-             assumptions=[{"CPR":[0.02,0.02,0.03]}
-                         ,{"CDR":[0.01,0.015,0.021]}
-                         ,{"Recovery":(0.7,18)}],
-             read=True)
+               assumptions=[{"CPR":[0.02,0.02,0.03]}
+                           ,{"CDR":[0.01,0.015,0.021]}
+                           ,{"Recovery":(0.7,18)}],
+               read=True)
 
 
 * Lease 
