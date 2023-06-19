@@ -524,14 +524,13 @@ Revolving Buy
 
 Pricing an revolving asset would have a huge impact on the pool cashflow . 
 
-Syntax:
+.. code-block:: python 
 
     ["buyAsset",<PricingMethod>,<Account>,None]
 
-<PricingMethod>:
+:ref:`Pricing Method` :
 
 * price an asset with balance factor `["Current|Defaulted",0.95,0]` means , if the asset has a current balance of 100, then the price would be 100*0.95 = 95
-
 * price an asset with curve, with a pricing curve supplied, price an asset by discount cashflow of the asset
 
 .. code-block:: python 
