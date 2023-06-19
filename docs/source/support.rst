@@ -11,7 +11,7 @@ https://github.com/yellowbean/AbsBox/issues
 **AbsBox** training is offered via Zoom meeting or recorded videos.
 
 API Integration
-----------------
+------------------
 
 - `absbox` can be used as a Python library embeded in other Python based application
 - or building webservice layer with `absbox` to intergate with other system

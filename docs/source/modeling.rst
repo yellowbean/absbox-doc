@@ -211,29 +211,32 @@ Pricing Method
 there are couple ways of pricing
 
 * Pricing by current balance 
+
   * ``["Current|Defaulted", a, b]``  -> Applies ``a`` as factor to current balance of a performing asset; ``b`` as factor to current balance of a defaulted asset
   * ``["Cuurent|Delinquent|Defaulted", a, b, c]`` -> same as above ,but with a ``b`` applies to an asset in deliquency.
   * ``["PV|Defaulted", a, b]`` ->  using ``a`` as pricing curve to discount future cashflow of performing asset while use ``b`` as factor to current balance of defautled asset.
+
 * Pricing by PV of future cashflow of assets 
+
   * ``["PVCurve", ts]`` -> using `ts` as pricing curve to discount future cashflow of all assets.
 
 Components
 ============
 
-Dates
----------
+Deal Dates
+------------
 
-Depends on the status of deal, the dates shall be modeled either in `ongoing` or `preclosing`
+Depends on the status of deal, the dates shall be modeled either in ``ongoing`` or ``preclosing``
 
-if it is `preclosing` stage ( the deal has not been issued yet )
+if it is ``preclosing`` stage ( the deal has not been issued yet )
 
-- `Cutoff Date`: All pool cashflow after `Closing Date` belongs to the SPV
-- `Closing Date`:  after `Closing Date` belongs to the SPV
-- `Settle Date`: Bond start to accrue interest after `Settle Date`.
-- `First Pay Date`: First execution of payment waterfall
-- `stated` : legal maturity date of the deal.
-- `poolFeq` : a `date pattern` , describle the dates that collect cashflow from pool
-- `payFeq` : a `date pattern` , describle the dates that distribution funds to fees and bonds.
+- ``cutoff``: All pool cashflow after `Closing Date` belongs to the SPV
+- ``closing``:  after `Closing Date` belongs to the SPV
+- ``Settle Date`` : Bond start to accrue interest after `Settle Date`.
+- ``firstPay``: First execution of payment waterfall
+- ``stated`` : legal maturity date of the deal.
+- ``poolFeq`` : a :ref:`DatePattern`, describle the dates that collect cashflow from pool
+- ``payFeq`` : a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
 
 .. code-block:: python
 
@@ -247,6 +250,10 @@ if it is `preclosing` stage ( the deal has not been issued yet )
 
 if deal is `ongoing` ( which has been issued ), the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
 
+- ``collect`` : ["last pool collection date","next pool collection date"]
+- ``pay`` : ["last distribution payment date","next distribution payment date"]
+- ``poolFeq`` : a :ref:`DatePattern`, describle the dates that collect cashflow from pool
+- ``payFeq`` : a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
 
 .. code-block:: python
 
@@ -275,7 +282,7 @@ User are free to feed in a series of custom defined pool collection date / bond 
 Fee/Expenses
 --------------
 
-syntax: ``({fee name} , {fee description} )``, fees fall into types:
+syntax: ``({fee name} , {fee description} )``, fees fall into types below :
 
 one-off fee
 ^^^^^^^^^^^^^^^^^^
@@ -285,11 +292,11 @@ with a oustanding balance and will be paid off once it paid down to zero
 recurrance fee
 ^^^^^^^^^^^^^^^^
 
-a fix amount fee which occurs by defined ``Date Pattern``
+a fix amount fee which occurs by defined :ref:`Date Pattern`
 
 percentage fee
 ^^^^^^^^^^^^^^^^^^^
-pecentage fee, a fee type which the due amount depends on a percentage of ``Formula``
+pecentage fee, a fee type which the due amount depends on a percentage of :ref:`Formula`
 
 like a fee is base on 
 
@@ -302,7 +309,7 @@ like a fee is base on
 annualized fee
 ^^^^^^^^^^^^^^^^
 
-similar to `percentage fee` but it will use an annualized rate to multiply the value of ``Formula``.
+similar to `percentage fee` but it will use an annualized rate to multiply the value of :ref:`Formula`.
 either reference to pool balance  or bond balance , etc.... it will accure type fee, which if not being paid, it will increase the due amount.
 
 
@@ -515,7 +522,7 @@ There is one extra attribute to set : `type`
       ("ReserveAccountA",{"balance":0
                          ,"type":{"fixReserve":1000}})
 
-  * Formula： the target reserve amount is derived from a `Formula`_ , like 2% of pool balance
+  * Formula： the target reserve amount is derived from a :ref:`Formula` , like 2% of pool balance
   
     .. code-block:: python
 
@@ -524,11 +531,11 @@ There is one extra attribute to set : `type`
 
   * Nested Formula, the target reserve amount is base on higher or lower of two formula 
 
-  * Conditional amount starts with ``"When"``, the target reserve amount depends on `Condition`_:
+  * Conditional amount starts with ``When``, the target reserve amount depends on :ref:`Condition`:
     
-    * certain <formula> value is above or below certain value
-    * satisfy all of ``condition`` s 
-    * satisfy any one of ``condition`` s 
+    * certain :ref:`Formula` value is above or below certain value
+    * satisfy all of :ref:`Condition` s 
+    * satisfy any one of :ref:`Condition` s 
   
     .. code-block:: python
 
@@ -603,10 +610,10 @@ there are 3 types of `Interest` settings for bonds
 
 there are 4 types of `Principal` for bonds/tranches
 
-  * `Sequential`： can be paid down as much as its oustanding balance
-  * `PAC`： Balance of bond can only be paid down by a predefined schedule
-  * `Lockout`： Principal won't be paid after lockout date
-  * `Equity`：  No interest and shall serve as junior tranche
+  * ``Sequential``： can be paid down as much as its oustanding balance
+  * ``PAC``： Balance of bond can only be paid down by a predefined schedule
+  * ``Lockout``： Principal won't be paid after lockout date
+  * ``Equity``：  No interest and shall serve as junior tranche
 
 Sequential 
 ^^^^^^^^^^^
@@ -680,7 +687,7 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``action`` to be executed at bond payment day or pool collection day.
+Waterfall means a list of ``action`` to be executed.
 
 Fee 
 ^^^^^^
@@ -831,7 +838,7 @@ ie：
        ,["payPrin","acc01",["B"]]
        ,["payResidual","acc01","B"]]
     ,"CleanUp":[]
-    ,"Defaulted":[]
+    ,"default":[]
     }
 
 
@@ -840,7 +847,7 @@ Trigger
 
 There are 4 components in Triggers:
 
-  * ``Condition`` -> it will fire the trigger effects, when <conditions> are met
+  * ``Condition`` -> it will fire the trigger effects, when :ref:`Condition` is met
   * ``Effects`` -> what would happen if the trigger is fired
   * ``Status`` -> it is triggered or not 
   * ``Curable`` -> whether the trigger is curable
@@ -848,15 +855,16 @@ There are 4 components in Triggers:
 When to run trigger
 ^^^^^^^^^^^^^^^^^^^^^^
   
-  Trigger can run at 4 point of time.
+  Trigger can run at 5 point of time.
   
   * Start/End of each Pool Collection Day -> ``BeforeCollect`` / ``AfterCollect``
   * Start/End of each Distribution Day    -> ``BeforeDistribution`` / ``AfterDistribution``
+  * During any point of waterfall 
 
 Conditons of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Magically, it just a `Condition`_ from the very begining ! We just reuse that component.
+Magically, it just a :ref:`Condition` from the very begining ! We just reuse that component.
 
 
 Effects/Consequence of a trigger
@@ -869,6 +877,7 @@ Effects/Consequence of a trigger
   * convert `amortizing` to `defaulted`
   * or between any `state` , once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
   * accure some certain fee 
+  * change reserve target balance of an account
   * create a new trigger 
   * a list of above
 

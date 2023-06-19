@@ -5,8 +5,8 @@ Installation
    :toctree: generated
 
 .. warning::
-  ``absbox`` is heavily using ``match clause`` which was introduced in Python3.10
-  Please make sure you are using *Python3.10* and above
+  ``absbox`` is heavily using ``match clause`` which was introduced in Python 3.10
+  Please make sure you are using *Python3.10* and after
 
 Using pip
 --------------
@@ -18,7 +18,7 @@ Using pip
 Upgrade `absbox` package to latest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``absbox`` is rapidly evolving rapidly, pls make sure you are using the latest one. 
+``absbox`` is rapidly evolving rapidly, please make sure you are using the latest one. 
 
 .. code-block:: console
 
@@ -39,8 +39,8 @@ which shows current version of `absbox`
 
 .. warning::
    Version matters !! as `absbox` is calling RESTful service from `Hastructure`. 
-   The message format for both shall be compatible to each other. i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.5`.
-   A general rule is that the "MINOR" part shall be same.
+   The message format for both shall be compatible to each other. i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.6`.
+   A general rule is that the "MINOR" part shall be same. ( here the ``8`` )
    
 
 Github
@@ -57,17 +57,17 @@ Documents and sample code in this site are being test against with code from git
 Public Server vs Self-hosted
 -----------------------------
 
-``absbox`` needs to connect an engine behind the scene. User can choose a public one or use it's own if user is keen on privacy and performance.
+``absbox`` needs connecting to an ``Hastructure`` engine behind the scene. User can choose a public one or use it's own if user is keen on privacy and performance.
 
 .. code-block:: python
 
    from absbox import API
    localAPI = API("https://absbox.org/api/latest")
 
-   # optinally adding a `english` to enable all responces are represented in English
+   # optinally adding a `english` to request all responces in English
    localAPI = API("https://absbox.org/api/latest",'english')
 
-* For public server list, pls visit `absbox.org <https://absbox.org>`_
+* For public server list, please visit `absbox.org <https://absbox.org>`_
 * If user want to have a self-hosted server 
     * user can build one from source code `Hastructure <https://github.com/yellowbean/Hastructure>`_
     * or using docker by one-line solution
