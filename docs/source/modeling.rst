@@ -687,7 +687,10 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``action`` to be executed.
+Waterfall means a list of ``Action`` to be executed.
+
+Action
+  ``Action`` is a list, which annoates the action to be performed. In most of cases, the first element of list is the name of action, rest of elements are describing the fund movements(fund source and fund target)/ state change like update trigger status / fee accrual /bond interest accrual.
 
 Fee 
 ^^^^^^

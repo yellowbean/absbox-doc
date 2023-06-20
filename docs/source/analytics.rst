@@ -172,7 +172,7 @@ Deal Assumption
      # vectorized/curve based assumption
      {"Rate":["LIBOR1M",["2022-01-01",0.05],["2023-01-01",0.06]]}
      
-     # constant assumption
+     # flat rate assumption
      {"Rate":["LIBOR1M",0.05]}
    
 
@@ -211,8 +211,8 @@ Inspects Variables
 
 Users are able to query values from any point of time 
 
-* values -> annoate by ``<formula>``
-* any point of time -> annoate by ``<DatePattern>``
+* values -> annoate by :ref:`Formula`
+* any point of time -> annoate by :ref:`DatePattern`
 
 .. code-block:: python
 
@@ -224,7 +224,7 @@ Users are able to query values from any point of time
 Build quasi Financial Statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-User just need to specify the dates of financial statement by ``<DatePattern>``
+User just need to specify the dates of financial statement by :ref:`DatePattern`
 
 .. code-block:: python
       
@@ -233,6 +233,15 @@ User just need to specify the dates of financial statement by ``<DatePattern>``
 
 Running
 --------------
+
+Running
+  Means sending request to backend engine server. A request has three elmenets:
+    * API instance 
+    * Assumptions
+      * Pool performance assumptions
+      * Deal assumptions (May include Interest Rate / Clean Up Call)
+    * Bond Pricing Inputs
+
 
 Running a deal 
 ^^^^^^^^^^^^^^^^^
@@ -250,7 +259,7 @@ Once the API was instantised ,call ``run()`` to project cashflow and price the b
                                  ,["2024-08-01",0.025]]},
              read=True)
 
-passing `read` with `True`, it will try it best to parse the result into `DataFrame`
+If user passes `read` with `True`, it will try it best to parse the result into `DataFrame`
 
 
 Running a pool of assets 
@@ -374,7 +383,7 @@ Inspecting Numbers
 Transparency matters ! For the users who are not satisfied with cashflow numbers but also having curiosity of the intermediary numbers, like `bond balance`, `pool factor` .
 
 User can add following dict with key ``Inspect``  into `assumptions` list.
-The value of the dict is a list of tuple ``(<Date Pattern>,<Deal Status/Formula>)`` , then the run result will carry the ``<Formula>`` value at the dates of observation.
+The value of the dict is a list of tuple ``(<Date Pattern>,<Deal Status/Formula>)`` , then the run result will carry the :ref:`Formula` value at the dates of observation.
 
 .. code-block:: python
    
@@ -504,7 +513,7 @@ IRR
 powered by `pyxirr`, user have option to calculate the IRR of a bond.
 
 * 1st parameter should pass the dataframe of bond flow 
-* 2nd `init` represent `initial invesment` a tuple with first as date of invesment and second as monetary amount of investment
+* 2nd `init` represent `initial investment` a tuple with first as date of invesment and second as monetary amount of investment
 
 
 .. code-block:: python
