@@ -773,6 +773,8 @@ Buy & Sell Assets
   * Buy Asset -> use cash from an account to buy assets.
   
     * format ``["buyAsset",{pricing method}, {Account}, {limit}]``
+
+      * ``limit`` can be either a :ref:`Formula` or a Cap Amount
       
 
 Liquidtiy Facility 
