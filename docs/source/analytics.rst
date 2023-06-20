@@ -18,6 +18,9 @@ here is a list of available servers at `absbox.org <https://absbox.org>`_
 
    from absbox import API
    localAPI = API("https://absbox.org/api/latest")
+   
+   # setting default language
+   localAPI = API("https://absbox.org/api/latest",lang='english')
 
 
 .. note::
