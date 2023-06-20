@@ -238,6 +238,7 @@ Running
   Means sending request to backend engine server. A request has three elmenets:
    * API instance 
    * Assumptions
+   
      * Pool performance assumptions
      * Deal assumptions (May include Interest Rate / Clean Up Call)
    * Bond Pricing Inputs
