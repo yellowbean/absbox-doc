@@ -238,7 +238,7 @@ Running
   Means sending request to backend engine server. A request has three elmenets:
    * API instance 
    * Assumptions
-   
+
      * Pool performance assumptions
      * Deal assumptions (May include Interest Rate / Clean Up Call)
    * Bond Pricing Inputs
@@ -446,14 +446,14 @@ There are two types in sensitivity analysis in `absbox`
 
 
 
-It is common to performn sensitivity analysis to see:
+It is common to performn sensitivity analysis to get answers to:
 
-* what if the pool performance realized in different scenario ? 
-* what if the call option was exercise in differnt date ?
-* what if interest rate curve drop ?
+* What are the pool performance in different scenarios ? 
+* what if the call option was exercise in differnt date or different bond/pool factor ?
+* what if interest rate curve drop/increase ?
 * or any thing changes in the `assumption` ?
 
-That's what we need `Multi-Scneario` run .
+That's where we need to have a  `Multi-Scneario` run .
 
 Multi-Scenario
 ^^^^^^^^^^^^^^^^^
@@ -485,14 +485,14 @@ Multi-Structs
 
 In the structuring stage:
 
-* what if sizing a larger bond balance ?
+* what if sizing a larger bond balance for Bond A ?
 * what if design a differnt issuance balance for tranches ? 
-* what if include less assets in the pool ?
+* what if include less/more assets in the pool ?
 * what if changing a waterfall payment sequesnce ? 
 * what if adding a trigger ? 
 * or anything in changes in the `deal` component ?
 
-That's what we need `Multi-Structs` run .
+That's where we need to have a `Multi-Structs` run .
 
 
 .. code-block:: python
