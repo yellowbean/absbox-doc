@@ -366,7 +366,7 @@ Mortgage
 
   ["Mortgage"
     ,{"originBalance": 12000.0
-      ,"originRate": ["Fixed",0.045]
+      ,"originRate": ["fix",0.045]
       ,"originTerm": 120
       ,"freq": "Monthly"
       ,"type": "Level"
