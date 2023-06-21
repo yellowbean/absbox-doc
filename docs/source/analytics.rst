@@ -252,6 +252,17 @@ Running a deal
 
 Once the API was instantised ,call ``run()`` to project cashflow and price the bonds
 
+When the deal was trigger for a run:
+
+* Project pool cashflow from the pool assumptions supplied by user 
+* Feed pool cashflow to waterfall
+* Waterfall distribute the fund to bonds, expenses, etc.
+
+.. image:: img/deal_cycle_flow.png
+  :width: 600
+  :alt: version
+
+
 .. code-block:: python
 
   localAPI.run(test01,
