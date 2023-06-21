@@ -18,7 +18,7 @@ Using pip
 Upgrade `absbox` package to latest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``absbox`` is rapidly evolving rapidly, please make sure you are using the latest one. 
+``absbox`` is evolving rapidly, please make sure you are using the latest one. 
 
 .. code-block:: console
 
@@ -58,6 +58,12 @@ Public Server vs Self-hosted
 -----------------------------
 
 ``absbox`` needs connecting to an ``Hastructure`` engine behind the scene. User can choose a public one or use it's own if user is keen on privacy and performance.
+
+.. image:: img/user_choose_server.png
+  :width: 600
+  :alt: user_choose_server
+
+
 
 .. code-block:: python
 
