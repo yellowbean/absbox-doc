@@ -340,7 +340,7 @@ the fee due equals to a number multiply a unit fee. The number is a formula refe
     ,{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
    ,("irregulargfee"
     ,{"type":{"customFee":[["2024-01-01",100]
-                          ,["2024-03-15",50]}})
+                          ,["2024-03-15",50]]}})
   )
 
 
