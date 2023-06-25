@@ -329,9 +329,9 @@ the fee due equals to a number multiply a unit fee. The number is a formula refe
 .. code-block:: python
   
   (("servicer_fee"
-    ,{"type":{"annualPctFee":["poolBalance",0.02]}})
+    ,{"type":{"annualPctFee":[("poolBalance",),0.0006]}})
    ,("bond_service_fee"
-    ,{"type":{"pctFee":["bondBalance",0.02]}})
+    ,{"type":{"pctFee":[("bondBalance",),0.02]}})
    ,("issuance_fee"
     ,{"type":{"fixFee":100}})
    ,("rating_fee"
@@ -729,6 +729,10 @@ Bond
   * PayInt -> pay interset to a bond till due int balance is 0
 
     * format ``["payInt", {Account}, [<Bonds>] ]``
+  
+  * AccrueAndPayInt -> accrue interest and pay interset to a bond till due int balance is 0
+
+    * format ``["accrueAndPayInt", {Account}, [<Bonds>] ]``
 
   * PayPrin -> pay principal to a bond till due principal balance is 0
 
@@ -1038,6 +1042,16 @@ BMW Auto Deal 2023-01
 
 .. literalinclude:: deal_sample/test07.py
    :language: python
+
+Ginnie Mae /ARM Mortgage Deal 
+------------------------------------
+* Model an ARM 
+* Using a rate curve
+* Using variable fee rate ( a formula based `rate` for a formula)
+
+.. literalinclude:: deal_sample/test08.py
+   :language: python
+
 
 
 Save a deal file
