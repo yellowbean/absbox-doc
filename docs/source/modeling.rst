@@ -1016,7 +1016,7 @@ The deal docs may split income from pools by pct% to another account
 
 .. literalinclude:: deal_sample/test04.py
    :language: python
-   :emphasize-lines: 14,32
+   :emphasize-lines: 39-40
 
 Liquidation Provider /Insurance / Ganrantee
 ----------------------------------------------
