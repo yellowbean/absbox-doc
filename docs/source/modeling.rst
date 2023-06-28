@@ -113,6 +113,9 @@ Structured product is using ``formula`` to define the amount of account transfer
 * Expense
     * ``("feeDue","F1","F2")`` -> sum of fee due for fee "F1","F2"
     * ``("lastFeePaid","F1","F2")`` -> sum of fee last paid for fee "F1","F2"
+* LiquidationProvider 
+    * ``("liqCredit","F1","F2")`` -> sum of credit provided by "F1" "F2"
+
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
