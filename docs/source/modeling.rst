@@ -854,6 +854,13 @@ ie：
 Trigger
 -----------
 
+`Trigger` is a generalized concept in `absbox`/`Hastructure`, it is not limited to <pool performance> related design to protect tranches but a border concpet as below:
+
+.. image:: img/trigger.png
+  :width: 500
+  :alt: version
+
+
 There are 4 components in Triggers:
 
   * ``Condition`` -> it will fire the trigger effects, when :ref:`Condition` is met
