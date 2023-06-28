@@ -465,12 +465,18 @@ The whole model can be referred to here :ref:`BMW Auto Deal 2023-01`
 
 Revolving Period
 ^^^^^^^^^^^^^^^^^^^
-The revolving period usually was set like first 12/24 months of the projection. While the transaction may impose some other condition to enter `Amortization` stage when certain criteria was met, like pool cumulative default rate.
+The revolving period usually was set like first 12/24 months after closing of deal. While the transaction may impose some other condition to enter `Amortization` stage when certain criteria was met, like pool cumulative default rate.
 
-In this case, we model such event of `entering amortizating` with a trigger : if deal date was later than `2024-05-26` OR pool cumulative defaulted rate greater than 1.6%, then change the deal status from `Revolving` to `Amortizing`
+In this case, we model such event of `entering amortizating` with a trigger : 
+
+  * if deal date was later than `2024-05-26` OR 
+  * pool cumulative defaulted rate greater than 1.6%, 
+  
+then change the deal status from `Revolving` to `Amortizing`
 
 .. code-block:: python 
 
+  # a trigger 
   {"condition":["any"
                  ,[">=","2024-05-26"]
                  ,[("cumPoolDefaultedRate",),">",0.016]]
@@ -478,7 +484,7 @@ In this case, we model such event of `entering amortizating` with a trigger : if
    ,"status":False
    ,"curable":False}
 
-once the deal enter a new status `Amortizing`, then in the waterfall acitons would branch on status :
+Once the deal enter a new status `Amortizing`, then in the waterfall acitons would branch base deal status :
 
 .. code-block:: python 
 
@@ -488,7 +494,7 @@ once the deal enter a new status `Amortizing`, then in the waterfall acitons wou
                    ,"distAcc",'revolBuyAcc']
      ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None]
      ,["payResidual","distAcc","Sub"] ]
-    ,[["payPrin","distAcc",["A"]] # list of actions if predicate is False
+    ,[["payPrin","distAcc",["A"]] # >>>> list of actions if deal is NOT  Revolving Status
      ,["payPrin","distAcc",["Sub"]]
      ,["payFeeResidual", "distAcc", "bmwFee"]]]]
 
@@ -497,10 +503,11 @@ Revolving Asset
 ^^^^^^^^^^^^^^^^^^
 
 Asset to be bought in the future isn't really part of deal data, thus we are going to supply these `dummy` asset in the `Assumption` 
+
 Pls noted:
 
 * revolving assets to be bought can be a `portfolio` which means a `list` of assets .
-* user can set up a snapshot curve to simulatie different assets at points of time in the future to be bought.
+* user can set up a snapshot curve to simulate different assets at points of time in the future to be bought.
 * user can set different pool performance assumption on the revolving pool 
 
 .. code-block:: python 
@@ -539,7 +546,7 @@ Pricing an revolving asset would have a huge impact on the pool cashflow .
    ,["status","Revolving"]
    ,[["transferBy",{"formula":("substract",("bondBalance",),("poolBalance",))}
                   ,"distAcc",'revolBuyAcc']
-    ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None] 
+    ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None] # <--- action of buying revolving assets
     ,["payResidual","distAcc","Sub"] ]
    ,[["payPrin","distAcc",["A"]]
     ,["payPrin","distAcc",["Sub"]]
