@@ -952,6 +952,18 @@ Examples
         ,"curable":False}
         ]}
 
+Liquidity Provider
+---------------------
+
+`Liquidity Provider` is an external entity which can be used as a line of credit/insuer. If there is a shortage on fee or interest or principal, user can setup rules to draw cash from the `Likquidity Provider`  and deposity to accounts.
+
+
+Interest Rate Swap
+--------------------
+
+`Interest Rate Swap` is a 3rd party entity ,which can either deposit money into a SPV or collecting money from SPV. The direction of cashflow depends on the strike rate vs interest rate curve in assumption.
+
+
 
 Examples
 ============
