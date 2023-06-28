@@ -451,13 +451,11 @@ or user can cross check by review the account logs by (if changing deal status w
 Sensitivity Analysis
 ----------------------
 
-There are two types in sensitivity analysis in `absbox`
-
+There are two types in sensitivity analysis in `absbox`: Either teaking on assumptions (left) or changing deal components (right)
 
 .. image:: img/sensitivity_analysis.png
   :width: 600
   :alt: sensitivity
-
 
 
 It is common to performn sensitivity analysis to get answers to:
@@ -521,6 +519,24 @@ That's where we need to have a `Multi-Structs` run .
   # deal run result using structure test 02
   r["B"]
 
+Retriving Results
+^^^^^^^^^^^^^^^^^^^^^
+
+The result returned from sensitviy run is just a map, with key as identifer for each scenario, the value is the same as single run. 
+
+To access same component from different sceanrio : 
+
+.. code-block:: python
+
+  r # r is the sensitivity run result 
+  
+  # get bond "A1" cashflow from all the scenario ,using a list comprehension
+  {k: v['bonds']["A1"] for k,v in r.items() }
+
+  # get account flow "reserve_account_01"
+  {k: v['accounts']["reserve_account_01"] for k,v in r.items() }
+
+  
 
 IRR 
 ------------------
