@@ -1080,7 +1080,7 @@ Load
 JSON
 ----------
 
-A deal object can be converted into json format via a properity field `.json`
+A deal object can be converted into json format via a property field `.json`
 
 .. code-block:: python
    
