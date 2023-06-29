@@ -552,8 +552,26 @@ Pricing an revolving asset would have a huge impact on the pool cashflow .
     ,["payPrin","distAcc",["Sub"]]
     ,["payFeeResidual", "distAcc", "bmwFee"]]]]
 
+Visualize the cash `flow`
+---------------------------
+
+Waterfall rules can be complex and headache.
+Luckily `absbox` is gentle enough to provide candy function to visualize the fund allocation.
+
+`absbox` is using `Graphviz <https://graphviz.org/>`_  , 
+pls make sure it was installed as well as python wrapper `graphviz <https://pypi.org/project/graphviz/>`_ 
+
+Let's use the example -> :ref:`BMW Auto Deal 2023-01`
 
 
+.. code-block:: python 
 
+  from absbox.local.chart import viz
+  
+  viz(BMW202301) # that's it ,done !
 
+.. image:: img/bmw_viz.svg
+  :width: 600
+  :alt: waterfall_viz
 
+  
