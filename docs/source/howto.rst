@@ -570,8 +570,9 @@ Let's use the example -> :ref:`BMW Auto Deal 2023-01`
   
   viz(BMW202301) # that's it ,done !
 
-.. raw:: html
-  :width: 600
-  :file: img/bmw_viz.svg
+preview
 
+.. image:: img/bmw_viz.png
+  :width: 600
+  :alt: waterfall_viz
   
