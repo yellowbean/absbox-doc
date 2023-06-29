@@ -120,11 +120,15 @@ Structured product is using ``formula`` to define the amount of account transfer
 Or `formula` can be an arithmetic calculation on itselfies.
 
 * Combination
-    * ``("factor", <Formula>,<Number>)`` -> multiply <Number> to a formula
-    * ``("Max", <Formula>, <Formula>)`` -> get the higher value
-    * ``("Min", <Formula>, <Formula>)`` -> get the lower value 
+    * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
+    * ``("Max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
+    * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
     * ``("sum", [<Formula>])`` -> sum of formula value
     * ``("substract", [<Formula>])`` -> using 1st of element to substract rest in the list
+    * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
+    * ``("floorWithZero", <Formula> )`` -> get value of <formula1> and floor with 0
+    * ``("floorCap", <Formula1>, <Formula2>, <Formula3> )`` -> use <Formula1> as floor, <Formula2> as cap, and use <Formula3> as value
+    * ``("capWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and cap with <formula2>
     * ``("constant", <Number>)``  -> a constant value
     * ``("custom", <Name of user define data>)`` -> use a custom data
 
