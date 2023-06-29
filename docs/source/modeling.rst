@@ -113,6 +113,9 @@ Structured product is using ``formula`` to define the amount of account transfer
 * Expense
     * ``("feeDue","F1","F2")`` -> sum of fee due for fee "F1","F2"
     * ``("lastFeePaid","F1","F2")`` -> sum of fee last paid for fee "F1","F2"
+* LiquidationProvider 
+    * ``("liqCredit","F1","F2")`` -> sum of credit provided by "F1" "F2"
+
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
@@ -747,6 +750,10 @@ Bond
   * PayInt -> pay interset to a bond till due int balance is 0
 
     * format ``["payInt", {Account}, [<Bonds>] ]``
+  
+  * AccrueAndPayInt -> accrue interest and pay interset to a bond till due int balance is 0
+
+    * format ``["accrueAndPayInt", {Account}, [<Bonds>] ]``
 
   * PayPrin -> pay principal to a bond till due principal balance is 0
 
@@ -1075,6 +1082,16 @@ BMW Auto Deal 2023-01
 
 .. literalinclude:: deal_sample/test07.py
    :language: python
+
+Ginnie Mae /ARM Mortgage Deal 
+------------------------------------
+* Model an ARM 
+* Using a rate curve
+* Using variable fee rate ( a formula based `rate` for a formula)
+
+.. literalinclude:: deal_sample/test08.py
+   :language: python
+
 
 
 Save a deal file
