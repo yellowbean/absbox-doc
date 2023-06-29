@@ -289,10 +289,22 @@ one-off fee
 
 with a oustanding balance and will be paid off once it paid down to zero
 
+.. code-block:: python
+  
+  ("issuance_fee"
+      ,{"type":{"fixFee":100}})
+
 recurrance fee
 ^^^^^^^^^^^^^^^^
 
 a fix amount fee which occurs by defined :ref:`Date Pattern`
+
+.. code-block:: python
+  
+   ,("rating_fee"
+    ,{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
+
+
 
 percentage fee
 ^^^^^^^^^^^^^^^^^^^
@@ -306,11 +318,22 @@ like a fee is base on
   * a sum of `formula` 
   * ...
 
+.. code-block:: python
+  
+  ("bond_service_fee"
+      ,{"type":{"pctFee":["bondBalance",0.02]}})
+
+
 annualized fee
 ^^^^^^^^^^^^^^^^
 
 similar to `percentage fee` but it will use an annualized rate to multiply the value of :ref:`Formula`.
 either reference to pool balance  or bond balance , etc.... it will accure type fee, which if not being paid, it will increase the due amount.
+
+.. code-block:: python
+  
+  ("servicer_fee"
+      ,{"type":{"annualPctFee":["poolBalance",0.02]}})
 
 
 custom fee flow
@@ -320,6 +343,12 @@ A user defined time series expenses, the date and amount can be customized.
 
 like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
+.. code-block:: python
+  
+   ,("irregulargfee"
+    ,{"type":{"customFee":[["2024-01-01",100]
+                          ,["2024-03-15",50]]}})
+
 
 count type fee
 ^^^^^^^^^^^^^^^^^^^
@@ -328,20 +357,9 @@ the fee due equals to a number multiply a unit fee. The number is a formula refe
 
 .. code-block:: python
   
-  (("servicer_fee"
-    ,{"type":{"annualPctFee":["poolBalance",0.02]}})
-   ,("bond_service_fee"
-    ,{"type":{"pctFee":["bondBalance",0.02]}})
-   ,("issuance_fee"
-    ,{"type":{"fixFee":100}})
-   ,("rating_fee"
-    ,{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
    ,("borrowerFee"
     ,{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
-   ,("irregulargfee"
-    ,{"type":{"customFee":[["2024-01-01",100]
-                          ,["2024-03-15",50]]}})
-  )
+
 
 
 Pool
