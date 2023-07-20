@@ -104,6 +104,7 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("originalPoolBalance",)``  -> pool original balance 
     * ``("currentPoolDefaultedBalance",)``  -> pool defaulted balance 
     * ``("cumPoolDefaultedBalance",)``  -> pool cumulative defaulted balance 
+    * ``("cumPoolRecoveries",)`` -> pool cumulative recoveries
     * ``("poolFactor",)`` -> pool factor
     * ``("borrowerNumber",)`` -> number of borrower
 * Accounts

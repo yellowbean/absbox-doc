@@ -182,8 +182,7 @@ Deal Assumption
 Pricing Assumption
 ^^^^^^^^^^^^^^^^^^^^^
 
-User can provide a pricing curve and a pricing data ,which all future bond cashflow will be discounted at that date with the curve provided.
-
+* User can provide a pricing curve and a pricing data to argument `pricing`,which all future bond cashflow will be discounted at that date with the curve provided.
 
    .. code-block:: python
       :emphasize-lines: 6-8
@@ -196,6 +195,27 @@ User can provide a pricing curve and a pricing data ,which all future bond cashf
                     ,"PVCurve":[["2021-01-01",0.025]
                                ,["2024-08-01",0.025]]},
            read=True)   
+
+* Caculate Z-spread  
+
+User need to provide a ```{<bond name>:(<price date>,<price>)}```
+The engine will calculate the how much spread need to added into ```curve```, then the PV of 
+bond cashflow equals to ```<price>```
+
+   .. code-block:: python
+      :emphasize-lines: 6-8
+
+      localAPI.run(test01,
+           assumptions=[{"CPR":0.01}
+                       ,{"CDR":0.01}
+                       ,{"Recovery":(0.7,18)}],
+           pricing={"bonds":{"A1":("2021-07-26",100)}
+                    ,"curve":[["2021-01-01",0.025]
+                             ,["2024-08-01",0.025]]},
+           read=True) 
+
+      # to retrive the Z-spread result
+      r['pricing']  
 
 
 
