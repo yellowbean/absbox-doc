@@ -124,8 +124,8 @@ Or `formula` can be an arithmetic calculation on itselfies.
     * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
     * ``("Max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
     * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
-    * ``("sum", [<Formula>])`` -> sum of formula value
-    * ``("substract", [<Formula>])`` -> using 1st of element to substract rest in the list
+    * ``("sum", <Formula>, <Formula>, ...)`` -> sum of formula value
+    * ``("substract", <Formula>, <Formula>, ...)`` -> using 1st of element to substract rest in the list
     * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
     * ``("floorWithZero", <Formula> )`` -> get value of <formula1> and floor with 0
     * ``("floorCap", <Formula1>, <Formula2>, <Formula3> )`` -> use <Formula1> as floor, <Formula2> as cap, and use <Formula3> as value
@@ -763,7 +763,18 @@ Bond
   * PayPrin -> pay principal to a bond till due principal balance is 0
 
     * format ``["payPrin", {Account}, [<Bonds>] ]``
-    * format ``["payPrinBy", {Account}, [<Bonds>], <Limit>]``
+    * format ``["payPrin", {Account}, [<Bonds>], <Limit>]``
+
+    the ``<Limit>`` is the magic key to make principal payment more versatile. User can control the amount to be paid via a :ref:`Formula` ie.
+       *  (from deal: Autoflorence) the target amount is ` (end pool balance - (end pool balance * subordination percentage(12%)))`
+          
+          .. code-block:: python
+
+            ["payPrinBy","SourceAccount","A"
+                        ,{"formula": ("substract"
+                                       ,("poolBalance",)
+                                       ,("factor"
+                                         ,("poolBalance",), 0.12))}]
   
   * PayPrinResidual -> pay principal to a bond regardless its due principal balance
     
@@ -1097,36 +1108,17 @@ Ginnie Mae /ARM Mortgage Deal
 .. literalinclude:: deal_sample/test08.py
    :language: python
 
+Limit Principal Payment
+------------------------------------
+
+* Using a formula to limit the principal repayment of a bond 
+* Using `Inspect` to view the formula value 
 
 
-Save a deal file
-===================
+.. literalinclude:: deal_sample/test09.py
+   :language: python
+   :emphasize-lines: 3-5,42,58-59
 
-Binary
--------------
-
-Save
-^^^^^^^
-
-using ``save()`` to save a deal file to disk
-
-.. code-block:: python
-
-  ...
-  from absbox import API,save
-  deal = .... #
-  save(deal,"path/to/file")
-
-Load
-^^^^^^^^
-
-``load()`` to load a deal from disk
-
-.. code-block:: python
-
-  ...
-  from absbox.local.generic import Generic
-  Generic.load("path/to/file")
 
 
 JSON
