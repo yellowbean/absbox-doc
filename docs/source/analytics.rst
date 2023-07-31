@@ -371,6 +371,18 @@ Bond Cashflow
    r['bonds'].keys() # all bond names
    r['bonds']['A1'] # cashflow for bond `A1`
 
+Bond Cashflow By Position
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+  from absbox.local.util import positionFlow
+
+  r = localAPI.run()
+  
+  positionFlow(r, {'A1':15000000.0} )
+
+
 Fee Cashflow
 ^^^^^^^^^^^^^^
 
@@ -510,6 +522,17 @@ User shall able to access the each scenario's response by just by `scenario name
    
    r["00"]
    r["stressed"]
+
+There are couple candy function user can view the data field from all the scenarios:
+
+.. code-block:: python
+   
+   from absbox.local.component import flow_by_scenario
+
+   flow_by_scenario(rs,["pool","flow","Interest"])
+   flow_by_scenario(rs,["bonds","A1","principal"])
+   flow_by_scenario(rs,["bonds","A1", ["principal","cash"]])
+   flow_by_scenario(rs,["pricing","A1"],node="idx")
 
 
 Multi-Structs
