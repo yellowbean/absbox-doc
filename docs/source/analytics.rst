@@ -527,7 +527,7 @@ There are couple candy function user can view the data field from all the scenar
 
 .. code-block:: python
    
-   from absbox.local.component import flow_by_scenario
+   from absbox.local.util import flow_by_scenario
 
    flow_by_scenario(rs,["pool","flow","Interest"])
    flow_by_scenario(rs,["bonds","A1","principal"])

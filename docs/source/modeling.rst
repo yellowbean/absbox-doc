@@ -99,6 +99,9 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("lastBondIntPaid","A")``  -> bond last paid interest
     * ``("behindTargetBalance","A")``  -> difference of target balance with current balance for the bond A
     * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
+    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
+    * ``("bondTxnAmt", None,"A")``  -> Total transaction amount of bond 'A'
+    * ``("bondTxnAmt", "<PayInt:A>","A")``  -> Total transaction amount of interest payment bond 'A'
 * Pool 
     * ``("poolBalance",)``  -> current pool balance
     * ``("originalPoolBalance",)``  -> pool original balance 
@@ -111,9 +114,12 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("accountBalance",)`` -> sum of all account balance
     * ``("accountBalance","A","B")`` -> sum of account balance for "A" and "B"
     * ``("reserveGap","A","B")`` -> sum of shortfall of reserve amount of specified accounts
+    * ``("accountTxnAmt",None,"A")`` -> total transaction amount of account "A"
+    * ``("accountTxnAmt","<tag>","A")`` -> total transaction amount tagged with ``<tag>`` of account "A"
 * Expense
     * ``("feeDue","F1","F2")`` -> sum of fee due for fee "F1","F2"
     * ``("lastFeePaid","F1","F2")`` -> sum of fee last paid for fee "F1","F2"
+    * ``("feeTxnAmt",None,"A")`` -> total transaction amount of fee "A"
 * LiquidationProvider 
     * ``("liqCredit","F1","F2")`` -> sum of credit provided by "F1" "F2"
 
