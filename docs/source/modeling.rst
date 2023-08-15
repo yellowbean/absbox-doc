@@ -391,7 +391,7 @@ Mortgage
 
 `type` field can be used to define either its `Annuity` type or `Linear` Type
 
-* `Level` -> `Annuity`
+* `Level` -> `Annuity`,`French`
 * `Even` -> `Linear`
 
 .. code-block:: python
