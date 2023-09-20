@@ -920,10 +920,17 @@ When to run trigger
   * Start/End of each Distribution Day    -> ``BeforeDistribution`` / ``AfterDistribution``
   * During any point of waterfall 
 
+
+.. image:: img/trigger_in_deal_run.png
+  :width: 600
+  :alt: trigger_loc
+
+
+
 Conditons of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Magically, it just a :ref:`Condition` from the very begining ! We just reuse that component.
+Magically, condition of a trigger is just a :ref:`Condition` from the very begining ! We just reuse that component.
 
 
 Effects/Consequence of a trigger
@@ -934,11 +941,45 @@ Effects/Consequence of a trigger
   * convert `revolving` to `amortizing`
   * convert `amortizing` to `accelerated`
   * convert `amortizing` to `defaulted`
+
+.. code-block:: python
+  
+  "effects":("newStatus","Amortizing") # change deal status to "Amortizing"
+  "effects":("newStatus","Accelerated") # change deal status to "Accelerated"
+  "effects":("newStatus","Defaulted") # change deal status to "Defautled"
+
   * or between any `state` , once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
   * accure some certain fee 
+
+.. code-block:: python
+  
+  "effects":["accrueFees","feeName1","feeName2",...]
+
   * change reserve target balance of an account
+
+.. code-block:: python
+  
+  "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
+  "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
+
   * create a new trigger 
+
+.. code-block:: python
+  
+  "effects":[("newTrigger"
+              ,{"condition":...
+               ,"effects":...
+               ,"status":...
+               ,"curable":...})]
+
   * a list of above
+
+.. code-block:: python
+  
+  "effects":["Effects"
+             ,<effect 1>
+             ,<effect 2>
+             ,....]
 
 
 Examples  
