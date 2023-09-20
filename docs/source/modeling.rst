@@ -936,7 +936,7 @@ Magically, condition of a trigger is just a :ref:`Condition` from the very begin
 Effects/Consequence of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   
-  Trigger will update the `state` of a deal, like:
+Trigger will update the `state` of a deal, like:
 
   * convert `revolving` to `amortizing`
   * convert `amortizing` to `accelerated`
@@ -948,21 +948,22 @@ Effects/Consequence of a trigger
   "effects":("newStatus","Accelerated") # change deal status to "Accelerated"
   "effects":("newStatus","Defaulted") # change deal status to "Defautled"
 
-  * or between any `state` , once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
-  * accure some certain fee 
+Once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
+
+* accure some certain fee 
 
 .. code-block:: python
   
   "effects":["accrueFees","feeName1","feeName2",...]
 
-  * change reserve target balance of an account
+* change reserve target balance of an account
 
 .. code-block:: python
   
   "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
   "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
 
-  * create a new trigger 
+* create a new trigger 
 
 .. code-block:: python
   
@@ -972,7 +973,7 @@ Effects/Consequence of a trigger
                ,"status":...
                ,"curable":...})]
 
-  * a list of above
+* a list of above
 
 .. code-block:: python
   
