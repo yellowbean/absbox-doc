@@ -581,7 +581,7 @@ Free Formulas
 
 if user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
 
-User just need to provide "When" to view the variables via a :ref:`<DatePattern>` or "What" variables to view via a :ref:`<Formula>`
+User just need to provide "When" to view the variables via a :ref:`DatePattern` or "What" variables to view via a :ref:`Formula`
 
 
 
