@@ -99,7 +99,6 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("lastBondIntPaid","A")``  -> bond last paid interest
     * ``("behindTargetBalance","A")``  -> difference of target balance with current balance for the bond A
     * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
-    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
     * ``("bondTxnAmt", None,"A")``  -> Total transaction amount of bond 'A'
     * ``("bondTxnAmt", "<PayInt:A>","A")``  -> Total transaction amount of interest payment bond 'A'
 * Pool 
@@ -719,7 +718,21 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``Action`` to be executed.
+Waterfall means a list of ``Action`` to be executed. A Deal may have more than one waterfalls.
+It was modeled as a map, with key as identifier to distinguish different type of waterfall.
+
+* `"amortizing"` -> will be pick when deal status is `Amortizing`
+* `("amortizing", "accelerated")` -> will be pick when deal status is `Accelerated`
+* `("amortizing", "defaulted")` -> will be pick when deal status is `Defaulted`
+* `"cleanUp"` -> will be pick when deal is being clean up call
+* `"endOfCollection"` -> will be exectued at the end of collection period
+* `"closingDay"` -> will be exectued at the `Day of Closing` if deal status is `PreClosing`
+* `"default"` -> the default waterfall to be executed if no other waterfall applicable
+
+
+.. image:: img/waterfall_in_deal_runt.png
+  :width: 500
+  :alt: waterfall_run_loc
 
 Action
   ``Action`` is a list, which annoates the action to be performed. In most of cases, the first element of list is the name of action, rest of elements are describing the fund movements(fund source and fund target)/ state change like update trigger status / fee accrual /bond interest accrual.
@@ -950,20 +963,20 @@ Trigger will update the `state` of a deal, like:
 
 Once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
 
-* accure some certain fee 
+  * accure some certain fee 
 
 .. code-block:: python
   
   "effects":["accrueFees","feeName1","feeName2",...]
 
-* change reserve target balance of an account
+  * change reserve target balance of an account
 
 .. code-block:: python
   
   "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
   "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
 
-* create a new trigger 
+  * create a new trigger 
 
 .. code-block:: python
   
@@ -973,7 +986,7 @@ Once the `state` of deal changed, the deal will pick the corresponding waterfall
                ,"status":...
                ,"curable":...})]
 
-* a list of above
+  * a list of above
 
 .. code-block:: python
   
