@@ -719,6 +719,11 @@ Waterfall
 -------------
 
 Waterfall means a list of ``Action`` to be executed. A Deal may have more than one waterfalls.
+
+
+Different Waterfalls in Deal
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 It was modeled as a map, with key as identifier to distinguish different type of waterfall.
 
 * `"amortizing"` -> will be pick when deal status is `Amortizing`
@@ -729,10 +734,24 @@ It was modeled as a map, with key as identifier to distinguish different type of
 * `"closingDay"` -> will be exectued at the `Day of Closing` if deal status is `PreClosing`
 * `"default"` -> the default waterfall to be executed if no other waterfall applicable
 
-
 .. image:: img/waterfall_in_deal_runt.png
   :width: 500
   :alt: waterfall_run_loc
+
+ie：
+
+.. code-block:: python
+
+   {"amortizing":[
+       ["payFee",["acc01"],['trusteeFee']]
+       ,["payInt","acc01",["A1"]]
+       ,["payPrin","acc01",["A1"]]
+       ,["payPrin","acc01",["B"]]
+       ,["payResidual","acc01","B"]]
+    ,"CleanUp":[]
+    ,"default":[]
+    }
+
 
 Action
   ``Action`` is a list, which annoates the action to be performed. In most of cases, the first element of list is the name of action, rest of elements are describing the fund movements(fund source and fund target)/ state change like update trigger status / fee accrual /bond interest accrual.
@@ -877,34 +896,6 @@ format : ``["IfElse",<conditon>``
                     ``]``
                     
 first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
-
-Different Waterfalls in Deal
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-`Waterfall`: there are couple waterfalls in a deal 
-
-  * ``default``, a default waterfall of deal, which is being executed if no other waterfall match deal current status.
-  * ``"amortizing"``, executing when deal is *not defaulted*
-  * ``("amortizing","accelerated")``, executing when deal is *accelerated*
-  * ``("amortizing","defaulted")``, executing when deal is *defaulted*
-  * ``EndOfPoolCollection``, executing at end of pool collection period
-  * ``closingDay``, executing only when the deal reach to closing day
-  * ``CleanUp``, executing when deal is being *clean up*
-
-ie：
-
-.. code-block:: python
-
-   {"amortizing":[
-       ["payFee",["acc01"],['trusteeFee']]
-       ,["payInt","acc01",["A1"]]
-       ,["payPrin","acc01",["A1"]]
-       ,["payPrin","acc01",["B"]]
-       ,["payResidual","acc01","B"]]
-    ,"CleanUp":[]
-    ,"default":[]
-    }
 
 
 Trigger
