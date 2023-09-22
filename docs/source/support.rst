@@ -33,3 +33,10 @@ Email
 .. image:: img/email-image.png
   :width: 200
   :alt: Support Email 
+
+Slack
+---------
+
+``absboxhastructure``
+
+https://absboxhastructure.slack.com
