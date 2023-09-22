@@ -552,6 +552,39 @@ Pricing an revolving asset would have a huge impact on the pool cashflow .
     ,["payPrin","distAcc",["Sub"]]
     ,["payFeeResidual", "distAcc", "bmwFee"]]]]
 
+
+
+Debug the cashflow
+------------------------
+
+Well.. there isn't such `Debug` action on the cashflow, but a more precise put: a various angles to `View` the cashflow.
+
+
+Financial Reports 
+^^^^^^^^^^^^^^^^^^^^^
+
+user can inspect `Balancesheet` and `Cashflow` report from a highlevel. :ref:`How to view projected quasi Financial Reports ?`
+
+
+Account transactions
+^^^^^^^^^^^^^^^^^^^^^
+
+if user want to view the break down of waterfall distribution, user may view account transaction via:
+
+.. code-block:: python 
+
+  r['accounts']['AccountName01']
+
+
+Free Formulas
+^^^^^^^^^^^^^^^^^^^^^
+
+if user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
+
+User just need to provide "When" to view the variables via a :ref:`DatePattern` or "What" variables to view via a :ref:`Formula`
+
+
+
 Visualize the cash `flow`
 ---------------------------
 
@@ -576,3 +609,6 @@ preview
   :width: 600
   :alt: waterfall_viz
   
+
+
+

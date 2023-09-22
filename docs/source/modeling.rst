@@ -154,7 +154,6 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("lastBondIntPaid","A")``  -> bond last paid interest
     * ``("behindTargetBalance","A")``  -> difference of target balance with current balance for the bond A
     * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
-    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
     * ``("bondTxnAmt", None,"A")``  -> Total transaction amount of bond 'A'
     * ``("bondTxnAmt", "<PayInt:A>","A")``  -> Total transaction amount of interest payment bond 'A'
 * Pool 
@@ -446,7 +445,7 @@ Mortgage
 
 `type` field can be used to define either its `Annuity` type or `Linear` Type
 
-* `Level` -> `Annuity`
+* `Level` -> `Annuity`,`French`
 * `Even` -> `Linear`
 
 .. code-block:: python
@@ -774,7 +773,40 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``Action`` to be executed.
+Waterfall means a list of ``Action`` to be executed. A Deal may have more than one waterfalls.
+
+
+Different Waterfalls in Deal
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It was modeled as a map, with key as identifier to distinguish different type of waterfall.
+
+* `"amortizing"` -> will be pick when deal status is `Amortizing`
+* `("amortizing", "accelerated")` -> will be pick when deal status is `Accelerated`
+* `("amortizing", "defaulted")` -> will be pick when deal status is `Defaulted`
+* `"cleanUp"` -> will be pick when deal is being clean up call
+* `"endOfCollection"` -> will be exectued at the end of collection period
+* `"closingDay"` -> will be exectued at the `Day of Closing` if deal status is `PreClosing`
+* `"default"` -> the default waterfall to be executed if no other waterfall applicable
+
+.. image:: img/waterfall_in_deal_runt.png
+  :width: 500
+  :alt: waterfall_run_loc
+
+ie：
+
+.. code-block:: python
+
+   {"amortizing":[
+       ["payFee",["acc01"],['trusteeFee']]
+       ,["payInt","acc01",["A1"]]
+       ,["payPrin","acc01",["A1"]]
+       ,["payPrin","acc01",["B"]]
+       ,["payResidual","acc01","B"]]
+    ,"CleanUp":[]
+    ,"default":[]
+    }
+
 
 Action
   ``Action`` is a list, which annoates the action to be performed. In most of cases, the first element of list is the name of action, rest of elements are describing the fund movements(fund source and fund target)/ state change like update trigger status / fee accrual /bond interest accrual.
@@ -918,34 +950,6 @@ format : ``["IfElse",<conditon>``
                     
 first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
 
-Different Waterfalls in Deal
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-`Waterfall`: there are couple waterfalls in a deal 
-
-  * ``default``, a default waterfall of deal, which is being executed if no other waterfall match deal current status.
-  * ``"amortizing"``, executing when deal is *not defaulted*
-  * ``("amortizing","accelerated")``, executing when deal is *accelerated*
-  * ``("amortizing","defaulted")``, executing when deal is *defaulted*
-  * ``EndOfPoolCollection``, executing at end of pool collection period
-  * ``closingDay``, executing only when the deal reach to closing day
-  * ``CleanUp``, executing when deal is being *clean up*
-
-ie：
-
-.. code-block:: python
-
-   {"amortizing":[
-       ["payFee",["acc01"],['trusteeFee']]
-       ,["payInt","acc01",["A1"]]
-       ,["payPrin","acc01",["A1"]]
-       ,["payPrin","acc01",["B"]]
-       ,["payResidual","acc01","B"]]
-    ,"CleanUp":[]
-    ,"default":[]
-    }
-
 
 Trigger
 -----------
@@ -973,25 +977,67 @@ When to run trigger
   * Start/End of each Distribution Day    -> ``BeforeDistribution`` / ``AfterDistribution``
   * During any point of waterfall 
 
+
+.. image:: img/trigger_in_deal_run.png
+  :width: 600
+  :alt: trigger_loc
+
+
+
 Conditons of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Magically, it just a :ref:`Condition` from the very begining ! We just reuse that component.
+Magically, condition of a trigger is just a :ref:`Condition` from the very begining ! We just reuse that component.
 
 
 Effects/Consequence of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   
-  Trigger will update the `state` of a deal, like:
+Trigger will update the `state` of a deal, like:
 
   * convert `revolving` to `amortizing`
   * convert `amortizing` to `accelerated`
   * convert `amortizing` to `defaulted`
-  * or between any `state` , once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
+
+.. code-block:: python
+  
+  "effects":("newStatus","Amortizing") # change deal status to "Amortizing"
+  "effects":("newStatus","Accelerated") # change deal status to "Accelerated"
+  "effects":("newStatus","Defaulted") # change deal status to "Defautled"
+
+Once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
+
   * accure some certain fee 
+
+.. code-block:: python
+  
+  "effects":["accrueFees","feeName1","feeName2",...]
+
   * change reserve target balance of an account
+
+.. code-block:: python
+  
+  "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
+  "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
+
   * create a new trigger 
+
+.. code-block:: python
+  
+  "effects":[("newTrigger"
+              ,{"condition":...
+               ,"effects":...
+               ,"status":...
+               ,"curable":...})]
+
   * a list of above
+
+.. code-block:: python
+  
+  "effects":["Effects"
+             ,<effect 1>
+             ,<effect 2>
+             ,....]
 
 
 Examples  
