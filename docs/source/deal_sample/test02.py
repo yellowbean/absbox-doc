@@ -36,21 +36,21 @@ test01 = Generic(
              }))
     ,(("trusteeFee",{"type":{"fixFee":30}}),)
     ,{"amortizing":[
-         ["payFee",["acc01"],['trusteeFee']]
+         ["payFee","acc01",['trusteeFee']]
          ,["accrueAndPayInt","acc01",["A1","A2"]]
          ,["payPrin","acc01",["A1","A2"]]
          ,["payPrin","acc01",["B"]]
-         ,["payResidual","acc01","B"]]
+         ,["payPrinResidual","acc01",["B"]]]
       ,"cleanUp":[]
       ,"endOfCollection":[]       # execute when collect money from pool
       ,("amortizing","defaulted"):[]   #execute when deal is `defaulted`
       ,("amortizing","accelerated"):[ #execute when deal is `accelerated`
-         ["payFee",["acc01"],['trusteeFee']]
+         ["payFee","acc01",['trusteeFee']]
          ,["accrueAndPayInt","acc01",["A1","A2"]]
          ,["payPrin","acc01",["A1"]] 
          ,["payPrin","acc01",["A2"]]
          ,["payPrin","acc01",["B"]]
-         ,["payResidual","acc01","B"]
+         ,["payPrinResidual","acc01",["B"]]
       ] 
       }
     ,[["CollectedInterest","acc01"]
@@ -60,11 +60,11 @@ test01 = Generic(
     ,None
     ,None
     ,None
-    ,{"AfterCollect":[
-        {"condition":[("cumPoolDefaultedRate",),">",0.05],
-        "effects":("newStatus","Accelerated"),
-        "status":False,
-        "curable":False} ]
-      }
+    ,{"AfterCollect":{
+        "DefaultTrigger": 
+         {"condition":[("cumPoolDefaultedRate",),">",0.05]
+          ,"effects":("newStatus","Accelerated")
+          ,"status":False
+          ,"curable":False}}}
 )
 

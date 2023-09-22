@@ -4,19 +4,20 @@ Modelling
 .. autosummary::
    :toctree: generated
 
-Deal modeling is a process to build a deal with descriptive data, with components follows:
+Deal modeling is a process to build deal class with descriptive components follows:
 
 * Asset info -> pool asset attributes, loan by loan or repline level data or projected cashflow as input
-* Bond info -> bonds with different types as well as residule tranche
+* Bond info -> bonds with different types and equity tranche
 * Waterfall info -> Describe the priority of payments when:
     * End of pool collection (Optional)
     * Distribution day for all the bonds and fees 
     * Event of Default (Optional)
     * Clean up call (Optional)
 * Dates info
-  * Cutoff day / Closing Date / Next/First payment Date or series of custom dates
-* Triggers (Optional)
-* Liquidity Provider (Optional)
+  * Cutoff day / Closing Date / Next / First payment Date or series of custom dates
+* Triggers (Optional) -> describe what may happened then what state changed should be performed in deal
+* Liquidity Provider (Optional) -> entities provides interest bearing/non-bearing support to shortfall of fee/interest or bond principal
+* Hedges (Optional) -> interest rate swap/ fx swap
 
 
 Structure of a `Generic` deal 
@@ -40,10 +41,64 @@ Structure of a `Generic` deal
         ,<triggers>
     )
 
-
-
-
 .. _Generic ABS:
+
+|:new:| Now we have a map-based syntax suguar ``mkDeal`` to create a deal without remembering the order of arguments passed into `Generic` class ! 
+
+.. code-block:: python
+  
+    name = "TEST01"
+    dates = {"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
+        ,"payFreq":["DayOfMonth",20],"poolFreq":"MonthEnd","stated":"2030-01-01"}
+    pool = {'assets':[["Mortgage"
+            ,{"originBalance":2200,"originRate":["fix",0.045],"originTerm":30
+              ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
+              ,{"currentBalance":2200
+              ,"currentRate":0.08
+              ,"remainTerm":20
+              ,"status":"current"}]]}
+    accounts = {"acc01":{"balance":0}}
+    bonds = {"A1":{"balance":1000
+                ,"rate":0.07
+                ,"originBalance":1000
+                ,"originRate":0.07
+                ,"startDate":"2020-01-03"
+                ,"rateType":{"Fixed":0.08}
+                ,"bondType":{"Sequential":None}}
+            ,"B":{"balance":1000
+                ,"rate":0.0
+                ,"originBalance":1000
+                ,"originRate":0.07
+                ,"startDate":"2020-01-03"
+                ,"rateType":{"Fixed":0.00}
+                ,"bondType":{"Equity":None}
+                }}
+                
+    waterfall = {"amortizing":[
+                    ["accrueAndPayInt","acc01",["A1"]]
+                    ,["payPrin","acc01",["A1"]]
+                    ,["payPrin","acc01",["B"]]
+                    ,["payPrinResidual","acc01",["B"]]
+                ]}
+    collects = [["CollectedInterest","acc01"]
+                ,["CollectedPrincipal","acc01"]
+                ,["CollectedPrepayment","acc01"]
+                ,["CollectedRecoveries","acc01"]]
+
+    deal_data = {
+        "name":name
+        ,"dates":dates
+        ,"pool":pool
+        ,"accounts":accounts
+        ,"bonds":bonds
+        ,"waterfall":waterfall
+        ,"collect":collects
+    }
+
+    from absbox import mkDeal
+    d = mkDeal(deal_data)  ## now a generic class created
+
+
 
 Building Blocks 
 ==================
@@ -55,7 +110,7 @@ Building Blocks
     from absbox.local.generic import Generic
 
 
-There are 4 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, ``<Curve>``, all of them are being used in different components.
+There are 5 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, ``<Curve>``, ``<Pricing Method>``, all of them are being used in different components.
 
 
 DatePattern
@@ -74,7 +129,7 @@ DatePattern
 * ``["CustomDate","YYYY-MM-DD1","YYYY-MM-DD2"]`` -> a series of user defined dates
 * ``["EveryNMonth","YYYY-MM-DD",N]`` -> a seriers day starts with "YYYY-MM-DD", then every other N months afterwards
 
-Composite <DatePattern>
+Composite ``<DatePattern>``
 
 DatePatterns can be composed together:
 
@@ -733,18 +788,16 @@ Fee
   
   * PayFee -> pay to a fee till due balance is 0
 
-    syntax ``["payFee", [{Account}], [<Fees>]]``
+    syntax ``["payFee", {Account}, [<Fees>]]``
 
-      *  ``[{Account}]`` -> Using the available funds of accounts in the list from 1st ,then 2nd ..
+      *  ``{Account}`` -> Using the available funds from a single account.
       *  ``[<Fees>]`` -> Pay the fees in the list on pro-rata basis
 
-  * PayFeeBy
-
-    * Using one more map to limit the amount to be paid
+    Using one more map to limit the amount to be paid
 
       * ``DuePct`` , limit the percentage of fee due to be paid
       * ``DueCapAmt`` ,  cap the paid amount to the fee
-      ie. ``["PayFeeBy", ["CashAccount"], ["ServiceFee"], {"DuePct":0.1}]``
+      ie. ``["payFee", "CashAccount", ["ServiceFee"], {"DuePct":0.1}]``
 
   * PayFeeResidual -> pay to a fee regardless the amount due
     
@@ -776,10 +829,10 @@ Bond
           
           .. code-block:: python
 
-            ["payPrinBy","SourceAccount","A"
-                        ,{"formula": ("substract"
-                                       ,("poolBalance",)
-                                       ,("factor"
+            ["payPrin","SourceAccount","A"
+                      ,{"formula": ("substract"
+                                      ,("poolBalance",)
+                                      ,("factor"
                                          ,("poolBalance",), 0.12))}]
   
   * PayPrinResidual -> pay principal to a bond regardless its due principal balance
@@ -798,17 +851,12 @@ Account
    
     * format ``["transfer", {Account}, {Account}]``
   
-  * TransferBy -> transfer funds to the other account by <Limit>
-   
-    * format ``["transferBy", <limit> , {Account}, {Account}]``
-  
- 
-  * TransferReserve -> transfer funds to other account till either one of reserve account met the target amount.
-   
-    * format ``["transferReserve", {Account}, {Account}, {satisfy} ]``
+    transfer funds to the other account by <Limit>
 
-      * satisfy = "target" -> transfer till reserve amount of *target* account is met
-      * satisfy = "source" -> transfer till reserve amount of *source* account is met
+    * format ``["transfer", {Account}, {Account}, <limit> ]``
+    * format ``["transfer", {Account}, {Account}, {satisfy} ]``
+      * satisfy = ``{"reserve":"gap"}`` -> transfer till reserve amount of *target* account is met
+      * satisfy = ``{"reserve":"excess"}`` -> transfer till reserve amount of *source* account is met
 
 Buy & Sell Assets 
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -836,11 +884,16 @@ Liquidity Facility
   
   * Or, only deposit to account with shortage amount described by ``<Limit>`` ,which can be a ``formula``
 
-    * format ``["liqSupport", <liqProvider>,<Account>,<Limit>]``
+    * format ``["liqSupport", <liqProvider>,"account",<Account Name>,<Limit>]``
+    * format ``["liqSupport", <liqProvider>,"fee",<Fee Name>,<Limit>]``
+    * format ``["liqSupport", <liqProvider>,"interest",<Bond Name>,<Limit>]``
+    * format ``["liqSupport", <liqProvider>,"principal",<Bond Name>,<Limit>]``
 
   * Liquidity Repay & Compensation -> pay back to liquidity provider till its balance is 0
 
-    * format ``["liqRepay", <Account>, <liqProvider>]``
+    * format ``["liqRepay","bal" , <Account>, <liqProvider>,<Limit>]``
+    * format ``["liqRepay","int" , <Account>, <liqProvider>,<Limit>]``
+    * format ``["liqRepay","premium" , <Account>, <liqProvider>,<Limit>]``
   
   * Or, pay all the residual cash back to the provider 
   
@@ -1010,6 +1063,29 @@ Interest Rate Swap
 
 `Interest Rate Swap` is a 3rd party entity ,which can either deposit money into a SPV or collecting money from SPV. The direction of cashflow depends on the strike rate vs interest rate curve in assumption.
 
+it was modeled as a map ,with key as name to swap ,value serve as properties to swap. The very reason using a map becasue a deal can have multiple Swap contract.
+
+properties:
+* `settleDates` -> describe the setttlement dates .
+* `pair` -> describe rates to swap (paying rate in left, receiving rate on right)
+* `base` -> describe how reference balance is being updated 
+* `start` -> when the swap contract come into effective
+* `balance` -> (optional), current reference balance
+* `lastSettleDate` -> (optional), last settle date which calculate `netcash`
+* `netcash` -> (optional), current cash to pay/to collect 
+* `stmt` -> (optional),transaction history
+
+example: 
+
+.. code-block:: python
+
+  swap = {
+      "swap1":{"settleDates":"MonthEnd"
+               ,"pair":[("LPR5Y",0.01),0.05] # paying a float rate with spread ,and receiving a fix annualized rate
+               ,"base":{"formula":("poolBalance",)}
+               ,"start":"2021-06-25"
+               ,"balance":2093.87}
+  }
 
 
 Examples
@@ -1125,10 +1201,19 @@ Limit Principal Payment
    :language: python
    :emphasize-lines: 3-5,42,58-59
 
+Interest Rate Swap
+-----------------------
+
+* Setup a swap instrument ,merge it into a deal map
+* using shortcut `mkDeal` to create a generic deal object 
+* Swap can reference a notion with a `formula`
+
+.. literalinclude:: deal_sample/test10.py
+   :language: python
 
 
 JSON
-----------
+=========
 
 A deal object can be converted into json format via a property field `.json`
 

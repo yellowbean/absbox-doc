@@ -13,8 +13,6 @@ asset = ["AdjustRateMortgage"
           ,"remainTerm":77
           ,"status":"current"}]
 
-from absbox.local.generic import Generic
-
 GNMA_36208ALG4 = Generic(
     "820146/36208ALG4/G2-Custom AR"
     ,{"collect":["2023-05-01","2023-05-31"]
@@ -29,7 +27,7 @@ GNMA_36208ALG4 = Generic(
              ,"originBalance":1_553_836.00
              ,"originRate":0.07
              ,"startDate":"2020-01-03"
-             ,"rateType":{"floater": ["USCMT1Y",0.01,"YearFirst"],"dayCount":"DC_30_360_US"}
+             ,"rateType":{"floater": [0.07,"USCMT1Y",0.01,"YearFirst"],"dayCount":"DC_30_360_US"}
              ,"bondType":{"Sequential":None}
              ,"lastAccrueDate":"2023-04-30"})
       ,)
@@ -44,14 +42,16 @@ GNMA_36208ALG4 = Generic(
        ,"feeDueDate":"2023-04-26"}))
     ,{"amortizing":[
          ["calcFee","Ginnie_Mae_guaranty","service_fee"]
-         ,["payFee",["acc01"],['Ginnie_Mae_guaranty',"service_fee"]]
+         ,["payFee","acc01",['Ginnie_Mae_guaranty',"service_fee"]]
          ,["payInt","acc01",["A1"]]
          ,["payPrin","acc01",["A1"]]]
       ,"endOfCollection":[
-          ["liqSupport","Ginnie_Mae","acc01"
+          ["liqSupport","Ginnie_Mae","account","acc01"
               ,{"formula": 
-                ("substract",("cumPoolDefaultedBalance",)
-                            ,("liqCredit","Ginnie_Mae"))}]
+                ("floorWithZero"
+                ,("substract",("cumPoolDefaultedBalance",)
+                            ,("liqBalance","Ginnie_Mae")))}
+              ]
           ,["calcInt","A1"]]}
     ,[["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc01"]
@@ -60,22 +60,24 @@ GNMA_36208ALG4 = Generic(
     ,{"Ginnie_Mae":{"type":"Unlimited","start":"2023-05-26"}}
     ,None)
 
-if __name__ == '__main__':
-    
-    localAPI = API("https://absbox.org/api/dev",lang='english')
 
-    r = localAPI.run(GNMA_36208ALG4
-                 ,assumptions = [{"Rate":["USCMT1Y",0.0468]}
-                                ,{"CDR":0.005} 
-                                ,{"Inspect":[("MonthEnd",("cumPoolDefaultedBalance",))
-                                           ,("MonthEnd",("liqCredit","Ginnie_Mae"))]}]
-                 ,read=True)
-    
-    # Inspect cumulative defaulted balance
-    r['result']['inspect']['<CumulativePoolDefaultedBalance>']
+r = localAPI.run(GNMA_36208ALG4
+                ,runAssump = [("inspect",("MonthEnd",("cumPoolDefaultedBalance",))
+                                         ,("MonthEnd",("liqBalance","Ginnie_Mae")))
+                              ,("interest",("USCMT1Y",0.0468))]
+                ,poolAssump = ("Pool"
+                              ,("Mortgage",{"CDR":0.005},None,{"Rate":0.3,"Lag":4},None)
+                              ,None
+                              ,None)
+                ,read=True)
 
-    # Inspect credit provided by Ginnie Mae
-    r['result']['inspect']['<LiqCredit:Ginnie_Mae>']
+# Inspect cumulative defaulted balance
+r['result']['inspect']['<CumulativePoolDefaultedBalance>']
 
-    # the cash deposited to SPV in account `acc01`
-    r['accounts']['acc01'][r['accounts']['acc01']["memo"]=="<Support:Ginnie_Mae>"]
+# Inspect credit provided by Ginnie Mae
+r['result']['inspect']['<LiqBalance:Ginnie_Mae>']
+
+# the cash deposited to SPV in account `acc01`
+r['accounts']['acc01'][r['accounts']['acc01']["memo"]=="<Support:Ginnie_Mae>"]
+
+

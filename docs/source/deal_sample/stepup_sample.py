@@ -1,7 +1,7 @@
 from absbox.local.generic import Generic
 
-test01 = Generic(
-    "TEST01"
+test06 = Generic(
+    "Step Up bond"
     ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
      ,"payFreq":["DayOfMonth",20],"poolFreq":"MonthEnd","stated":"2030-01-01"}
     ,{'assets':[["Mortgage"
@@ -17,7 +17,8 @@ test01 = Generic(
              ,"originBalance":1000
              ,"originRate":0.07
              ,"startDate":"2020-01-03"
-             ,"rateType":{"StepUp":0.08,"Spread":0.01,"When":["After","2022-04-01","MonthEnd"]}
+             ,"rateType":{"StepUp":0.08,"Spread":0.01
+                          ,"When":["After","2022-04-01","MonthEnd"]}
              ,"bondType":{"Sequential":None}})
       ,("B",{"balance":1000
              ,"rate":0.0
@@ -29,11 +30,11 @@ test01 = Generic(
              }))
     ,(("trusteeFee",{"type":{"fixFee":30}}),)
     ,{"amortizing":[
-         ["payFee",["acc01"],['trusteeFee']]
+         ["payFee","acc01",['trusteeFee']]
          ,["payInt","acc01",["A1"]]
          ,["payPrin","acc01",["A1"]]
          ,["payPrin","acc01",["B"]]
-         ,["payResidual","acc01","B"]
+         ,["payPrinResidual","acc01",["B"]]
      ]}
     ,[["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc01"]

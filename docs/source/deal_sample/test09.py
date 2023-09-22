@@ -37,11 +37,11 @@ test01 = Generic(
       ,("borrowerFee",{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}))
     ,{"amortizing":[
           ["calcFee",'borrowerFee']
-         ,["payFee",["acc01"],['borrowerFee']]
+         ,["payFee","acc01",['borrowerFee']]
          ,["accrueAndPayInt","acc01",["A1"]]
-         ,["payPrin","acc01","A1",fm]
+         ,["payPrin","acc01",["A1"],fm]
          ,["payPrin","acc01",["B"]]
-         ,["payResidual","acc01","B"]
+         ,["payIntResidual","acc01","B"]
      ]}
     ,[["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc01"]
@@ -52,9 +52,9 @@ test01 = Generic(
 
 from absbox import API
 
-localAPI = API("<url to calculation engine>",'english')
+#localAPI = API("<url to calculation engine>",'english')
 
 r = localAPI.run(test01,
-           assumptions=[{"Inspect":
-                         [(["DayOfMonth",20],fm['formula'])]}],
+           runAssump=[("inspect",(["DayOfMonth",20],fm['formula']))],
            read=True)
+

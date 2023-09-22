@@ -1,6 +1,6 @@
 from absbox.local.generic import Generic
 
-test01 = Generic(
+test05 = Generic(
     "liquidation provider with interest"
     ,{"cutoff":"2021-03-01","closing":"2021-06-15","firstPay":"2021-07-26"
      ,"payFreq":["DayOfMonth",20],"poolFreq":"MonthEnd","stated":"2030-01-01"}
@@ -11,7 +11,8 @@ test01 = Generic(
           ,"currentRate":0.08
           ,"remainTerm":20
           ,"status":"current"}]]}
-    ,(("acc01",{"balance":0}),("acc02",{"balance":0}))
+    ,(("acc01",{"balance":0})
+      ,("acc02",{"balance":0}))
     ,(("A1",{"balance":1000
              ,"rate":0.08
              ,"originBalance":1000
@@ -31,19 +32,16 @@ test01 = Generic(
     ,{"amortizing":[
          ["calcInt","A1"]
          ,["liqAccrue","insuranceProvider"]
-         ,["liqSupport", "insuranceProvider","acc01"
-           ,{"formula":
-             ("Max"
-             ,("substract",("bondDueInt","A1","B"),("accountBalance","acc01"))
-             ,("constant",0.0))}]
+         ,["liqSupport", "insuranceProvider","interest","A1"]
+         ,["liqSupport", "insuranceProvider","interest","B"]
          ,["accrueAndPayInt","acc01",["A1","B"]]
          ,["payPrin","acc02",["A1"]]
          ,["payPrin","acc02",["B"]]
          ,["If"
            ,[("bondBalance","A1","B"),"=",0]
            ,["accrueAndPayInt","acc02",["A1","B"]]
-           ,["liqRepay","bal","acc01","insuranceProvider"]
-           ,["liqRepay","bal","acc02","insuranceProvider"]]
+           ,["liqRepay","balance","acc01","insuranceProvider"]
+           ,["liqRepay","balance","acc02","insuranceProvider"]]
      ]}
     ,[["CollectedInterest","acc01"]
       ,["CollectedPrincipal","acc02"]
