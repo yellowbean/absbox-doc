@@ -45,21 +45,21 @@ deal_data = {
 if __name__ == '__main__':
     from absbox import API
     localAPI = API("http://localhost:8081")
-    
+
     swap = {
         "swap1":{"settleDates":"MonthEnd"
-                 ,"pair":[("LPR5Y",0.01),0.05]
-                 ,"base":{"formula":("poolBalance",)}
-                 ,"start":"2021-06-25"
-                 ,"balance":2093.87}
+                ,"pair":[("LPR5Y",0.01),0.05]
+                ,"base":{"formula":("poolBalance",)}
+                ,"start":"2021-06-25"
+                ,"balance":2093.87}
     }
-    
+
     deal = mkDeal(deal_data|{"rateSwap":swap})
-    
+
     r = localAPI.run(deal
-                     ,assumptions = [{"Rate":["LPR5Y"
-                                              ,["2022-01-01",0.05]
-                                              ,["2023-01-01",0.06]]}]
-                     ,read=True)
-    
+                    ,runAssump = [("interest"
+                                    ,("LPR5Y",[["2022-01-01",0.05]
+                                              ,["2023-01-01",0.06]]))]
+                    ,read=True)
+
     r['rateSwap']['swap1']

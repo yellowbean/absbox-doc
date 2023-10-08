@@ -9,18 +9,19 @@ Deal modeling is a process to build deal class with descriptive components follo
 * Asset info -> pool asset attributes, loan by loan or repline level data or projected cashflow as input
 * Bond info -> bonds with different types and equity tranche
 * Waterfall info -> Describe the priority of payments when:
-    * End of pool collection (Optional)
-    * Distribution day for all the bonds and fees 
-    * Event of Default (Optional)
-    * Clean up call (Optional)
+    * On Closing Date (Optional, One-off)
+    * End of pool collection (Optional, reoccurring)
+    * Distribution day for all the bonds and fees (reoccurring)
+    * Clean up call (Optional, One-off)
 * Dates info
-  * Cutoff day / Closing Date / Next / First payment Date or series of custom dates
+    * Cutoff day / Closing Date / (Next/First) payment Date or series of custom dates
 * Triggers (Optional) -> describe what may happened then what state changed should be performed in deal
 * Liquidity Provider (Optional) -> entities provides interest bearing/non-bearing support to shortfall of fee/interest or bond principal
 * Hedges (Optional) -> interest rate swap/ fx swap
 
 
 Structure of a `Generic` deal 
+==================================
 
 .. code-block:: python
 
@@ -42,6 +43,9 @@ Structure of a `Generic` deal
     )
 
 .. _Generic ABS:
+
+<New> : Model via a map
+----------------------------
 
 |:new:| Now we have a map-based syntax suguar ``mkDeal`` to create a deal without remembering the order of arguments passed into `Generic` class ! 
 
@@ -93,6 +97,7 @@ Structure of a `Generic` deal
         ,"bonds":bonds
         ,"waterfall":waterfall
         ,"collect":collects
+        ,"status":"Revolving"
     }
 
     from absbox import mkDeal
@@ -133,17 +138,17 @@ Composite ``<DatePattern>``
 
 DatePatterns can be composed together:
 
-* ``["After","YYYY-MM-DD",<datepattern>]`` -> a <datapattern> after "YYYY-MM-DD"(exclusive)
+* ``["After","YYYY-MM-DD",<datepattern>]`` -> a ``<datapattern>`` after "YYYY-MM-DD"(exclusive)
 * ``["AllDatePattern",<datepattern1>,<datepattern2>.....]`` -> a union set of date pattern during the projection, like sum of dates
-* ``["ExcludeDatePattern",<datepattern1>,<datepattern2>.....]`` -> build dates from 1st <datepattern1> and exclude dates from <datepattern2>，<datepattern3>... 
-* ``["OffsetDateDattern",<datepattern>,N]`` ->  build dates from <datepattern> and offset days by N ( positive N move dates to future) , negative N will move dates to past ) 
+* ``["ExcludeDatePattern",<datepattern1>,<datepattern2>.....]`` -> build dates from 1st ``<datepattern1>`` and exclude dates from ``<datepattern2>,<datepattern3>``... 
+* ``["OffsetDateDattern",<datepattern>,N]`` ->  build dates from ``<datepattern>`` and offset days by N ( positive N move dates to future) , negative N will move dates to past ) 
 
 Formula 
 ---------
 
 Structured product is using ``formula`` to define the amount of account transfer, principal paydown or fee pay limit etc.
 
-``absbox`` use the concept of ``formula`` in an extreamly composible way, a ``formula`` can be a variable reference to deal attributes.
+``absbox`` use the concept of ``formula`` in an extreamly composable way, a ``formula`` can be a variable reference to deal attributes.
 
 * Bond 
     * ``("bondBalance",)`` -> sum of all bond balance
@@ -153,7 +158,6 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("bondDueInt","A","B")``  -> bond due interest for bond A and bond B
     * ``("lastBondIntPaid","A")``  -> bond last paid interest
     * ``("behindTargetBalance","A")``  -> difference of target balance with current balance for the bond A
-    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
     * ``("bondTxnAmt", None,"A")``  -> Total transaction amount of bond 'A'
     * ``("bondTxnAmt", "<PayInt:A>","A")``  -> Total transaction amount of interest payment bond 'A'
 * Pool 
@@ -175,7 +179,8 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("lastFeePaid","F1","F2")`` -> sum of fee last paid for fee "F1","F2"
     * ``("feeTxnAmt",None,"A")`` -> total transaction amount of fee "A"
 * LiquidationProvider 
-    * ``("liqCredit","F1","F2")`` -> sum of credit provided by "F1" "F2"
+    * ``("liqCredit","F1","F2")`` -> sum of credit available from "F1" "F2"
+    * ``("liqBalance","F1","F2")`` -> sum of credit drawn from "F1" "F2"
 
 
 Or `formula` can be an arithmetic calculation on itselfies.
@@ -184,7 +189,9 @@ Or `formula` can be an arithmetic calculation on itselfies.
     * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
     * ``("Max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
     * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
-    * ``("sum", <Formula>, <Formula>, ...)`` -> sum of formula value
+    * ``("sum", <Formula>, <Formula>, ...)`` -> sum of formula values
+    * ``("avg", <Formula>, <Formula>, ...)`` -> average of formula values
+    * ``("abs", <Formula>)`` -> absolute value of formula value
     * ``("substract", <Formula>, <Formula>, ...)`` -> using 1st of element to substract rest in the list
     * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
     * ``("floorWithZero", <Formula> )`` -> get value of <formula1> and floor with 0
@@ -197,12 +204,17 @@ Or `formula` can be an arithmetic calculation on itselfies.
 
 * Integer 
     * ``("borrowerNumber",)`` -> number of borrower
+    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
 * Ratio
     * ``("bondFactor",)`` -> factor of bond
     * ``("poolFactor",)`` -> factor of pool
-    * ``("cumulativePoolDefaultRate",)`` -> cumulative default rate of pool
+    * ``("cumuPoolDefaultedRate",)`` -> cumulative default rate of pool
+    * ``("cumuPoolNetLossRate",)`` -> cumulative loss rate of pool
 * Bool 
-    * ``("trigger", loc ,idx)`` -> trigger with index at ``idx`` at ``loc`` status ->
+    * ``("trigger", loc ,<trigger name>)`` -> trigger with name ``<trigger name>`` at ``loc`` status
+    * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
+    * ``("status", <deal status>)`` -> True if current deal status is ``<deal status>``
+
 
 
 Condition
@@ -270,7 +282,7 @@ To build a ``Curve`` , just a list of 2-element list
 
 .. code-block:: python
 
-  ``[["2022-01-01",150],["2022-02-01",200]]``
+  [["2022-01-01",150],["2022-02-01",200]]
 
 Pricing Method
 ----------------
@@ -288,6 +300,8 @@ there are couple ways of pricing
 
   * ``["PVCurve", ts]`` -> using `ts` as pricing curve to discount future cashflow of all assets.
 
+
+
 Components
 ============
 
@@ -296,15 +310,23 @@ Deal Dates
 
 Depends on the status of deal, the dates shall be modeled either in ``ongoing`` or ``preclosing``
 
+PreClosing Deal dates
+^^^^^^^^^^^^^^^^^^^^^
+
 if it is ``preclosing`` stage ( the deal has not been issued yet )
 
-- ``cutoff``: All pool cashflow after `Closing Date` belongs to the SPV
-- ``closing``:  after `Closing Date` belongs to the SPV
-- ``Settle Date`` : Bond start to accrue interest after `Settle Date`.
-- ``firstPay``: First execution of payment waterfall
-- ``stated`` : legal maturity date of the deal.
-- ``poolFeq`` : a :ref:`DatePattern`, describle the dates that collect cashflow from pool
-- ``payFeq`` : a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
+``cutoff``
+    All pool cashflow after `Closing Date` belongs to the SPV
+``closing``
+    after `Closing Date` belongs to the SPV
+``firstPay``
+    First execution of payment waterfall
+``stated``
+    legal maturity date of the deal.
+``poolFeq``
+    a :ref:`DatePattern`, describle the dates that collect cashflow from pool
+``payFeq``
+    a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
 
 .. code-block:: python
 
@@ -315,13 +337,19 @@ if it is ``preclosing`` stage ( the deal has not been issued yet )
     ,"poolFreq":"MonthEnd"
     ,"payFreq":["DayOfMonth",20]}
 
+Ongoing Deal dates
+^^^^^^^^^^^^^^^^^^^^^
 
-if deal is `ongoing` ( which has been issued ), the difference is that in `preclosing` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
+if deal is ``ongoing`` ( which has been issued ), the difference is that in ``PreClosing`` mode, the projection will include an event of `OnClosingDate` which describe a sequence of actions to be performed at the date of `closing`
 
-- ``collect`` : ["last pool collection date","next pool collection date"]
-- ``pay`` : ["last distribution payment date","next distribution payment date"]
-- ``poolFeq`` : a :ref:`DatePattern`, describle the dates that collect cashflow from pool
-- ``payFeq`` : a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
+``collect``
+    :code:`[<last pool collection date>,<next pool collection date>]`
+``pay``
+    :code:`[<last distribution payment date>,<next distribution payment date>]`
+``poolFeq``
+    a :ref:`DatePattern`, describle the dates that collect cashflow from pool
+``payFeq``
+    a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
 
 .. code-block:: python
 
@@ -345,6 +373,20 @@ User are free to feed in a series of custom defined pool collection date / bond 
    ,"distirbution":["2023-02-01","2023-03-01"...]
    ,"cutoff":"2022-11-21"
    ,"closing":"2023-01-01"}
+
+
+Deal Status 
+----------------
+
+Deal status is a ``Tag`` to describe the current ``status`` of deal, it can be one of the following:
+
+* ``(PreClosing,"<new status>")`` : Deal is in pre-closing stage, which means the deal has not been issued yet. Make sure to include a ``new status`` which deal will enter after ``Closing Date``
+* ``RampUp``     : Deal is ramping up to build assets
+* ``Revolving``  : Deal is not amortizing yet, which means the deal is still in revolving stage.
+* ``Amortizing`` : Deal is amortizing, the deal is picking ``Amortizing`` waterfall on distribution dates .
+* ``Accelerated``: Deal is in accelerated stage, which means the deal is picking ``Accelerated`` waterfall on distribution dates .
+* ``Defaulted``  : Deal is in default stage, which means the deal is picking ``Defaulted`` waterfall on distribution dates .
+* ``Ended``      : Means deal stop projection cashflow.
 
 
 Fee/Expenses
@@ -371,7 +413,6 @@ a fix amount fee which occurs by defined :ref:`Date Pattern`
   
    ,("rating_fee"
     ,{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
-
 
 
 percentage fee
@@ -467,11 +508,11 @@ ARM
 
 `ARM` is a type of `Mortgage` that has one more field `arm` to describe the rate adjust behavior of the loan.
 
-* initPeriod -> Required
-* firstCap -> Optional
-* periodicCap -> Optional
-* lifeCap -> Optional
-* lifeFloor -> Optional
+* ``initPeriod`` -> Required
+* ``firstCap`` -> Optional
+* ``periodicCap`` -> Optional
+* ``lifeCap`` -> Optional
+* ``lifeFloor`` -> Optional
 
 
 .. code-block:: python
@@ -577,19 +618,58 @@ Installment
       ,"currentBalance":1000
       ,"remainTerm":10}]
 
+Collection Rules 
+-------------------
+
+`Colelction Rules` defines *how* ``SPV`` / ``Transaction`` / ``Deal`` collect *proceeds* from ``Pool``
+
+Proceeds
+^^^^^^^^^^
+Includes:
+
+* Principal
+* Interest
+* Recoveries from defaults
+* Prepayment
+* Rental ( only for lease )
+
+Allocation Rule
+^^^^^^^^^^^^^^^^
+
+The rule was defined as a *List*, each element is a *List* with 2 elements.
+
+* 1st element describes the ``Proceeds`` 
+* 2nd element describes `percentage` to be allocated to each account
+  * if it is just an `account name`,then 100% of ``Proceeds`` will be flowed into that account
+
+
+exmaple:
+
+.. code-block:: python 
+
+  [["CollectedInterest",[[0.8,"acc01"],[0.2,"acc02"]]] 
+    # 80% of interest will be allocated to acc01
+    # 20% of interest will be allocated to acc02
+    ,["CollectedPrincipal",[[0.8,"acc01"],[0.2,"acc02"]]]
+    ,["CollectedPrepayment","acc01"] 
+    # 100% of prepayment will be allocated to acc01
+    ,["CollectedRecoveries","acc01"]]
+
+
 
 Accounts
 ---------
 
 There are two types of `Account`:
 
-  * `Bank Account` -> which used to collect money from pool and pay out to fees/bonds
-  * `Reserve Account` -> with one addtional attribute to `Bank Account` , specifies target reserve amount of the account
+  * ``Bank Account`` -> which used to collect money from pool and pay out to fees/bonds
+  * ``Reserve Account`` -> with one addtional attribute to ``Bank Account`` , specifies target reserve amount of the account
 
 syntax   ``({account name},{account description})``, i.e
 
 
-* Bank Account
+Bank Account
+^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -660,11 +740,16 @@ There is one extra attribute to set : `type`
 Interest/Cash Investment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-model the interest or short-term investment income in the account.
+To model the interest or short-term investment income in the account.
 
-syntax: 
+* fix rate syntax: 
 
-``{"period": <date Pattern>,"rate": <number>,"lastSettleDate":<date>}``
+  ``{"period": <date Pattern>, "rate": <number>, "lastSettleDate":<date>}``
+
+* floater rate syntax: 
+
+  ``{"period": <date Pattern>, "index": <index name>, "spread": <number>, "lastSettleDate":<date>}``
+
 
 .. code-block:: python
 
@@ -686,14 +771,57 @@ syntax:
 Bonds/Tranches
 ---------------
 
-syntax ``({bond/tranche name},{bond/tranche description})``
+Bonds/Tranches serves as a ``Liability`` in the SPV, with two components to model:
+
+* Interest
+* Principal
+
+syntax
+    ``({bond/tranche name},{bond/tranche description})``
+
+
+Interest
+^^^^^^^^^^^
 
 there are 3 types of `Interest` settings for bonds
 
-  * Fix Rate   :code:`"rateType":{"fix":0.0569}`
-  * Float Rate   :code:`"rateType":{"floater":["SOFR1Y",-0.0169,"MonthEnd"]}`
-  * Step-Up Rate :code:`"rateType":{"StepUp":0.06,"Spread":0.01,"When":["After","2023-05-01","YearEnd"]}`
 
+Fix Rate 
+""""""""""""
+
+The bond will use an annualized fixed rate during till maturity, with option of day count convention.
+
+syntax
+    :code:`"rateType":{"fix":0.0569}`
+
+    :code:`"rateType":{"fix":0.0569,"dayCount":"DC_ACT_365"}`
+
+Float Rate 
+""""""""""""""""
+
+The bond will use an initial floater rate , with an index and spread, and a reset frequency, with option of day count convention.
+
+syntax
+    :code:`"rateType":{"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"]}`
+    
+    :code:`"rateType":{"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"], "dayCount":"DC_ACT_365"}`
+    
+
+Step-Up Rate
+""""""""""""""
+
+The bond will use a step up rate with:
+
+* a base rate which will be used "When"
+* a spread which will be added to base rate 
+* a condtion ``When`` which describle  when to start steping up and the frequency.
+
+syntax
+    :code:`"rateType":{"StepUp":0.06,"Spread":0.01,"When":["After","2023-05-01","YearEnd"]}`
+
+
+Principal 
+^^^^^^^^^^^
 there are 4 types of `Principal` for bonds/tranches
 
   * ``Sequential``： can be paid down as much as its oustanding balance
@@ -702,7 +830,7 @@ there are 4 types of `Principal` for bonds/tranches
   * ``Equity``：  No interest and shall serve as junior tranche
 
 Sequential 
-^^^^^^^^^^^
+"""""""""""""
 A bond with will receive principal till it's balance reduce to 0.
 
 .. code-block:: python
@@ -712,11 +840,11 @@ A bond with will receive principal till it's balance reduce to 0.
            ,"originBalance":3_650_000_000
            ,"originRate":0.03
            ,"startDate":"2020-01-03"
-           ,"rateType":{"Floater":["SOFAR1Y",-0.0169,"MonthEnd"]}
+           ,"rateType":{"floater":[0.05,"SOFAR1Y",-0.0169,"MonthEnd"]}
            ,"bondType":{"Sequential":None} })
  
 PAC
-^^^^^^^^^^^
+"""""""""""""
 A bond with target amortize balances, it will stop recieving principal once its balance hit the targeted balance 
 
 
@@ -727,7 +855,7 @@ A bond with target amortize balances, it will stop recieving principal once its 
        ,"originBalance":1000
        ,"originRate":0.07
        ,"startDate":"2020-01-03"
-       ,"rateType":{"Fixed":0.08}
+       ,"rateType":{"fix":0.08}
        ,"bondType":{"PAC":
                      [["2021-07-20",800]
                      ,["2021-08-20",710]
@@ -737,7 +865,7 @@ A bond with target amortize balances, it will stop recieving principal once its 
 
 
 Lockout
-^^^^^^^^^^^
+"""""""""""""
 A bond with ``Lockout`` type is used to setup bond with only recieve principal after the `lockout date`
 
 This bond only get principal repayed starting at `2021-09-20`
@@ -749,11 +877,11 @@ This bond only get principal repayed starting at `2021-09-20`
         ,"originBalance":1000
         ,"originRate":0.07
         ,"startDate":"2020-01-03"
-        ,"rateType":{"Fixed":0.08}
+        ,"rateType":{"fix":0.08}
         ,"bondType":{"Lockout":"2021-09-20"}})
  
 Equity
-^^^^^^^^^^^
+"""""""""""""
 
 ``Equity`` type is used to model junior or equity slice of liabilites of the SPV
 
@@ -765,7 +893,7 @@ Equity
            ,"originBalance":2_123_875_534.53
            ,"originRate":0.00
            ,"startDate":"2020-01-03"
-           ,"rateType":{"InterimYield":0.02}  
+           ,"rateType":{"fix":0.0}  
            ,"bondType":{"Equity":None} })
 
 
@@ -773,7 +901,7 @@ Equity
 Waterfall
 -------------
 
-Waterfall means a list of ``Action`` to be executed. A Deal may have more than one waterfalls.
+Waterfall means a *list* of ``Action`` to be executed. A Deal may have more than one waterfalls.
 
 
 Different Waterfalls in Deal
@@ -781,13 +909,13 @@ Different Waterfalls in Deal
 
 It was modeled as a map, with key as identifier to distinguish different type of waterfall.
 
-* `"amortizing"` -> will be pick when deal status is `Amortizing`
-* `("amortizing", "accelerated")` -> will be pick when deal status is `Accelerated`
-* `("amortizing", "defaulted")` -> will be pick when deal status is `Defaulted`
-* `"cleanUp"` -> will be pick when deal is being clean up call
-* `"endOfCollection"` -> will be exectued at the end of collection period
-* `"closingDay"` -> will be exectued at the `Day of Closing` if deal status is `PreClosing`
-* `"default"` -> the default waterfall to be executed if no other waterfall applicable
+* ``"amortizing"`` -> will be picked when deal status is `Amortizing`
+* ``("amortizing", "accelerated")`` -> will be picked when deal status is `Accelerated`
+* ``("amortizing", "defaulted")`` -> will be picked when deal status is `Defaulted`
+* ``"endOfCollection"`` -> will be exectued at the end of each collection period
+* ``"default"`` -> the default waterfall to be executed if no other waterfall applicable
+* ``"cleanUp"`` -> will be exectued *once* when deal is being clean up call
+* ``"closingDay"`` -> will be exectued *once* at the `Day of Closing` if deal status is `PreClosing`
 
 .. image:: img/waterfall_in_deal_runt.png
   :width: 500
@@ -798,43 +926,68 @@ ie：
 .. code-block:: python
 
    {"amortizing":[
-       ["payFee",["acc01"],['trusteeFee']]
+       ["payFee","acc01",['trusteeFee']]
        ,["payInt","acc01",["A1"]]
        ,["payPrin","acc01",["A1"]]
        ,["payPrin","acc01",["B"]]
        ,["payResidual","acc01","B"]]
-    ,"CleanUp":[]
-    ,"default":[]
+    ,"cleanUp":[]
     }
 
 
 Action
-  ``Action`` is a list, which annoates the action to be performed. In most of cases, the first element of list is the name of action, rest of elements are describing the fund movements(fund source and fund target)/ state change like update trigger status / fee accrual /bond interest accrual.
+  ``Action`` is a python list, whose elements annoates the parameter of action. In most of cases, 
+
+  * the *first element* of list is the name of action, 
+  * *rest of elements* are describing the fund movements(fund source and fund target)/ state change like update trigger status / fee accrual /bond interest accrual.
 
 Fee 
 ^^^^^^
 
-  * Calc Fee -> calculate the due balance of a fee
+  * Calc Fee -> calculate the due balance of a fee till the date of action
     
-    * format ``["calcFee",<Fee1> , <Fee2> ... ]``
+    * format ``["calcFee", <Fee1> , <Fee2> ... ]``
   
-  * PayFee -> pay to a fee till due balance is 0
+  * PayFee -> pay to a fee till due balance is 0 if there is a due balance otherwise no actual payment happen.
 
-    syntax ``["payFee", {Account}, [<Fees>]]``
+    syntax ``["payFee", {Account}, [<Fee>]]``
 
       *  ``{Account}`` -> Using the available funds from a single account.
-      *  ``[<Fees>]`` -> Pay the fees in the list on pro-rata basis
+      *  ``[<Fee>]`` -> Pay the fees in the list on pro-rata basis
 
     Using one more map to limit the amount to be paid
 
-      * ``DuePct`` , limit the percentage of fee due to be paid
-      * ``DueCapAmt`` ,  cap the paid amount to the fee
-      ie. ``["payFee", "CashAccount", ["ServiceFee"], {"DuePct":0.1}]``
+    syntax ``["payFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
+    
+    * ``<limit>``
+  
+      * ``{"balPct": 0.6}`` , pay up to 60% of due amount
+      * ``{"balCapAmt": 500}`` ,  pay up to 500.
+      * ``{"formula": <formula> }``, pay up the <formula> 
+ 
+      ie. ``["payFee", "CashAccount", ["ServiceFee"], {"balPct":0.1}]``
+
+    * ``<supports>``, if there is shortfall from ``{Account}``, the shortfall can be supported by other accounts or liquidity provider.
+     
+      * supported by accounts : 
+  
+        *  ``["account","accountName"]``
+      * supported by liquidity provider: 
+      
+        *  ``["facility","liquidity provider name"]``
+      * supported by mix 
+      
+        *  ``["multiSupport" ,["account","accountName1"] ,["facility","liquidity provider name"] ,["account","accountName2"]]``
+
+  * calcAndPayFee -> calculate the due balance of a fee and pay it till due balance is 0
+
+    * format ``["calcAndPayFee", {Account}, [<Fee>]]``
+    * format ``["calcAndPayFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
 
   * PayFeeResidual -> pay to a fee regardless the amount due
     
     * format ``["payFeeResidual", {Account}, {Fee} ]``
-    * format ``["payFeeResidual", {Account}, {Fee}, <Limit> ]``
+    * format ``["payFeeResidual", {Account}, {Fee}, <limit> ]``
 
 Bond
 ^^^^^^
@@ -846,6 +999,11 @@ Bond
   * PayInt -> pay interset to a bond till due int balance is 0
 
     * format ``["payInt", {Account}, [<Bonds>] ]``
+    * format ``["payInt", {Account}, [<Bonds>], m ]``
+      `m`is just amp same in the `payFee` , which has keys :
+
+      * ``limit`` -> same as `payFee`
+      * ``support`` -> same as `payFee`
   
   * AccrueAndPayInt -> accrue interest and pay interset to a bond till due int balance is 0
 
@@ -854,10 +1012,17 @@ Bond
   * PayPrin -> pay principal to a bond till due principal balance is 0
 
     * format ``["payPrin", {Account}, [<Bonds>] ]``
-    * format ``["payPrin", {Account}, [<Bonds>], <Limit>]``
+    * format ``["payPrin", {Account}, [<Bonds>], m ]``
+      `m`is just amp same in the `payFee` , which has keys :
 
-    the ``<Limit>`` is the magic key to make principal payment more versatile. User can control the amount to be paid via a :ref:`Formula` ie.
-       *  (from deal: Autoflorence) the target amount is ` (end pool balance - (end pool balance * subordination percentage(12%)))`
+      * ``limit`` -> same as `payFee`
+      * ``support`` -> same as `payFee`
+ 
+    i.e.
+    the ``limit`` is the magic key to make principal payment more versatile. User can control the amount to be paid via a :ref:`Formula` ie.
+    
+    (from deal: Autoflorence)
+        the target amount is ``(end pool balance - (end pool balance * subordination percentage(12%)))``
           
           .. code-block:: python
 
@@ -871,10 +1036,12 @@ Bond
     
     * format ``["payPrinResidual", {Account}, <Bond> ]``
   
-  * PayResidual  -> pay interest to a bond regardless its interest due.
+  * PayIntResidual  -> pay interest to a bond regardless its interest due.
     
-    * format ``["payResidual", {Account}, <Bond> ]``
-    * format ``["payResidual", {Account}, <Bond>, <Limit> ]``
+    * format ``["payIntResidual", {Account}, <Bond> ]``
+    * format ``["payIntResidual", {Account}, <Bond>, <Limit> ]``
+  
+      The ``<Limit>`` can be used to describe limit amount via ``{"formula":<formula>}`` 
   
 Account
 ^^^^^^^^^
@@ -883,12 +1050,16 @@ Account
    
     * format ``["transfer", {Account}, {Account}]``
   
-    transfer funds to the other account by <Limit>
+    transfer funds to the other account by ``<Limit>``
 
     * format ``["transfer", {Account}, {Account}, <limit> ]``
-    * format ``["transfer", {Account}, {Account}, {satisfy} ]``
-      * satisfy = ``{"reserve":"gap"}`` -> transfer till reserve amount of *target* account is met
-      * satisfy = ``{"reserve":"excess"}`` -> transfer till reserve amount of *source* account is met
+      ``<limit>`` could be 
+
+      * ``{"balCapAmt":100}`` -> transfer up to 100
+      * ``{"balPct":0.1}`` -> transfer up to 10% of source account 
+      * ``{"formula":<formula>}`` -> transfer up to the value of formula
+      * ``{"reserve":"gap"}`` -> transfer till reserve amount of *target* account is met
+      * ``{"reserve":"excess"}`` -> transfer till reserve amount of *source* account is met
 
 Buy & Sell Assets 
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -907,14 +1078,23 @@ Buy & Sell Assets
 Liquidtiy Facility 
 ^^^^^^^^^^^^^^^^^^^
 
-Liquidity Facility 
-  it behaves like a 3rd party entity which support the cashflow distirbution in case of shortgage. It can depoit cash to account via ``liqSupport``, with optinal a ``limit``.
-    
-  * Liquidity Support -> deposit cash to account from a liquidity provider, subject to its available balance.
+  ``Liquidity Facility`` behaves like a 3rd party entity which support the cashflow distirbution in case of shortage. It can deposit cash to account via ``liqSupport``, with optinal a ``limit``.
+  it can be used to draw and 
+
+  * draw and deposit cash to account
+
+    * format ``["liqSupport", <liqProvider>,"account",<Account Name>,<Limit>]``
   
-    * format ``["liqSupport", <liqProvider>,<Account>]``
+  * Pay fee 
+
+    * format ``["liqSupport", <liqProvider>,"fee",<Fee Name>,<Limit>]``
   
-  * Or, only deposit to account with shortage amount described by ``<Limit>`` ,which can be a ``formula``
+  * Pay interest to bond or principal to bond
+
+    * format ``["liqSupport", <liqProvider>,"interest",<Bond Name>,<Limit>]``
+    * format ``["liqSupport", <liqProvider>,"principal",<Bond Name>,<Limit>]``
+  
+  * Provide support a shortfall amount described by ``<Limit>`` ,which can be a ``Formula``
 
     * format ``["liqSupport", <liqProvider>,"account",<Account Name>,<Limit>]``
     * format ``["liqSupport", <liqProvider>,"fee",<Fee Name>,<Limit>]``
@@ -930,8 +1110,6 @@ Liquidity Facility
   * Or, pay all the residual cash back to the provider 
   
     * format ``["liqRepayResidual", <Account>, <liqProvider>]``
-
-
 
 Conditional Action
 ^^^^^^^^^^^^^^^^^^^^
@@ -954,7 +1132,7 @@ first list of actions will be executed if ``condtion`` was met , otherwise , sec
 Trigger
 -----------
 
-`Trigger` is a generalized concept in `absbox`/`Hastructure`, it is not limited to <pool performance> related design to protect tranches but a border concpet as below:
+`Trigger` is a generalized concept in `absbox` / `Hastructure`, it is not limited to <pool performance> related design to protect tranches but a border concpet as below:
 
 .. image:: img/trigger.png
   :width: 500
@@ -967,6 +1145,30 @@ There are 4 components in Triggers:
   * ``Effects`` -> what would happen if the trigger is fired
   * ``Status`` -> it is triggered or not 
   * ``Curable`` -> whether the trigger is curable
+
+Syntax of trigger
+^^^^^^^^^^^^^^^^^^^^^^
+
+it's optional to specify ``Location``
+
+.. code-block:: python 
+
+  {"BeforeCollect": # optional
+    {"triggerName1":
+      {"condition":..
+      ,"effects":..
+      ,"status":..
+      ,"curable":..}
+      ......
+    }
+  ,"AfterCollect": # optional
+    {}
+  ,"BeforeDistribution": # optional 
+    {}
+  ,"AfterDistribution": # optional
+    {}
+  }
+
 
 When to run trigger
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -981,6 +1183,9 @@ When to run trigger
 .. image:: img/trigger_in_deal_run.png
   :width: 600
   :alt: trigger_loc
+
+Why there are 5 points of time to run trigger ? 
+    Because , when there is a ``Formula`` ,it may reference to bond balance ,but the bond balance varies in different point of time : the balance in ``BeforeDistribution``  is different from ``AfterDistirbution`` as the bond maybe paid down.
 
 
 
@@ -1007,20 +1212,20 @@ Trigger will update the `state` of a deal, like:
 
 Once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
 
-  * accure some certain fee 
+* accure some certain fees 
 
 .. code-block:: python
   
   "effects":["accrueFees","feeName1","feeName2",...]
 
-  * change reserve target balance of an account
+* change reserve target balance of an account
 
 .. code-block:: python
   
   "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
   "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
 
-  * create a new trigger 
+* create a new trigger 
 
 .. code-block:: python
   
@@ -1030,7 +1235,7 @@ Once the `state` of deal changed, the deal will pick the corresponding waterfall
                ,"status":...
                ,"curable":...})]
 
-  * a list of above
+* a list of above
 
 .. code-block:: python
   
@@ -1098,10 +1303,21 @@ Examples
         ,"curable":False}
         ]}
 
+Query trigger during run
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By specify in the `inspect`, user are able to view the status of trigger during the run.
+
+
+
 Liquidity Provider
 ---------------------
 
-`Liquidity Provider` is an external entity which can be used as a line of credit/insuer. If there is a shortage on fee or interest or principal, user can setup rules to draw cash from the `Likquidity Provider`  and deposity to accounts.
+`Liquidity Provider` is an external entity which can be used as a line of credit/insuer. 
+
+If there is a shortage on fee or interest or principal, user can setup rules to draw cash from the `Likquidity Provider`  and deposity to accounts.
+
+
 
 
 Interest Rate Swap
@@ -1112,6 +1328,7 @@ Interest Rate Swap
 it was modeled as a map ,with key as name to swap ,value serve as properties to swap. The very reason using a map becasue a deal can have multiple Swap contract.
 
 properties:
+
 * `settleDates` -> describe the setttlement dates .
 * `pair` -> describe rates to swap (paying rate in left, receiving rate on right)
 * `base` -> describe how reference balance is being updated 

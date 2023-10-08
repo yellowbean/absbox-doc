@@ -40,4 +40,8 @@ test01 = Generic(
       ,["CollectedPrepayment","acc01"]
       ,["CollectedRecoveries","acc01"]]
     ,None
-    ,None)
+    ,None
+    ,None
+    ,None
+    ,("PreClosing","Amortizing")
+    )

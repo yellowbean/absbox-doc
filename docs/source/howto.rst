@@ -260,7 +260,7 @@ Build multiple deals
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Now we need to build a dict with named key.
-2. Call ``mkDealsBy`` ,which takes a base deal, and a dict which will be swaped into the base deal. It will return a map with same key of `bond_plan`, with new deals as value.
+2. Call ``mkDealsBy()`` ,which takes a base deal, and a dict which will be swaped into the base deal. It will return a map with same key of `bond_plan`, with new deals as value.
 3. User can inspect ``differentDeals`` the reuslt via key.
 
 .. code-block:: python
@@ -286,12 +286,12 @@ To run mulitple deal with same assumptions ,use ``runStructs()``
 
   r = localAPI.runStructs(differentDeals
                           ,read=True
-                          ,pricing= {"PVDate":"2021-08-22"
-                                    ,"PVCurve":[["2021-01-01",0.025]
-                                              ,["2024-08-01",0.025]]}
-                          ,assumptions=[{"CPR":[0.02,0.02,0.03]}
-                                      ,{"CDR":[0.01,0.015,0.021]}
-                                      ,{"Recovery":(0.7,18)}]
+                          ,runAssump = [('pricing',{"date":"2021-08-22"
+                                                   ,"curve":[["2021-01-01",0.025]
+                                                            ,["2024-08-01",0.025]]})]
+                          ,poolAssump = ("Pool",("Mortgage",{"CDR":0.03},{"CPR":0.01},{"Rate":0.7,"Lag":18},None)
+                                              ,None
+                                              ,None)
                           )
 
 Now the ``r`` is a map with key of "SmallSenior" and "HighSenior", value as cashflow of bond/pool/account/fee and a pricing.
@@ -324,14 +324,20 @@ Prerequisite
    
   # pool performance  
   pool_assumps = {
-       "CPR15":[{"CPR":0.15}]
-      ,"CPR20":[{"CPR":0.20}]
-      ,"CPR25":[{"CPR":0.25}]
+       "CPR15":("Pool",("Mortgage",None,{"CPR":0.15},None,None)
+                      ,None
+                      ,None)
+      ,"CPR20":("Pool",("Mortgage",None,{"CPR":0.20},None,None)
+                      ,None
+                      ,None)
+      ,"CPR25":("Pool",("Mortgage",None,{"CPR":0.25},None,None)
+                      ,None
+                      ,None)
   }
   # pricing curves and PV date
-  pricing_assumps = {"PVDate":"2021-08-22"
-                    ,"PVCurve":[["2021-01-01",0.025]
-                               ,["2024-08-01",0.025]]}
+  pricing_assumps = {"date":"2021-08-22"
+                    ,"curve":[["2021-01-01",0.025]
+                             ,["2024-08-01",0.025]]}
   
 
 Run with candy function
@@ -348,7 +354,11 @@ Run with candy function
 
 
   # test01 is a deal object
-  run_yield_table(localAPI, test01, "A1", pool_assumps, pricing_assumps )
+  run_yield_table(localAPI
+                  , test01
+                  , "A1"
+                  , pool_assumps
+                  , pricing_assumps )
 
 
 .. image:: img/yield_table.png
@@ -384,10 +394,6 @@ After the deal was run, user can view the cashflow of `pool`/ `bonds` `fees` etc
 
 .. code-block:: python
 
-    r = localAPI.run(test01,
-                     assumptions=[{"CDR":0.01},{"Recovery":(0.5,4)}],
-                     read=True)
-
     #view result of bonds
     r['bonds']
 
@@ -406,11 +412,11 @@ For the users who is not patient enough or who want to take a high level view of
 Syntax
 ^^^^^^^^^^
 
-To query the `financial reports` , user need to add a dict in the list of `assumptions`.
+To build the `financial reports` , user need to add a tuple in the list of `runAssump`.
 
 .. code:: python 
    
-    {"FinancialReports":{"dates":<DatePattern>}
+    ("report",{"dates":<DatePattern>})
 
 the `<DatePattern>` will be used to describe `Financial Report Date`.
 
@@ -418,11 +424,18 @@ Example:
 
 .. code-block:: python 
 
-    r = localAPI.run(test01,
-                     assumptions=[{"FinancialReports":{"dates":"MonthEnd"}}
-                        ,{"CDR":0.01}
-                        ,{"Recovery":(0.5,4)}],
-                     read=True)
+  r = localAPI.run(deal
+                  ,poolAssump = ("Pool"
+                                  ,("Mortgage"
+                                  ,{"CDR":0.01} ,None, None, None)
+                                  ,None
+                                  ,None)
+                  ,runAssump = [("inspect",
+                                  ("MonthEnd",("cumPoolDefaultedBalance",)))
+                                ,("report",
+                                  {"dates":"MonthEnd"})]
+                  ,read=True)
+
 
 Cash Report 
 ^^^^^^^^^^^^
@@ -493,7 +506,7 @@ Once the deal enter a new status `Amortizing`, then in the waterfall acitons wou
     ,[["transferBy",{"formula":("substract",("bondBalance",),("poolBalance",))} # list of actions if predicate is True ()
                    ,"distAcc",'revolBuyAcc']
      ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None]
-     ,["payResidual","distAcc","Sub"] ]
+     ,["payIntResidual","distAcc","Sub"] ]
     ,[["payPrin","distAcc",["A"]] # >>>> list of actions if deal is NOT  Revolving Status
      ,["payPrin","distAcc",["Sub"]]
      ,["payFeeResidual", "distAcc", "bmwFee"]]]]
@@ -520,11 +533,13 @@ Pls noted:
                     ,"remainTerm":36
                     ,"status":"current"}]
   
-  r = localAPI.run(BMW202301,
-             assumptions=[{"RevolvingAssets":[["constant",[revol_asset]]  # revolving pool can be a list of assets 
-                                              ,[{"CDR":0.01}]]}   # revolving pool may have different pool performance assumption
-                         ,{"CDR":0.0012}],
-             read=True)
+  r = localAPI.run(BMW202301
+                  ,runAssump = [("revolving"
+                                  ,["constant",revol_asset]
+                                  ,("Pool",("Mortgage",{"CDR":0.07},None,None,None)
+                                            ,None
+                                            ,None))]
+                  ,read=True)
 
 Revolving Buy
 ^^^^^^^^^^^^^^^
@@ -547,7 +562,7 @@ Pricing an revolving asset would have a huge impact on the pool cashflow .
    ,[["transferBy",{"formula":("substract",("bondBalance",),("poolBalance",))}
                   ,"distAcc",'revolBuyAcc']
     ,["buyAsset",["Current|Defaulted",1.0,0],"revolBuyAcc",None] # <--- action of buying revolving assets
-    ,["payResidual","distAcc","Sub"] ]
+    ,["payIntResidual","distAcc","Sub"] ]
    ,[["payPrin","distAcc",["A"]]
     ,["payPrin","distAcc",["Sub"]]
     ,["payFeeResidual", "distAcc", "bmwFee"]]]]
@@ -558,6 +573,11 @@ Debug the cashflow
 ------------------------
 
 Well.. there isn't such `Debug` action on the cashflow, but a more precise put: a various angles to `View` the cashflow.
+
+Stop Run At Certain Date
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+user can instruct the projection to stop at certian date :ref:`Stop Run`
 
 
 Financial Reports 
@@ -581,8 +601,10 @@ Free Formulas
 
 if user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
 
-User just need to provide "When" to view the variables via a :ref:`DatePattern` or "What" variables to view via a :ref:`Formula`
+User just need to provide :
 
+* "When" to view the variables via a :ref:`DatePattern` and 
+* "What" variables to view via a :ref:`Formula`
 
 
 Visualize the cash `flow`

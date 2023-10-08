@@ -31,7 +31,6 @@ Content
 ------------
 
 .. toctree::
-
    installation
    modeling
    analytics

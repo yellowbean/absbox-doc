@@ -8,7 +8,7 @@ If any **Bug** found or  **features/documenent** request,please raise tickets al
 
 https://github.com/yellowbean/AbsBox/issues
 
-**AbsBox** training is offered via Zoom meeting or recorded videos.
+**AbsBox** training is offered via google meeting .
 
 API Integration
 ------------------
@@ -37,6 +37,6 @@ Email
 Slack
 ---------
 
-``absboxhastructure``
+``absbox & hastructure``
 
 https://absboxhastructure.slack.com
