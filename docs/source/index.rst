@@ -36,5 +36,6 @@ Content
    analytics
    howto
    support
+   internals
 
 

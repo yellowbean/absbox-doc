@@ -19,6 +19,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.autosectionlabel',
     'sphinxemoji.sphinxemoji',
+    'sphinx.ext.graphviz'
     #'nbsphinx'
     #'myst_nb'
 ]

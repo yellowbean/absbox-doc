@@ -210,6 +210,27 @@ Users are enable to apply:
 * apply extra haircut by percentage to pool cashflow
 * apply time series stress on prepay or default curve
 
+.. warning::
+    Extra stress only supports `Mortgage` assumption
+
+.. code-block:: python
+
+   r = localAPI.run(deal
+                  ,poolAssump = ("Pool",("Mortgage",{"CDR":0.01}
+                                                   ,{"CPR":0.01}
+                                                   ,None
+                                                   ,{"defaultFactor":[["2020-10-01",1.05]
+                                                                      ,["2022-10-01",1.15]]
+                                                     ,"prepayFactor":[["2020-10-01",1.05]
+                                                                      ,["2022-10-01",1.15]]
+                                                     ,"haircuts":[("Interest",0.05)]})
+                                          ,None
+                                          ,None)
+                  ,runAssump = None
+                  ,read=True)
+
+
+
 
 Deal Assumption
 ^^^^^^^^^^^^^^^^^^^

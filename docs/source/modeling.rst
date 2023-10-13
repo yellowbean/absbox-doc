@@ -313,6 +313,9 @@ Depends on the status of deal, the dates shall be modeled either in ``ongoing`` 
 PreClosing Deal dates
 ^^^^^^^^^^^^^^^^^^^^^
 
+.. warning::
+    if deal was modeled as `PreClosing` ,user has to include a ``new status`` in deal status ("PreClosing","<new status>"")
+
 if it is ``preclosing`` stage ( the deal has not been issued yet )
 
 ``cutoff``
@@ -394,10 +397,21 @@ Fee/Expenses
 
 syntax: ``({fee name} , {fee description} )``, fees fall into types below :
 
+Optional fields in ``{fee description}``:
+
+* ``"feeStart"`` ->  the date fee start to become effective
+* ``"feeDueDate"`` -> the date when due amount was calculated 
+* ``"feeDue"`` ->    total oustanding due amount 
+* ``"feeLastPaidDate"`` -> the date when last paid
+
+
 one-off fee
 ^^^^^^^^^^^^^^^^^^
 
 with a oustanding balance and will be paid off once it paid down to zero
+
+Syntax
+  `fixFee` : total oustanding fee amount to be paid
 
 .. code-block:: python
   
@@ -407,10 +421,13 @@ with a oustanding balance and will be paid off once it paid down to zero
 recurrance fee
 ^^^^^^^^^^^^^^^^
 
-a fix amount fee which occurs by defined :ref:`Date Pattern`
+a fix amount fee which occurs by defined :ref:`DatePattern`
+
+Syntax
+  `recurFee`:[ <DatePattern>,<new due amount on each DatePattern> ]
 
 .. code-block:: python
-  
+    
    ,("rating_fee"
     ,{"type":{"recurFee":[["MonthDayOfYear",6,30],15]}})
 
@@ -427,6 +444,9 @@ like a fee is base on
   * a sum of `formula` 
   * ...
 
+Syntax 
+  `pctFee`:[ <Formula>,<percentage> ]
+
 .. code-block:: python
   
   ("bond_service_fee"
@@ -438,6 +458,9 @@ annualized fee
 
 similar to `percentage fee` but it will use an annualized rate to multiply the value of :ref:`Formula`.
 either reference to pool balance  or bond balance , etc.... it will accure type fee, which if not being paid, it will increase the due amount.
+
+Syntax 
+  `annualPctFee`:[ <Formula>,<percentage> ]
 
 .. code-block:: python
   
@@ -452,6 +475,9 @@ A user defined time series expenses, the date and amount can be customized.
 
 like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
+Syntax 
+  `customFee`:[ [<Date>,<Amount>] .... ]
+
 .. code-block:: python
   
    ,("irregulargfee"
@@ -463,6 +489,9 @@ count type fee
 ^^^^^^^^^^^^^^^^^^^
 
 the fee due equals to a number multiply a unit fee. The number is a formula reference.
+
+Syntax 
+  `numFee`:[ <DatePattern>,<Formula>, <Amount> ]
 
 .. code-block:: python
   
@@ -1474,6 +1503,15 @@ Interest Rate Swap
 .. literalinclude:: deal_sample/test10.py
    :language: python
 
+Formula based trigger 
+------------------------
+
+* formula based on delinquency  
+* query trigger status via `inspect`
+
+.. literalinclude:: deal_sample/test11.py
+   :language: python
+   :emphasize-lines: 53-60,76-84
 
 JSON
 =========
