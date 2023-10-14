@@ -884,7 +884,7 @@ There is one extra attribute to set for ``Reserve Account`` : ``type``
                                            ,{"fixReserve":100}]}
                                     ,{"fixReserve":150}]})
 
-Model Reinterest
+Model Reinvestment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To model the interest or short-term investment income in the account.
