@@ -319,9 +319,9 @@ PreClosing Deal dates
 if it is ``preclosing`` stage ( the deal has not been issued yet )
 
 ``cutoff``
-    All pool cashflow after `Closing Date` belongs to the SPV
+    All pool cashflow after `Cutoff Date` belongs to the SPV
 ``closing``
-    after `Closing Date` belongs to the SPV
+    fee/bonds starts from `Closing Date` 
 ``firstPay``
     First execution of payment waterfall
 ``stated``
@@ -331,14 +331,15 @@ if it is ``preclosing`` stage ( the deal has not been issued yet )
 ``payFeq``
     a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
 
-.. code-block:: python
+date example
+  .. code-block:: python
 
-    {"cutoff":"2022-11-01"
-    ,"closing":"2022-11-15"
-    ,"firstPay":"2022-12-26"
-    ,"stated":"2030-01-01"
-    ,"poolFreq":"MonthEnd"
-    ,"payFreq":["DayOfMonth",20]}
+      {"cutoff":"2022-11-01"
+      ,"closing":"2022-11-15"
+      ,"firstPay":"2022-12-26"
+      ,"stated":"2030-01-01"
+      ,"poolFreq":"MonthEnd"
+      ,"payFreq":["DayOfMonth",20]}
 
 Ongoing Deal dates
 ^^^^^^^^^^^^^^^^^^^^^
