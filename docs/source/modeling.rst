@@ -1482,7 +1482,61 @@ Liquidity Provider
 
 `Liquidity Provider` is an external entity which can be used as a line of credit/insuer. 
 
-If there is a shortage on fee or interest or principal, user can setup rules to draw cash from the `Likquidity Provider`  and deposity to accounts.
+If there is a shortage on fee or interest or principal, user can setup rules to draw cash from the `Liquidity Provider`  and deposity cash to accounts.
+
+There are couple types available:
+
+Unlimit Liquidity 
+^^^^^^^^^^^^^^^^^^
+
+It provides unlimit liquidity.
+
+.. code-block:: python 
+
+  {"type" : "Unlimited"
+  ,"start": <Date>}
+
+Fix Support
+^^^^^^^^^^^^^
+
+It provides liquidity up to a fix amount of cash
+
+.. code-block:: python 
+
+  {"lineOfCredit" : 1000
+  ,"type": {"total": <Balance> }
+  ,"start": <Date>}
+
+
+Reset Line of Credit 
+^^^^^^^^^^^^^^^^^^^^^^
+
+The line of credit will be reset periodically.
+
+.. code-block:: python 
+
+  {"lineOfCredit" : 1000
+  ,"type": {"reset":<DatePattern>
+           ,"quota":<CapToReset>}
+  ,"start": <Date>}
+
+Formula-based Line of Credit
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python 
+
+  {"lineOfCredit" : 1000
+  ,"type":{"formula":<Formula>
+           ,"pct":<Percentage>}
+  ,"start": <Date>}
+
+common properites
+  * ``start`` -> when the liquidity provider start to be effective
+  * ``lineOfCredit`` -> current available credit to draw
+  * ``balance`` -> current balance to be paid back to provider
+  * ``rate`` -> interest rate to be used on ``balance``
+  * ``fee`` ->  premium feee to be used on ``lineOfCredit``
+
 
 
 
@@ -1494,16 +1548,15 @@ Interest Rate Swap
 
 it was modeled as a map ,with key as name to swap ,value serve as properties to swap. The very reason using a map becasue a deal can have multiple Swap contract.
 
-properties:
-
-* `settleDates` -> describe the setttlement dates .
-* `pair` -> describe rates to swap (paying rate in left, receiving rate on right)
-* `base` -> describe how reference balance is being updated 
-* `start` -> when the swap contract come into effective
-* `balance` -> (optional), current reference balance
-* `lastSettleDate` -> (optional), last settle date which calculate `netcash`
-* `netcash` -> (optional), current cash to pay/to collect 
-* `stmt` -> (optional),transaction history
+syntax:
+  * `settleDates` -> describe the setttlement dates .
+  * `pair` -> describe rates to swap (paying rate in left, receiving rate on right)
+  * `base` -> describe how reference balance is being updated 
+  * `start` -> when the swap contract come into effective
+  * `balance` -> (optional), current reference balance
+  * `lastSettleDate` -> (optional), last settle date which calculate `netcash`
+  * `netcash` -> (optional), current cash to pay/to collect 
+  * `stmt` -> (optional),transaction history
 
 example: 
 
