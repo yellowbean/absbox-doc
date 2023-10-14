@@ -150,7 +150,10 @@ Structured product is using ``formula`` to define the amount of account transfer
 
 ``absbox`` use the concept of ``formula`` in an extreamly composable way, a ``formula`` can be a variable reference to deal attributes.
 
-* Bond 
+Balance Type 
+^^^^^^^^^^^^^^
+Bond 
+"""""""
     * ``("bondBalance",)`` -> sum of all bond balance
     * ``("bondBalance","A","B")`` -> sum of balance of bond A and bond B
     * ``("originalBondBalance",)`` -> bond balance at issuance
@@ -160,7 +163,8 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("behindTargetBalance","A")``  -> difference of target balance with current balance for the bond A
     * ``("bondTxnAmt", None,"A")``  -> Total transaction amount of bond 'A'
     * ``("bondTxnAmt", "<PayInt:A>","A")``  -> Total transaction amount of interest payment bond 'A'
-* Pool 
+Pool 
+"""""""
     * ``("poolBalance",)``  -> current pool balance
     * ``("originalPoolBalance",)``  -> pool original balance 
     * ``("currentPoolDefaultedBalance",)``  -> pool defaulted balance 
@@ -168,24 +172,47 @@ Structured product is using ``formula`` to define the amount of account transfer
     * ``("cumPoolRecoveries",)`` -> pool cumulative recoveries
     * ``("poolFactor",)`` -> pool factor
     * ``("borrowerNumber",)`` -> number of borrower
-* Accounts
+Accounts
+"""""""
     * ``("accountBalance",)`` -> sum of all account balance
     * ``("accountBalance","A","B")`` -> sum of account balance for "A" and "B"
     * ``("reserveGap","A","B")`` -> sum of shortfall of reserve amount of specified accounts
     * ``("accountTxnAmt",None,"A")`` -> total transaction amount of account "A"
     * ``("accountTxnAmt","<tag>","A")`` -> total transaction amount tagged with ``<tag>`` of account "A"
-* Expense
+Expense
+""""""""""
     * ``("feeDue","F1","F2")`` -> sum of fee due for fee "F1","F2"
     * ``("lastFeePaid","F1","F2")`` -> sum of fee last paid for fee "F1","F2"
     * ``("feeTxnAmt",None,"A")`` -> total transaction amount of fee "A"
-* LiquidationProvider 
+LiquidationProvider 
+""""""""""""""""""""""""
     * ``("liqCredit","F1","F2")`` -> sum of credit available from "F1" "F2"
     * ``("liqBalance","F1","F2")`` -> sum of credit drawn from "F1" "F2"
 
+`formula` can be used to refer to  Integer/Bool/Ratio type data as well
+
+Integer Type
+^^^^^^^^^^^^^^
+    * ``("borrowerNumber",)`` -> number of borrower
+    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
+
+Ratio Type
+^^^^^^^^^^^^
+    * ``("bondFactor",)`` -> factor of bond
+    * ``("poolFactor",)`` -> factor of pool
+    * ``("cumuPoolDefaultedRate",)`` -> cumulative default rate of pool
+    * ``("cumuPoolNetLossRate",)`` -> cumulative loss rate of pool
+
+Bool Type
+^^^^^^^
+    * ``("trigger", loc ,<trigger name>)`` -> trigger with name ``<trigger name>`` at ``loc`` status
+    * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
+    * ``("status", <deal status>)`` -> True if current deal status is ``<deal status>``
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
-* Combination
+Combination Type
+^^^^^^^^^^^^^^
     * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
     * ``("Max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
     * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
@@ -199,21 +226,6 @@ Or `formula` can be an arithmetic calculation on itselfies.
     * ``("capWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and cap with <formula2>
     * ``("constant", <Number>)``  -> a constant value
     * ``("custom", <Name of user define data>)`` -> use a custom data
-
-`formula` can be used to refer to  Integer/Bool/Ratio type data as well
-
-* Integer 
-    * ``("borrowerNumber",)`` -> number of borrower
-    * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
-* Ratio
-    * ``("bondFactor",)`` -> factor of bond
-    * ``("poolFactor",)`` -> factor of pool
-    * ``("cumuPoolDefaultedRate",)`` -> cumulative default rate of pool
-    * ``("cumuPoolNetLossRate",)`` -> cumulative loss rate of pool
-* Bool 
-    * ``("trigger", loc ,<trigger name>)`` -> trigger with name ``<trigger name>`` at ``loc`` status
-    * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
-    * ``("status", <deal status>)`` -> True if current deal status is ``<deal status>``
 
 
 
@@ -416,26 +428,34 @@ Deal status is a ``Tag`` to describe the current ``status`` of deal, it can be o
 
 
 
-* ``(PreClosing,"<new status>")`` : Deal is in pre-closing stage, which means the deal has not been issued yet. Make sure to include a ``new status`` which deal will enter after ``Closing Date``
-* ``RampUp``     : Deal is ramping up to build assets
-* ``Revolving``  : Deal is not amortizing yet, which means the deal is still in revolving stage.
-* ``Amortizing`` : Deal is amortizing, the deal is picking ``Amortizing`` waterfall on distribution dates .
-* ``Accelerated``: Deal is in accelerated stage, which means the deal is picking ``Accelerated`` waterfall on distribution dates .
-* ``Defaulted``  : Deal is in default stage, which means the deal is picking ``Defaulted`` waterfall on distribution dates .
-* ``Ended``      : Means deal stop projection cashflow.
+``(PreClosing,"<new status>")``
+  Deal is in pre-closing stage, which means the deal has not been issued yet. Make sure to include a ``new status`` which deal will enter after ``Closing Date``
+``RampUp``
+  Deal is ramping up to build assets
+``Revolving``
+  Deal is not amortizing yet, which means the deal is still in revolving stage.
+``Amortizing``
+  Deal is amortizing, the deal is picking ``Amortizing`` waterfall on distribution dates .
+``Accelerated``
+  Deal is in accelerated stage, which means the deal is picking ``Accelerated`` waterfall on distribution dates .
+``Defaulted``
+  Deal is in default stage, which means the deal is picking ``Defaulted`` waterfall on distribution dates .
+``Ended`` 
+  Means deal stop projection cashflow.
 
 
 Fee/Expenses
 --------------
 
-syntax: ``({fee name} , {fee description} )``, fees fall into types below :
+syntax
+  ``({fee name} , {fee description} )``, fees fall into types below :
 
-Optional fields in ``{fee description}``:
+  Optional fields in ``{fee description}``:
 
-* ``"feeStart"`` ->  the date fee start to become effective
-* ``"feeDueDate"`` -> the date when due amount was calculated 
-* ``"feeDue"`` ->    total oustanding due amount 
-* ``"feeLastPaidDate"`` -> the date when last paid
+  * ``"feeStart"`` ->  the date fee start to become effective
+  * ``"feeDueDate"`` -> the date when due amount was calculated 
+  * ``"feeDue"`` ->    total oustanding due amount 
+  * ``"feeLastPaidDate"`` -> the date when last paid
 
 
 one-off fee
@@ -443,7 +463,7 @@ one-off fee
 
 with a oustanding balance and will be paid off once it paid down to zero
 
-Syntax
+syntax
   `fixFee` : total oustanding fee amount to be paid
 
 .. code-block:: python
@@ -456,7 +476,7 @@ recurrance fee
 
 a fix amount fee which occurs by defined :ref:`DatePattern`
 
-Syntax
+syntax
   `recurFee`:[ <DatePattern>,<new due amount on each DatePattern> ]
 
 .. code-block:: python
@@ -477,7 +497,7 @@ like a fee is base on
   * a sum of `formula` 
   * ...
 
-Syntax 
+syntax 
   `pctFee`:[ <Formula>,<percentage> ]
 
 .. code-block:: python
@@ -492,7 +512,7 @@ annualized fee
 similar to `percentage fee` but it will use an annualized rate to multiply the value of :ref:`Formula`.
 either reference to pool balance  or bond balance , etc.... it will accure type fee, which if not being paid, it will increase the due amount.
 
-Syntax 
+syntax 
   `annualPctFee`:[ <Formula>,<percentage> ]
 
 .. code-block:: python
@@ -508,7 +528,7 @@ A user defined time series expenses, the date and amount can be customized.
 
 like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
-Syntax 
+syntax 
   `customFee`:[ [<Date>,<Amount>] .... ]
 
 .. code-block:: python
@@ -523,8 +543,8 @@ count type fee
 
 the fee due equals to a number multiply a unit fee. The number is a formula reference.
 
-Syntax 
-  `numFee`:[ <DatePattern>,<Formula>, <Amount> ]
+syntax 
+  `numFee`:[ <DatePattern>, <Formula>, <Amount> ]
 
 .. code-block:: python
   
@@ -541,15 +561,31 @@ Pool
 * it can either has a loan level ``asset`` or ``projected cashflow``
 * other optional fields like ``issuance balance``, which will be supplimental to calculate certain value , like ``Pool Factor``
 
+syntax
+  ``Pool`` is modeled as map with following fields:
+
+  * ``assets`` -> a list of assets
+  * ``cashflow`` -> a list of projected cashflow
+  * ``issuanceStat`` -> a map describe extra information of pool
+  
+    * ``IssuanceBalance`` -> issuance balance of pool
+  * ``extendBy`` -> <DatePattern>, used to provide extra dates of pool collection
+
+.. warning::
+
+  ``assets`` and ``cashflow`` are mutually exclusive, only one of them can be used in a pool
+
+
 Mortgage
 ^^^^^^^^^^^
 
 `Mortgage` is a loan with level pay at each payment period.
 
-`type` field can be used to define either its `Annuity` type or `Linear` Type
+``type``
+  `type` field can be used to define either its `Annuity` type or `Linear` Type
 
-* `Level` -> `Annuity`,`French`
-* `Even` -> `Linear`
+  * `Level` -> `Annuity`,`French`
+  * `Even` -> `Linear`
 
 .. code-block:: python
 
@@ -687,13 +723,42 @@ Collection Rules
 
 Proceeds
 ^^^^^^^^^^
-Includes:
 
-* Principal
-* Interest
-* Recoveries from defaults
-* Prepayment
-* Rental ( only for lease )
+``Proceeds`` refer to cash yields from pool:
+
+.. list-table:: Proceeds By Types
+   :header-rows: 1
+
+   * - Asset Type
+     - Principal
+     - Interest
+     - Prepayment
+     - Recovery
+     - Rental
+   * - Mortgage
+     - Yes
+     - Yes
+     - Yes
+     - Yes
+     - No
+   * - Installment
+     - Yes
+     - Yes
+     - Yes
+     - Yes
+     - No
+   * - Loan
+     - Yes
+     - Yes
+     - Yes
+     - Yes
+     - No
+   * - Lease
+     - No
+     - No
+     - No
+     - No
+     - Yes
 
 Allocation Rule
 ^^^^^^^^^^^^^^^^
@@ -733,28 +798,19 @@ There are two types of `Account`:
   * ``Bank Account`` -> which used to collect money from pool and pay out to fees/bonds
   * ``Reserve Account`` -> with one addtional attribute to ``Bank Account`` , specifies target reserve amount of the account
 
-.. list-table:: Account-By-Types
-   :widths: 25 25 50
+.. list-table:: Account By Types
+   :widths: 15 10 30
    :header-rows: 1
 
    * - Account Type
      - Reserve Target
      - Interest Bearing
    * - Bank Account
-     - Reserve Account
-   * - No
+     - No
      - Optional
-   * - No
+   * - Reserve Account
+     - Yes
      - Optional
-
-+-----------------+----------------+------------------+
-| Account Type    | Reserve Target | Interest Bearing |
-+=================+================+==================+
-| Bank Account    | No             | Optional         |
-+-----------------+----------------+------------------+
-| Reserve Account | Yes            | Optional         |
-+-----------------+----------------+------------------+
-
 
 syntax
   ``({account name},{account description})``
@@ -828,7 +884,7 @@ There is one extra attribute to set for ``Reserve Account`` : ``type``
                                            ,{"fixReserve":100}]}
                                     ,{"fixReserve":150}]})
 
-Interest/Cash Investment
+Model Reinterest
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To model the interest or short-term investment income in the account.
@@ -883,6 +939,7 @@ Bonds/Tranches serves as a ``Liability`` in the SPV, with two components to mode
       principal -> "Equity"
       interest -> "Fix Rate"
       interest -> "Floater Rate"
+      interest -> "Step up Rate"
     }
 
 
@@ -1249,7 +1306,7 @@ Trigger
   :alt: version
 
 
-There are 4 components in Triggers:
+There are 4 fields in Triggers:
 
   * ``Condition`` -> it will fire the trigger effects, when :ref:`Condition` is met
   * ``Effects`` -> what would happen if the trigger is fired
@@ -1593,30 +1650,6 @@ Formula based trigger
 .. literalinclude:: deal_sample/test11.py
    :language: python
    :emphasize-lines: 53-60,76-84
-
-JSON
-=========
-
-A deal object can be converted into json format via a property field `.json`
-
-.. code-block:: python
-   
-   #Assuming 
-
-   test.json  
-
-   #{'tag': 'MDeal',
-   # 'contents': {'dates': {'tag': 'PreClosingDates',
-   #   'contents': ['2021-03-01',
-   #    '2021-06-15',
-   #    None,
-   #    '2030-01-01',
-   #    ['2021-06-15', {'tag': 'MonthEnd'}],
-   #    ['2021-07-26', {'tag': 'DayOfMonth', 'contents': 20}]]},
-   #  'name': 'Multiple Waterfall',
-   #  'status': {'tag': 'Amortizing'},
-   #  'pool': {'assets': [{'tag': 'Mortgage',
-   #     'contents': [{'originBalanc
 
  
 

@@ -1,5 +1,5 @@
-Internals 
-===========
+Internals(WIP)
+=================
 
 Asset Cashflow Projection Document
 -----------------------------------
@@ -27,37 +27,48 @@ Mortgage/Loan/Installment
 Non-Performing Asset(WIP)
 """"""""""""""""""""""
 
-(WIP)
+Why Mortgage Performance Assumption is so complex ?
+----------------------------------------
 
-.. graphviz::
-    :name: sphinx.ext.graphviz
-    :caption: Sphinx and GraphViz Data Flow
-    :alt: How Sphinx and GraphViz Render the Final Document
-    :align: center
+Before version ``0.21.x`` , pool performance assumption is just a *LIST*, which includes like ``{"CDR":0.05}``
 
-     digraph "sphinx-ext-graphviz" {
-         size="6,4";
-         rankdir="LR";
-         graph [fontname="Verdana", fontsize="12"];
-         node [fontname="Verdana", fontsize="12"];
-         edge [fontname="Sans", fontsize="9"];
+But it is not scalable when more types of assets and assumptions are introduced. for example: when including new assumption on *Delinquency*, what happen if user passes ``[{"CDR":0.05},{"Delinquency":0.05}]`` ? How delinquency interacts with default assumption ? 
 
-         sphinx [label="Sphinx", shape="component",
-                   href="https://www.sphinx-doc.org/",
-                   target="_blank"];
-         dot [label="GraphViz", shape="component",
-              href="https://www.graphviz.org/",
-              target="_blank"];
-         docs [label="Docs (.rst)", shape="folder",
-               fillcolor=green, style=filled];
-         svg_file [label="SVG Image", shape="note", fontcolor=white,
-                 fillcolor="#3333ff", style=filled];
-         html_files [label="HTML Files", shape="folder",
-              fillcolor=yellow, style=filled];
+It can be solved by introducing "How" via supplying a *Tuple* as below :
 
-         docs -> sphinx [label=" parse "];
-         sphinx -> dot [label=" call ", style=dashed, arrowhead=none];
-         dot -> svg_file [label=" draw "];
-         sphinx -> html_files [label=" render "];
-         svg_file -> html_files [style=dashed];
-     }
+.. code-block:: python
+  
+  ("Mortgage","Delinq",<delinquency assump>,<prepay assump>,<recovery assump>,<extra assump>)
+
+With starting ``("Mortgage","Delinq",...)`` the engine treat this as identifier to logic of how apply pool assumption.
+
+It is scalable if more assumption type comming in.
+
+
+
+JSON Format
+--------------
+
+Deal 
+^^^^^^^^
+A deal object can be converted into json format via a property field `.json`
+
+.. code-block:: python
+   
+   #Assuming 
+
+   test.json  
+
+   #{'tag': 'MDeal',
+   # 'contents': {'dates': {'tag': 'PreClosingDates',
+   #   'contents': ['2021-03-01',
+   #    '2021-06-15',
+   #    None,
+   #    '2030-01-01',
+   #    ['2021-06-15', {'tag': 'MonthEnd'}],
+   #    ['2021-07-26', {'tag': 'DayOfMonth', 'contents': 20}]]},
+   #  'name': 'Multiple Waterfall',
+   #  'status': {'tag': 'Amortizing'},
+   #  'pool': {'assets': [{'tag': 'Mortgage',
+   #     'contents': [{'originBalanc
+
