@@ -310,6 +310,21 @@ Deal Dates
 
 Depends on the status of deal, the dates shall be modeled either in ``ongoing`` or ``preclosing``
 
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: how to model deal date
+    :alt: how to model deal date
+    :align: center
+
+    digraph {
+        b -> OngoingDates [label="Yes"]
+        b -> PreCloseDates [label="Not yet"]
+        PreCloseDates
+        OngoingDates
+        b [shape=diamond, label="Deal Closed ?"]
+    }
+
+
 PreClosing Deal dates
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -383,6 +398,23 @@ Deal Status
 ----------------
 
 Deal status is a ``Tag`` to describe the current ``status`` of deal, it can be one of the following:
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: deal cycle
+    :alt: deal cycle
+    :align: center
+
+    digraph {
+      rankdir=LR;
+      PreClosing -> Revolving [label="if revolving"]
+      PreClosing -> Amortizing
+      Revolving -> Amortizing
+      Amortizing -> End
+    }
+
+
+
 
 * ``(PreClosing,"<new status>")`` : Deal is in pre-closing stage, which means the deal has not been issued yet. Make sure to include a ``new status`` which deal will enter after ``Closing Date``
 * ``RampUp``     : Deal is ramping up to build assets
