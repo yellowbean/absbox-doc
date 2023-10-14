@@ -704,6 +704,10 @@ The rule was defined as a *List*, each element is a *List* with 2 elements.
 * 2nd element describes `percentage` to be allocated to each account
   * if it is just an `account name`,then 100% of ``Proceeds`` will be flowed into that account
 
+syntax
+  * ``[<Proceeds from pool>, <Account to be depsit>]``
+  * ``[<Proceeds from pool>, [[<Allocation ration1>,<Account01>],[<Allocation ration2>,<Account02>] ]``
+
 
 exmaple:
 
@@ -722,12 +726,38 @@ exmaple:
 Accounts
 ---------
 
+Accounts serves as intermediary to control flow of cash between assets and liabilities of SPV.
+
 There are two types of `Account`:
 
   * ``Bank Account`` -> which used to collect money from pool and pay out to fees/bonds
   * ``Reserve Account`` -> with one addtional attribute to ``Bank Account`` , specifies target reserve amount of the account
 
-syntax   ``({account name},{account description})``, i.e
+.. list-table:: Account-By-Types
+   :widths: 25 25 50
+   :header-rows: 1
+
+   * - Account Type
+     - Reserve Target
+     - Interest Bearing
+   * - Bank Account
+     - Reserve Account
+   * - No
+     - Optional
+   * - No
+     - Optional
+
++-----------------+----------------+------------------+
+| Account Type    | Reserve Target | Interest Bearing |
++=================+================+==================+
+| Bank Account    | No             | Optional         |
++-----------------+----------------+------------------+
+| Reserve Account | Yes            | Optional         |
++-----------------+----------------+------------------+
+
+
+syntax
+  ``({account name},{account description})``
 
 
 Bank Account
@@ -741,7 +771,7 @@ Bank Account
 Reserve Account
 ^^^^^^^^^^^^^^^^^^
 
-There is one extra attribute to set : `type`
+There is one extra attribute to set for ``Reserve Account`` : ``type``
 
   * Fix Amount： a single reserve amount 
   
@@ -761,9 +791,8 @@ There is one extra attribute to set : `type`
 
   * Conditional amount starts with ``When``, the target reserve amount depends on :ref:`Condition`:
     
-    * certain :ref:`Formula` value is above or below certain value
-    * satisfy all of :ref:`Condition` s 
-    * satisfy any one of :ref:`Condition` s 
+    * Use 1st formula if condition is true
+    * Use 2nd formula if condition is false
   
     .. code-block:: python
 
@@ -837,6 +866,25 @@ Bonds/Tranches serves as a ``Liability`` in the SPV, with two components to mode
 
 * Interest
 * Principal
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: how to model bond
+    :alt: how to model bond
+    :align: center
+
+
+    digraph {
+      "model bond" -> principal
+      "model bond" -> interest
+      principal -> "Sequential"
+      principal -> "Schdule Amortization"
+      principal -> "Lock out"
+      principal -> "Equity"
+      interest -> "Fix Rate"
+      interest -> "Floater Rate"
+    }
+
 
 syntax
     ``({bond/tranche name},{bond/tranche description})``
