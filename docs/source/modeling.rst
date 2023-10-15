@@ -425,7 +425,10 @@ Deal status is a ``Tag`` to describe the current ``status`` of deal, it can be o
       Amortizing -> End
     }
 
+The ``status`` is being used by engine to:
 
+* pick up the ``right`` waterfall actions of the deal.
+* being used in ``waterfall`` or ``Condtion`` to condtionally execute actions or calculate a value
 
 
 ``(PreClosing,"<new status>")``

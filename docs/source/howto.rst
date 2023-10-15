@@ -620,7 +620,7 @@ if user want to view the break down of waterfall distribution, user may view acc
   r['accounts']['AccountName01']
 
 
-Free Formulas on projection 
+Inspect Free Formulas on projection 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 if user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
@@ -630,12 +630,19 @@ User just need to provide :
 * "When" to view the variables via a :ref:`DatePattern` and 
 * "What" variables to view via a :ref:`Formula`
 
-Free formulas within waterfall distribution
+Inspect Free formulas within waterfall distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 * :ref:`Inspect Variables during waterfall`
 * example :ref:`View Variables In Waterfall`
 
+.. note::
+  Free formula in **Projection** v.s Free formula in **Waterfall**
 
+  * Free formula in **Projection**
+      formula value was evaluated at **End of Day** on dates specified via ``DatePattern``. The value won't be changed again in that day.
+  * Free formula in **Waterfall** 
+      formula value was evaluated at **Point of time** on the location in the waterfall. The value may changes if futhur actions were taken in the waterfall in that day.
 
 
 Visualize the cash `flow`
