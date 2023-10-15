@@ -772,6 +772,25 @@ or user can cross check by review the account logs by (if changing deal status w
    r["accounts"]["<account name>"].loc["<date after deal status change>"]
 
 
+Variables During Waterfall 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If there is waterfall action in the waterfall 
+
+.. code-block:: python
+   
+  ,["inspect","BeforePayInt bond:A1",("bondDueInt","A1")]
+
+
+then the <Formula> value can be view in the ``result`` ``waterfallInspect``.
+
+.. code-block:: python
+   
+  r['result']['waterfallInspect']
+
+
+
+
 Sensitivity Analysis
 ----------------------
 

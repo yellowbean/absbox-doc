@@ -1161,7 +1161,7 @@ Bond
 
   * Calc Bond Int -> calculate the due balance of a bond
     
-    * format ``["calcBondInt", <Bond1> , <Bond2> ... ]``
+    * format ``["calcInt", <Bond1> , <Bond2> ... ]``
  
   * PayInt -> pay interset to a bond till due int balance is 0
 
@@ -1283,17 +1283,35 @@ Conditional Action
 
 There are two types of `Conditional Action`, which are same in with "IF" / "IF-ELSE" clause in programming language
 
-format : ``["If",<conditon>,<Action1>,<Action2>....]``
+``if``
+  waterfall actions follows will be executed if certain ``Condtion`` is met.
 
-waterfall actions follows will be executed if certain `Condtion`_ is met.
+  .. code-block:: python 
+    
+    ["If",<conditon>,<Action1>,<Action2>....]
 
 
-format : ``["IfElse",<conditon>``
-                    ``,[<Action1>,<Action2>....]``
-                    ``,[<Action1>,<Action2>....]``
-                    ``]``
-                    
-first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
+``ifelse``
+  first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
+
+  .. code-block:: python 
+    
+     ["IfElse",<conditon>
+              ,[<Action1>,<Action2>....]
+              ,[<Action1>,<Action2>....]
+              ]
+
+
+Inspect Variables during waterfall 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+this action will query the <Formula> and tag with <Comment> save to result. 
+To read the result, please refer to :ref:`View Variables In Waterfall`
+
+syntax
+  .. code-block:: python
+
+    ["inspect",<Comment>,<Formula1>,<Formula2>.....]
 
 
 Trigger
@@ -1705,7 +1723,15 @@ Formula based trigger
    :emphasize-lines: 53-60,76-84
 
  
+View Variables In Waterfall
+------------------------------
 
+* set "inpsect" during the waterfall with a comment string and a list of ``<Formula>``
+* view resutl from ``["inspect"]["waterfallInspect"]``
+
+.. literalinclude:: deal_sample/test12.py
+   :language: python
+   :emphasize-lines: 42,46,67
 
 
 

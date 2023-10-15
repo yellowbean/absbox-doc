@@ -572,7 +572,29 @@ Pricing an revolving asset would have a huge impact on the pool cashflow .
 Debug the cashflow
 ------------------------
 
-Well.. there isn't such `Debug` action on the cashflow, but a more precise put: a various angles to `View` the cashflow.
+Well.. there isn't such `Debug` action on the cashflow, but a more precise put: 
+
+**a various angles to `View` the cashflow**
+
+
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: how to debug cashflow
+    :alt: how to debug cashflow
+    :align: center
+
+    digraph {
+      "Debug" -> "Deal Level"
+      "Deal Level" -> "Financial Reports"
+      "Financial Reports" -> "<Cash Report>"
+      "Financial Reports" -> "<Balance Sheet Report>"
+      "Deal Level" -> "Variables During Projection" 
+      "Variables During Projection" -> "runAssump = ('inspect',...) "
+      "Debug" -> "Waterfall Level"
+      "Waterfall Level" -> "['inspect',....]"
+    }
+
 
 Stop Run At Certain Date
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -582,6 +604,8 @@ user can instruct the projection to stop at certian date :ref:`Stop Run`
 
 Financial Reports 
 ^^^^^^^^^^^^^^^^^^^^^
+
+This will offer a high level on how stats chagnes during cashflow projection.
 
 user can inspect `Balancesheet` and `Cashflow` report from a highlevel. :ref:`How to view projected quasi Financial Reports ?`
 
@@ -596,8 +620,8 @@ if user want to view the break down of waterfall distribution, user may view acc
   r['accounts']['AccountName01']
 
 
-Free Formulas
-^^^^^^^^^^^^^^^^^^^^^
+Free Formulas on projection 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 if user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
 
@@ -605,6 +629,13 @@ User just need to provide :
 
 * "When" to view the variables via a :ref:`DatePattern` and 
 * "What" variables to view via a :ref:`Formula`
+
+Free formulas within waterfall distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* :ref:`Inspect Variables during waterfall`
+* example :ref:`View Variables In Waterfall`
+
+
 
 
 Visualize the cash `flow`
