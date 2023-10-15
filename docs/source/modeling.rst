@@ -387,9 +387,9 @@ if it is ``preclosing`` stage ( the deal has not been issued yet )
     First execution of payment waterfall
 ``stated``
     legal maturity date of the deal.
-``poolFeq``
+``poolFreq``
     a :ref:`DatePattern`, describle the dates that collect cashflow from pool
-``payFeq``
+``payFreq``
     a :ref:`DatePattern`, describle the dates that distribution funds to fees and bonds.
 
 date example
