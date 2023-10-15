@@ -1,4 +1,4 @@
-Modelling
+Modeling
 ***********
 
 .. autosummary::
@@ -22,6 +22,40 @@ Deal modeling is a process to build deal class with descriptive components follo
 
 Structure of a `Generic` deal 
 ==================================
+
+There are couple must-have components in a deal:
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: deal components
+    :alt: deal components
+    :align: center
+    
+    digraph {
+        rankdir = LR
+        Deal -> DealDates [label="Must"]
+        DealDates -> payFreq [label="Frequency distribution"]
+        DealDates -> poolFreq [label="Frequency collect pool cash"]
+        payFreq -> Waterfall [label="When to run"]
+        poolFreq -> Waterfall [label="When to run"]
+        Deal -> Pool [label="Must"]
+        Deal -> "Collection Rule" [label="Must"]
+        Pool -> "Collection Rule" [label="Generate Cash"]
+        "Collection Rule" -> Accounts [label="Deposit proceeds"]
+        Deal -> Accounts [label="Must"]
+        Deal -> Waterfall [label="Must"]
+        Accounts -> Waterfall [label="Source of funds"]
+        Waterfall -> Bonds [label="Pay"]
+        Waterfall -> Fees [label="Pay"]
+        Deal -> Bonds [label="Must"]
+        Deal -> Fees [label="Optional"]
+        Deal -> Trigger [label="Optional"]
+        Deal -> "Liquiditiy Provider" [label="Optional"]
+        Deal -> Ledger [label="Optional"]
+        Deal -> InterestRateSwap [label="Optional"]
+    }
+
+To model them in code:
 
 .. code-block:: python
 
