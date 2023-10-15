@@ -1073,10 +1073,6 @@ Waterfall
 
 Waterfall means a *list* of ``Action`` to be executed. A Deal may have more than one waterfalls.
 
-
-Different Waterfalls in Deal
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 It was modeled as a map, with key as identifier to distinguish different type of waterfall.
 
 * ``"amortizing"`` -> will be picked when deal status is `Amortizing`
@@ -1091,18 +1087,46 @@ It was modeled as a map, with key as identifier to distinguish different type of
   :width: 500
   :alt: waterfall_run_loc
 
-ie：
 
-.. code-block:: python
+.. list-table:: When Waterfall Run
+   :header-rows: 1
+   
+   * - waterfall key
+     - require deal status
+     - times to run
+   * - ``amortizing``
+     - deal status is `Amortizing`
+     - every distribution day
+   * - ``(amortizing, accelerated)``
+     - deal status is `Accelerated`
+     - every distribution day
+   * - ``(amortizing, defaulted)``
+     - deal status is `Defaulted`
+     - every distribution day
+   * - ``endOfCollection``
+     - any deal status
+     - every day of collection period
+   * - ``cleanUp``
+     - any deal status
+     - once deal was called
+   * - ``closingDay``
+     - deal status is `PreClosing`
+     - once deal exits `PreClosing` status
 
-   {"amortizing":[
-       ["payFee","acc01",['trusteeFee']]
-       ,["payInt","acc01",["A1"]]
-       ,["payPrin","acc01",["A1"]]
-       ,["payPrin","acc01",["B"]]
-       ,["payResidual","acc01","B"]]
-    ,"cleanUp":[]
-    }
+
+
+
+example:
+  .. code-block:: python
+
+    {"amortizing":[
+        ["payFee","acc01",['trusteeFee']]
+        ,["payInt","acc01",["A1"]]
+        ,["payPrin","acc01",["A1"]]
+        ,["payPrin","acc01",["B"]]
+        ,["payResidual","acc01","B"]]
+      ,"cleanUp":[]
+      }
 
 
 Action
@@ -1114,194 +1138,223 @@ Action
 Fee 
 ^^^^^^
 
-  * Calc Fee -> calculate the due balance of a fee till the date of action
-    
-    * format ``["calcFee", <Fee1> , <Fee2> ... ]``
+Calc Fee 
+  calculate the due balance of a fee till the date of action  
+
+  syntax
+    ``["calcFee", <Fee1> , <Fee2> ... ]``
   
-  * PayFee -> pay to a fee till due balance is 0 if there is a due balance otherwise no actual payment happen.
+PayFee
+  Pay to a fee till due balance is 0 if there is a due balance otherwise no actual payment happen.
 
-    syntax ``["payFee", {Account}, [<Fee>]]``
+  syntax
+    ``["payFee", {Account}, [<Fee>]]``
 
-      *  ``{Account}`` -> Using the available funds from a single account.
-      *  ``[<Fee>]`` -> Pay the fees in the list on pro-rata basis
+    *  ``{Account}`` -> Using the available funds from a single account.
+    *  ``[<Fee>]`` -> Pay the fees in the list on pro-rata basis
 
-    Using one more map to limit the amount to be paid
+  Using one more map to limit the amount to be paid
 
-    syntax ``["payFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
-    
-    * ``<limit>``
+  syntax
+    ``["payFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
   
-      * ``{"balPct": 0.6}`` , pay up to 60% of due amount
-      * ``{"balCapAmt": 500}`` ,  pay up to 500.
-      * ``{"formula": <formula> }``, pay up the <formula> 
+  * ``<limit>``
+  
+    * ``{"balPct": 0.6}`` , pay up to 60% of due amount
+    * ``{"balCapAmt": 500}`` ,  pay up to 500.
+    * ``{"formula": <formula> }``, pay up the <formula> 
  
-      ie. ``["payFee", "CashAccount", ["ServiceFee"], {"balPct":0.1}]``
-
-    * ``<supports>``, if there is shortfall from ``{Account}``, the shortfall can be supported by other accounts or liquidity provider.
-     
-      * supported by accounts : 
+    ie. ``["payFee", "CashAccount", ["ServiceFee"], {"balPct":0.1}]``
   
-        *  ``["account","accountName"]``
-      * supported by liquidity provider: 
-      
-        *  ``["facility","liquidity provider name"]``
-      * supported by mix 
-      
-        *  ``["multiSupport" ,["account","accountName1"] ,["facility","liquidity provider name"] ,["account","accountName2"]]``
+  If there is a shortfall from ``{Account}`` to pay, the shortfall can be supported by other accounts or liquidity provider.
 
-  * calcAndPayFee -> calculate the due balance of a fee and pay it till due balance is 0
-
-    * format ``["calcAndPayFee", {Account}, [<Fee>]]``
-    * format ``["calcAndPayFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
-
-  * PayFeeResidual -> pay to a fee regardless the amount due
+  syntax
+    ``["payFee", {Account}, [<Fee>], {'support':<supports>}]``
+  
+    * supported by accounts : 
+  
+      *  ``["account","accountName"]``
+    * supported by liquidity provider: 
     
-    * format ``["payFeeResidual", {Account}, {Fee} ]``
-    * format ``["payFeeResidual", {Account}, {Fee}, <limit> ]``
+      *  ``["facility","liquidity provider name"]``
+    * supported by mix 
+    
+      *  ``["multiSupport" ,["account","accountName1"] ,["facility","liquidity provider name"] ,["account","accountName2"]]``
+Calc Fee and Pay
+  calculate the due balance of a fee and pay it till due balance is 0
+
+  syntax
+    ``["calcAndPayFee", {Account}, [<Fee>]]``
+    ``["calcAndPayFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
+
+Pay Fee Residual
+  pay to a fee regardless the amount due
+
+  syntax  
+    ``["payFeeResidual", {Account}, {Fee} ]``
+    ``["payFeeResidual", {Account}, {Fee}, <limit> ]``
 
 Bond
 ^^^^^^
 
-  * Calc Bond Int -> calculate the due balance of a bond
+Calc Bond Int
+  calculate the due balance of a bond
     
-    * format ``["calcInt", <Bond1> , <Bond2> ... ]``
+  syntax
+    ``["calcInt", <Bond1> , <Bond2> ... ]``
  
-  * PayInt -> pay interset to a bond till due int balance is 0
+PayInt 
+  pay interset to a bond till due int balance is 0
 
-    * format ``["payInt", {Account}, [<Bonds>] ]``
-    * format ``["payInt", {Account}, [<Bonds>], m ]``
-      `m`is just amp same in the `payFee` , which has keys :
+  syntax
+    ``["payInt", {Account}, [<Bonds>] ]``
+    ``["payInt", {Account}, [<Bonds>], m ]``
+    `m`is just a map same in the `payFee` , which has keys :
 
       * ``limit`` -> same as `payFee`
       * ``support`` -> same as `payFee`
   
-  * AccrueAndPayInt -> accrue interest and pay interset to a bond till due int balance is 0
+AccrueAndPayInt 
+  accrue interest and pay interset to a bond till due int balance is 0
 
-    * format ``["accrueAndPayInt", {Account}, [<Bonds>] ]``
+  syntax
+    ``["accrueAndPayInt", {Account}, [<Bonds>] ]``
 
-  * PayPrin -> pay principal to a bond till due principal balance is 0
+PayPrin 
+  pay principal to a bond till due principal balance is 0
 
-    * format ``["payPrin", {Account}, [<Bonds>] ]``
-    * format ``["payPrin", {Account}, [<Bonds>], m ]``
-      `m`is just amp same in the `payFee` , which has keys :
+  syntax
+    ``["payPrin", {Account}, [<Bonds>] ]``
+    ``["payPrin", {Account}, [<Bonds>], m ]``
+    `m`is just amp same in the `payFee` , which has keys :
 
       * ``limit`` -> same as `payFee`
       * ``support`` -> same as `payFee`
  
-    i.e.
-    the ``limit`` is the magic key to make principal payment more versatile. User can control the amount to be paid via a :ref:`Formula` ie.
-    
-    (from deal: Autoflorence)
-        the target amount is ``(end pool balance - (end pool balance * subordination percentage(12%)))``
-          
-          .. code-block:: python
+  the ``limit`` is the magic key to make principal payment more versatile. User can control the amount to be paid via a :ref:`Formula` ie.
+  
+  (from deal: Autoflorence)
+      the target amount is ``(end pool balance - (end pool balance * subordination percentage(12%)))``
+        
+        .. code-block:: python
 
-            ["payPrin","SourceAccount","A"
-                      ,{"formula": ("substract"
-                                      ,("poolBalance",)
-                                      ,("factor"
-                                         ,("poolBalance",), 0.12))}]
+          ["payPrin","SourceAccount","A"
+                    ,{"formula": ("substract"
+                                    ,("poolBalance",)
+                                    ,("factor"
+                                        ,("poolBalance",), 0.12))}]
   
-  * PayPrinResidual -> pay principal to a bond regardless its due principal balance
+PayPrinResidual 
+  pay principal to a bond regardless its due principal balance
     
-    * format ``["payPrinResidual", {Account}, <Bond> ]``
+  syntax
+    ``["payPrinResidual", {Account}, <Bond> ]``
   
-  * PayIntResidual  -> pay interest to a bond regardless its interest due.
-    
-    * format ``["payIntResidual", {Account}, <Bond> ]``
-    * format ``["payIntResidual", {Account}, <Bond>, <Limit> ]``
+PayIntResidual 
+  pay interest to a bond regardless its interest due.
+
+  syntax  
+    ``["payIntResidual", {Account}, <Bond> ]``
+    ``["payIntResidual", {Account}, <Bond>, <Limit> ]``
   
-      The ``<Limit>`` can be used to describe limit amount via ``{"formula":<formula>}`` 
+  The ``<Limit>`` can be used to describe limit amount via ``{"formula":<formula>}`` 
   
 Account
 ^^^^^^^^^
 
-  * Transfer -> transfer all the funds to the other account 
+Transfer 
+  transfer all the funds to the other account 
    
-    * format ``["transfer", {Account}, {Account}]``
+  syntax
+    ``["transfer", {Account}, {Account}]``
   
-    transfer funds to the other account by ``<Limit>``
+  transfer funds to the other account by ``<Limit>``
+  
+  syntax
+    ``["transfer", {Account}, {Account}, <limit> ]``
+    
+  ``<limit>`` could be 
 
-    * format ``["transfer", {Account}, {Account}, <limit> ]``
-      ``<limit>`` could be 
-
-      * ``{"balCapAmt":100}`` -> transfer up to 100
-      * ``{"balPct":0.1}`` -> transfer up to 10% of source account 
-      * ``{"formula":<formula>}`` -> transfer up to the value of formula
-      * ``{"reserve":"gap"}`` -> transfer till reserve amount of *target* account is met
-      * ``{"reserve":"excess"}`` -> transfer till reserve amount of *source* account is met
+    * ``{"balCapAmt":100}`` -> transfer up to 100
+    * ``{"balPct":0.1}`` -> transfer up to 10% of source account 
+    * ``{"formula":<formula>}`` -> transfer up to the value of formula
+    * ``{"reserve":"gap"}`` -> transfer till reserve amount of *target* account is met
+    * ``{"reserve":"excess"}`` -> transfer till reserve amount of *source* account is met
 
 Buy & Sell Assets 
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-  * Liquidation -> sell the assets and deposit the proceeds to the account
+Liquidation 
+  sell the assets and deposit the proceeds to the account
    
-    * format ``["sellAsset", {pricing method}, {Account}]``
+  syntax
+    ``["sellAsset", {pricing method}, {Account}]``
       
-  * Buy Asset -> use cash from an account to buy assets.
+Buy Asset 
+  use cash from an account to buy assets.
   
-    * format ``["buyAsset",{pricing method}, {Account}, {limit}]``
+  syntax 
+    ``["buyAsset",{pricing method}, {Account}, {limit}]``
 
-      * ``limit`` can be either a :ref:`Formula` or a Cap Amount
+    ``limit`` can be either a :ref:`Formula` or a Cap Amount
       
 
 Liquidtiy Facility 
 ^^^^^^^^^^^^^^^^^^^
 
-  ``Liquidity Facility`` behaves like a 3rd party entity which support the cashflow distirbution in case of shortage. It can deposit cash to account via ``liqSupport``, with optinal a ``limit``.
-  it can be used to draw and 
+``Liquidity Facility`` behaves like a 3rd party entity which support the cashflow distirbution in case of shortage. It can deposit cash to account via ``liqSupport``, with optinal a ``<limit>``.
 
-  * draw and deposit cash to account
-
-    * format ``["liqSupport", <liqProvider>,"account",<Account Name>,<Limit>]``
+Draw Cash to Account
+  syntax
+    ``["liqSupport", <liqProvider>, "account", <Account Name>, <Limit>]``
   
-  * Pay fee 
-
-    * format ``["liqSupport", <liqProvider>,"fee",<Fee Name>,<Limit>]``
+Pay fee 
+  syntax
+    ``["liqSupport", <liqProvider>, "fee", <Fee Name>, <Limit>]``
   
-  * Pay interest to bond or principal to bond
+Pay interest/principal to bond
+  pay principal or interest to bond.
 
-    * format ``["liqSupport", <liqProvider>,"interest",<Bond Name>,<Limit>]``
-    * format ``["liqSupport", <liqProvider>,"principal",<Bond Name>,<Limit>]``
+  syntax
+    ``["liqSupport", <liqProvider>, "interest", <Bond Name>, <Limit>]``
+    ``["liqSupport", <liqProvider>, "principal", <Bond Name>, <Limit>]``
+
+Liquidity Repay 
+  pay back to liquidity provider till its oustanding balance is 0
+
+  syntax:
+    * ``["liqRepay","bal", <Account>, <liqProvider>, <Limit>]``
+    * ``["liqRepay","int", <Account>, <liqProvider>, <Limit>]``
+    * ``["liqRepay","premium", <Account>, <liqProvider>, <Limit>]``
+
+Compensation 
+  Use all cash from the account and pay back to liquidity provider as compensation,no limit amount.
   
-  * Provide support a shortfall amount described by ``<Limit>`` ,which can be a ``Formula``
-
-    * format ``["liqSupport", <liqProvider>,"account",<Account Name>,<Limit>]``
-    * format ``["liqSupport", <liqProvider>,"fee",<Fee Name>,<Limit>]``
-    * format ``["liqSupport", <liqProvider>,"interest",<Bond Name>,<Limit>]``
-    * format ``["liqSupport", <liqProvider>,"principal",<Bond Name>,<Limit>]``
-
-  * Liquidity Repay & Compensation -> pay back to liquidity provider till its balance is 0
-
-    * format ``["liqRepay","bal" , <Account>, <liqProvider>,<Limit>]``
-    * format ``["liqRepay","int" , <Account>, <liqProvider>,<Limit>]``
-    * format ``["liqRepay","premium" , <Account>, <liqProvider>,<Limit>]``
-  
-  * Or, pay all the residual cash back to the provider 
-  
-    * format ``["liqRepayResidual", <Account>, <liqProvider>]``
+  syntax 
+    ``["liqRepayResidual", <Account>, <liqProvider>]``
 
 Conditional Action
 ^^^^^^^^^^^^^^^^^^^^
 
 There are two types of `Conditional Action`, which are same in with "IF" / "IF-ELSE" clause in programming language
 
-``if``
+``If``
   waterfall actions follows will be executed if certain ``Condtion`` is met.
 
   .. code-block:: python 
     
-    ["If",<conditon>,<Action1>,<Action2>....]
+    ["If",<conditon>
+         ,<Action1>,<Action2>....]
 
 
-``ifelse``
+``IfElse``
   first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
 
   .. code-block:: python 
     
      ["IfElse",<conditon>
-              ,[<Action1>,<Action2>....]
-              ,[<Action1>,<Action2>....]
+              ,[<Action1>,<Action2>....] # executed if condition is met/True
+              ,[<Action1>,<Action2>....] # executed if condition is not met/False
               ]
 
 
@@ -1376,7 +1429,6 @@ Why there are 5 points of time to run trigger ?
     Because , when there is a ``Formula`` ,it may reference to bond balance ,but the bond balance varies in different point of time : the balance in ``BeforeDistribution``  is different from ``AfterDistirbution`` as the bond maybe paid down.
 
 
-
 Conditons of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1385,35 +1437,39 @@ Magically, condition of a trigger is just a :ref:`Condition` from the very begin
 
 Effects/Consequence of a trigger
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  
-Trigger will update the `state` of a deal, like:
 
-  * convert `revolving` to `amortizing`
-  * convert `amortizing` to `accelerated`
-  * convert `amortizing` to `defaulted`
+Change Deal Status
+  Trigger will update the `state` of a deal, like:
 
-.. code-block:: python
-  
-  "effects":("newStatus","Amortizing") # change deal status to "Amortizing"
-  "effects":("newStatus","Accelerated") # change deal status to "Accelerated"
-  "effects":("newStatus","Defaulted") # change deal status to "Defautled"
+    * convert `revolving` to `amortizing`
+    * convert `amortizing` to `accelerated`
+    * convert `amortizing` to `defaulted`
 
-Once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
+  .. code-block:: python
+    
+    "effects":("newStatus","Amortizing") # change deal status to "Amortizing"
+    "effects":("newStatus","Accelerated") # change deal status to "Accelerated"
+    "effects":("newStatus","Defaulted") # change deal status to "Defautled"
 
-* accure some certain fees 
+  Once the `state` of deal changed, the deal will pick the corresponding waterfall to run at distribution days.
 
-.. code-block:: python
-  
-  "effects":["accrueFees","feeName1","feeName2",...]
+Accure fees 
+  Accure fees if it was triggered
 
-* change reserve target balance of an account
+  .. code-block:: python
+    
+    "effects":["accrueFees","feeName1","feeName2",...]
 
-.. code-block:: python
-  
-  "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
-  "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
+Change Target Reserve 
+  Change reserve target formula of a reserve account
 
-* create a new trigger 
+  .. code-block:: python
+    
+    "effects":["newReserveBalance","accName1",{"fixReserve":1000}]
+    "effects":["newReserveBalance","accName1",{"targetReserve":["......"]}]
+
+Add a trigger
+  Create a new trigger 
 
 .. code-block:: python
   
@@ -1423,7 +1479,8 @@ Once the `state` of deal changed, the deal will pick the corresponding waterfall
                ,"status":...
                ,"curable":...})]
 
-* a list of above
+Combination of above
+  a list of above can be combined together with keyword ``Effects``
 
 .. code-block:: python
   
