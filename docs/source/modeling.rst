@@ -638,16 +638,63 @@ Mortgage
       ,"remainTerm": 80
       ,"status": "Current"}]
 
+Prepayment Penalty
+""""""""""""""""""""""
+If ``Prepayment Penalty`` was modeled and any prepayment will be yield extra cashflow to the pool.
+
+``prepayPenalty``
+
+  * ``{"byTerm":[<term>,<rate1>,<rate2>]}`` 
+  
+    first <term> periods, prepayment will use rate1 ,otherwise use rate2
+  * ``{"fixAmount":[<amount>,<term>]}``
+  
+    before <term> periods, prepayment will use <amount> as penalty, otherwise 0
+  * ``{"fixAmount":[<amount>]}``
+
+    prepayment will use <amount> as penalty
+  * ``{"fixPct":[<pct>,<term>]}``
+  
+    before <term> periods, prepayment will use <pct> * prepayment amount as penalty, otherwise 0
+  * ``{"fixPct":[<pct>]}``
+  
+    prepayment will use <pct>* prepayment amount as penalty
+  * ``{"sliding":[<pct>,<step>]}``
+  
+    penalty rate is declining by <step>  each period
+  * ``{"stepDown":[(<first N term>,<rate1>),....]}``
+
+    penalty rate is being used by different term interval
+.. code-block:: python
+
+  ["Mortgage"
+  ,{"originBalance": 12000.0
+    ,"originRate": ["fix",0.045]
+    ,"originTerm": 36
+    ,"freq": "Monthly"
+    ,"type": "Level"
+    ,"originDate": "2021-02-01"
+    ,"prepayPenalty":{"byTerm":[15,0.1,0.2]}
+    }
+  ,{"currentBalance": 10000.0
+    ,"currentRate": 0.075
+    ,"remainTerm": 24
+    ,"status": "Current"}]
+
+
 ARM 
 ^^^^^^^^
 
 `ARM` is a type of `Mortgage` that has one more field `arm` to describe the rate adjust behavior of the loan.
 
-* ``initPeriod`` -> Required
-* ``firstCap`` -> Optional
-* ``periodicCap`` -> Optional
-* ``lifeCap`` -> Optional
-* ``lifeFloor`` -> Optional
+``arm``
+  describe the initial rate period of `AdjustRateMortgage`
+
+  * ``initPeriod`` -> Required
+  * ``firstCap`` -> Optional
+  * ``periodicCap`` -> Optional
+  * ``lifeCap`` -> Optional
+  * ``lifeFloor`` -> Optional
 
 
 .. code-block:: python
@@ -673,8 +720,12 @@ Loan
 `Loan` is type of asset which has interest only and a lump sum principal payment at end
 
 
-.. code-block:: python
+``type``
 
+  * ``i_p`` : interest only in all periods,the principal balance repayment at last term
+  * ``schedule`` : principal repayment schdule
+
+.. code-block:: python
 
   ["Loan"
     ,{"originBalance": 80000
@@ -690,10 +741,37 @@ Loan
       ,"remainTerm": 48
       ,"status": "Current"}]
 
+Schedule Repayment
+""""""""""""""""""""
+
+.. versionadded:: 0.22
+
+.. code-block:: python
+
+  ["Loan"
+  ,{"originBalance": 80000
+    ,"originRate": ["floater",0.045,{"index":"SOFR3M"
+                                    ,"spread":0.01
+                                    ,"reset":"QuarterEnd"}]
+    ,"originTerm": 3
+    ,"freq": "SemiAnnually"
+    ,"type": ("Schedule",[["2021-10-10",0.2]
+                          ,["2022-01-10",0.3]
+                          ,["2022-10-10",0.1]
+                          ])
+    ,"originDate": "2021-03-01"}
+  ,{"currentBalance": 65000
+    ,"currentRate": 0.06
+    ,"remainTerm": 3
+    ,"status": "Current"}]
+
+
 Lease
 ^^^^^^^^^
 
 `Lease` is an asset with have evenly distributed rental as income or step up feature on the rental over the projection timeline.
+
+
 
 .. code-block:: python
 
@@ -1214,6 +1292,7 @@ PayFee
     * supported by mix 
     
       *  ``["multiSupport" ,["account","accountName1"] ,["facility","liquidity provider name"] ,["account","accountName2"]]``
+
 Calc Fee and Pay
   calculate the due balance of a fee and pay it till due balance is 0
 
@@ -1395,7 +1474,9 @@ There are two types of `Conditional Action`, which are same in with "IF" / "IF-E
 Inspect Variables during waterfall 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-this action will query the <Formula> and tag with <Comment> save to result. 
+.. versionadded:: 0.22
+
+this action will query the :ref:`Formula` and tag with <Comment>("optional string") save to result. 
 To read the result, please refer to :ref:`View Variables In Waterfall`
 
 syntax
@@ -1581,6 +1662,11 @@ Examples
         ,"status":False
         ,"curable":False}
         ]}
+
+.. seealso::
+  
+  Example :ref:`Formula based trigger` 
+
 
 Query trigger during run
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -32,8 +32,8 @@ here is a list of available servers at `absbox.org <https://absbox.org>`_
    The engine code was hosted at `Hastructure <https://github.com/yellowbean/Hastructure>`_
 
 
-Setting Assumption
---------------------
+Asset Performance Assumption
+----------------------------------------
 
 Assumpitions are required to set when running stressed scenario as well as getting specific outputs other than cashflow.
 
@@ -42,11 +42,8 @@ There are two type of assumptions:
 * Assumptions for performance of asset
 * Assumptions for running a deal
 
-Asset Performance
-^^^^^^^^^^^^^^^^^^^
-
 Mortgage/Loan/Installment
-""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. warning::
    <delinq assumption> is not implemented yet ,it only serves as a place holder
@@ -116,8 +113,37 @@ Notes:
       * the recovery starts at 4 periods after defaulted date
       * the recovery distribution is 50%,20% and 30%
 
+Extra Stress 
+""""""""""""""
+
+Users are enable to apply:
+
+* apply extra haircut by percentage to pool cashflow
+* apply time series stress on prepay or default curve
+
+.. warning::
+    Extra stress only supports `Mortgage` assumption
+
+.. code-block:: python
+
+   r = localAPI.run(deal
+                  ,poolAssump = ("Pool",("Mortgage",{"CDR":0.01}
+                                                   ,{"CPR":0.01}
+                                                   ,None
+                                                   ,{"defaultFactor":[["2020-10-01",1.05]
+                                                                      ,["2022-10-01",1.15]]
+                                                     ,"prepayFactor":[["2020-10-01",1.05]
+                                                                      ,["2022-10-01",1.15]]
+                                                     ,"haircuts":[("Interest",0.05)]})
+                                          ,None
+                                          ,None)
+                  ,runAssump = None
+                  ,read=True)
+
+
+
 Lease
-""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -136,7 +162,7 @@ Notes:
   * ``<end date>`` -> the date when lease projection ends 
 
 Assumption on Asset Level
-""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As suggested above, the assumption would apply to all the asset of deals. But user has the abliity to set assumption on asset level.
 
@@ -202,38 +228,9 @@ i.e
   r[0]
 
 
-Extra Stress 
-""""""""""""""
-
-Users are enable to apply:
-
-* apply extra haircut by percentage to pool cashflow
-* apply time series stress on prepay or default curve
-
-.. warning::
-    Extra stress only supports `Mortgage` assumption
-
-.. code-block:: python
-
-   r = localAPI.run(deal
-                  ,poolAssump = ("Pool",("Mortgage",{"CDR":0.01}
-                                                   ,{"CPR":0.01}
-                                                   ,None
-                                                   ,{"defaultFactor":[["2020-10-01",1.05]
-                                                                      ,["2022-10-01",1.15]]
-                                                     ,"prepayFactor":[["2020-10-01",1.05]
-                                                                      ,["2022-10-01",1.15]]
-                                                     ,"haircuts":[("Interest",0.05)]})
-                                          ,None
-                                          ,None)
-                  ,runAssump = None
-                  ,read=True)
-
-
-
 
 Deal Assumption
-^^^^^^^^^^^^^^^^^^^
+----------------------------------------
 
 ``Deal Assumption`` is just list of tuples passed to ``runAssump`` argument.
 
@@ -247,7 +244,7 @@ Deal Assumption
                    ,read=True)
 
 Stop Run
-""""""""""
+^^^^^^^^^^^^^^
 
 cashflow projection will stop at the date specified.
 
@@ -255,8 +252,11 @@ cashflow projection will stop at the date specified.
 
   ("stop","2021-01-01")
 
+
+
 Project Expense
-"""""""""""""""""
+^^^^^^^^^^^^^^
+
 a time series of expense will be used in cashflow projection.
 
 .. code-block:: python
@@ -282,7 +282,7 @@ a time series of expense will be used in cashflow projection.
                ,read=True)                    
 
 Call When
-""""""""""""
+^^^^^^^^^^^^^^
 
 Assumptions to call the deal. 
 
@@ -309,7 +309,7 @@ Assumptions to call the deal.
      
 
 Revolving Assumption
-""""""""""""""""""""""
+^^^^^^^^^^^^^^
 
 User can set assumption on revolving pool with two compoenents: assets and performance assumption.
 
@@ -337,7 +337,8 @@ assumption for revolving pool
 
 
 Interest Rate
-""""""""""""""""""""""
+^^^^^^^^^^^^^^
+
 set interest rate assumptions for cashflow projection. 
 
 .. code-block:: python
@@ -397,7 +398,7 @@ set interest rate assumptions for cashflow projection.
 
 
 Inspection
-""""""""""""""""""""""
+^^^^^^^^^^^^^^
 Transparency matters ! For the users who are not satisfied with cashflow numbers but also having curiosity of the intermediary numbers, like `bond balance`, `pool factor` .
 
 Users are able to query values from any point of time ,using syntax ``(<DatePattern>,<Formula>)``
@@ -439,7 +440,7 @@ But, the values are a dataframe with single column, how to view all the variable
 
 
 Financial Reports
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^
 
 User just need to specify the ``dates`` of financial statement by :ref:`DatePattern`
 
@@ -457,7 +458,7 @@ to view results
    r['results']['report']['cash']
 
 Pricing
-""""""""""""""""""""""
+^^^^^^^^^^^
 
 * User can provide a pricing curve and a pricing data to argument `pricing`,which all future bond cashflow will be discounted at that date with the curve provided.
 

@@ -601,6 +601,27 @@ Stop Run At Certain Date
 
 user can instruct the projection to stop at certian date :ref:`Stop Run`
 
+Error/Warning Log 
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.22
+
+``Hastructure`` engine will perform certian validation check before or after deal run, user can inspect the log via:
+
+.. code-block:: python 
+
+  from absbox import API,mkDeal
+  localAPI = API("http://localhost:8081",check=False)
+
+  deal = mkDeal(deal_data,preCheck=False)
+
+  r = localAPI.run(deal
+                  ,poolAssump = None
+                  ,runAssump = None
+                  ,read=True
+                  ,preCheck=False)
+
+  r['result']['logs']
 
 Financial Reports 
 ^^^^^^^^^^^^^^^^^^^^^
@@ -623,7 +644,8 @@ if user want to view the break down of waterfall distribution, user may view acc
 Inspect Free Formulas on projection 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-if user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
+
+If user would like to view variables during the cashflow projection, there is a `time machine` built for this purpose. :ref:`Inspecting Numbers`
 
 User just need to provide :
 
@@ -632,6 +654,9 @@ User just need to provide :
 
 Inspect Free formulas within waterfall distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.22
+
 
 * :ref:`Inspect Variables during waterfall`
 * example :ref:`View Variables In Waterfall`
