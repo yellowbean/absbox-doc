@@ -683,7 +683,7 @@ If ``Prepayment Penalty`` was modeled and any prepayment will be yield extra cas
 
 
 ARM 
-^^^^^^^^
+""""""
 
 `ARM` is a type of `Mortgage` that has one more field `arm` to describe the rate adjust behavior of the loan.
 
@@ -748,23 +748,23 @@ Schedule Repayment
 
 .. code-block:: python
 
-  ["Loan"
-  ,{"originBalance": 80000
-    ,"originRate": ["floater",0.045,{"index":"SOFR3M"
-                                    ,"spread":0.01
-                                    ,"reset":"QuarterEnd"}]
-    ,"originTerm": 3
-    ,"freq": "SemiAnnually"
-    ,"type": ("Schedule",[["2021-10-10",0.2]
-                          ,["2022-01-10",0.3]
-                          ,["2022-10-10",0.1]
-                          ])
-    ,"originDate": "2021-03-01"}
-  ,{"currentBalance": 65000
-    ,"currentRate": 0.06
-    ,"remainTerm": 3
-    ,"status": "Current"}]
 
+  ["Loan"
+    ,{"originBalance": 80000
+      ,"originRate": ["floater",0.045,{"index":"SOFR3M"
+                                      ,"spread":0.01
+                                      ,"reset":"QuarterEnd"}]
+      ,"originTerm": 3
+      ,"freq": "SemiAnnually"
+      ,"type": ("Schedule",[["2021-10-10",20000]
+                            ,["2022-01-10",20000]
+                            ,["2022-10-10",40000]
+                           ])
+      ,"originDate": "2021-03-01"}
+    ,{"currentBalance": 80000
+      ,"currentRate": 0.06
+      ,"remainTerm": 3
+      ,"status": "Current"}]
 
 Lease
 ^^^^^^^^^
