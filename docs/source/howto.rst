@@ -576,8 +576,6 @@ Well.. there isn't such `Debug` action on the cashflow, but a more precise put:
 
 **a various angles to `View` the cashflow**
 
-
-
 .. graphviz::
     :name: sphinx.ext.graphviz
     :caption: how to debug cashflow
@@ -607,6 +605,12 @@ Error/Warning Log
 .. versionadded:: 0.22
 
 ``Hastructure`` engine will perform certian validation check before or after deal run, user can inspect the log via:
+
+``Error``
+  Means the run result is in-complete, don't use the number for downstream
+
+``Warning``
+  Means the cashflow projection is complete but subject to unorthodox design
 
 .. code-block:: python 
 
