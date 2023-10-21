@@ -78,9 +78,9 @@ Use Public Server
 
 For public server list, please visit `absbox.org <https://absbox.org>`_
 
-.. note ::
+.. warning::
   
-  Public server may provide less calculation performance and high network IO and doesn't ganrantee the SLA. Pls don't use it in production.
+  Public server may provide less calculation performance and suffer high network IO and doesn't ganrantee the SLA. Pls don't use it in production.
 
 
 Use Private/In-House Server
@@ -95,8 +95,3 @@ If user want to have a self-hosted server
       docker pull yellowbean/hastructure
       docker run yellowbean/hastructure
       # by default the server expose its port at 8081
-
-
-.. note ::
-  
-  ``absbox`` uses ``pandas`` , ``requests`` for data processing and service call.

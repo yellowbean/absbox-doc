@@ -8,11 +8,11 @@ Welcome to  AbsBox Documentation!
 
 **AbsBox** is a python based library which pertains to structured product analytics. 
 
-* By adopting `Data-Driven` way to build cashflow models, it's easy to pull factual data from database/local files to build cashflow models.
-* By adopting using resuable components, it flattens the learning curve to build cashflow models .
+* `Data-Driven` oriented design, it's easy to pull factual data from database/local files to build cashflow models.
+* By adopting resuable components, it flattens the learning curve.
 * Being capable of modeling deal via a natureal & structural language way.
 
-    - designed to perform investment analytics 
+    - investment analytics 
   
       - setting pool/loan level assumptions: default, prepayment, loss, (revolving assupmtions)
       - setting deal level assumptions: trigger, call, interest rate curve

@@ -6,18 +6,31 @@ Modeling
 
 Deal modeling is a process to build deal class with descriptive components follows:
 
-* Asset info -> pool asset attributes, loan by loan or repline level data or projected cashflow as input
-* Bond info -> bonds with different types and equity tranche
-* Waterfall info -> Describe the priority of payments when:
-    * On Closing Date (Optional, One-off)
-    * End of pool collection (Optional, reoccurring)
-    * Distribution day for all the bonds and fees (reoccurring)
-    * Clean up call (Optional, One-off)
 * Dates info
-    * Cutoff day / Closing Date / (Next/First) payment Date or series of custom dates
-* Triggers (Optional) -> describe what may happened then what state changed should be performed in deal
-* Liquidity Provider (Optional) -> entities provides interest bearing/non-bearing support to shortfall of fee/interest or bond principal
-* Hedges (Optional) -> interest rate swap/ fx swap
+
+  * Cutoff day / Closing Date / (Next/First) payment Date or series of custom dates
+* Asset info 
+  
+  pool asset attributes, loan by loan or repline level data or projected cashflow as input
+* Bond info
+  
+  bonds with different types and equity tranche
+* Waterfall info 
+  Describe the priority of payments when:
+
+  * On Closing Date (Optional, One-off)
+  * End of pool collection (Optional, reoccurring)
+  * Distribution day for all the bonds and fees (reoccurring)
+  * Clean up call (Optional, One-off)
+* Triggers (Optional) 
+  
+  describe what may happened then what state changed should be performed in deal
+* Liquidity Provider (Optional) 
+  
+  entities provides interest bearing/non-bearing support to shortfall of fee/interest or bond principal
+* Hedges (Optional) 
+  
+  interest rate swap
 
 
 Structure of a `Generic` deal 
@@ -346,6 +359,63 @@ there are couple ways of pricing
 
   * ``["PVCurve", ts]`` -> using `ts` as pricing curve to discount future cashflow of all assets.
 
+Constants
+--------------
+
+Day Count
+^^^^^^^^^^^^
+
+* ``DC_30E_360``       -- ^ ISMA European 30S/360 Special German Eurobond Basis
+* ``DC_30Ep_360``      -- ^ 30E+/360
+* ``DC_ACT_360``       -- ^ Actual/360 , French
+* ``DC_ACT_365``
+* ``DC_ACT_365A``      -- ^ Actual/365 Actual 
+* ``DC_ACT_365L``      -- ^ Actual/365 Leap Year
+* ``DC_NL_365``        -- ^ Actual/365 No leap year
+* ``DC_ACT_365F``      -- ^ Actual /365 Fixed, English
+* ``DC_ACT_ACT``       -- ^ Actual/Actual ISDA 
+* ``DC_30_360_ISDA``   -- ^ IDSA
+* ``DC_30_360_German`` -- ^ Gernman
+* ``DC_30_360_US``     -- ^ 30/360 US Municipal , Bond basis
+
+Indexs
+^^^^^^^^^
+* ``LPR5Y``
+* ``LPR1Y``
+* ``LIBOR1M``
+* ``LIBOR3M``
+* ``LIBOR6M``
+* ``LIBOR1Y``
+* ``USTSY1Y``
+* ``USTSY2Y``
+* ``USTSY3Y``
+* ``USTSY5Y``
+* ``USTSY7Y``
+* ``USTSY10Y``
+* ``USTSY20Y``
+* ``USTSY30Y``
+* ``USCMT1Y``
+* ``PRIME``
+* ``COFI``
+* ``SOFR1M``
+* ``SOFR3M``
+* ``SOFR6M``
+* ``SOFR1Y``
+* ``EURIBOR1M``
+* ``EURIBOR3M``
+* ``EURIBOR6M``
+* ``EURIBOR12M``
+* ``IRPH``
+* ``SONIA`` 
+
+Period
+^^^^^^^^^^^
+ * ``Daily``
+ * ``Weekly``
+ * ``Monthly``
+ * ``Quarterly`` 
+ * ``SemiAnnually``
+ * ``Annually``
 
 
 Components

@@ -539,6 +539,28 @@ returns:
                                        ,["2024-08-01",0.025]]})],
                read=True)
 
+Multi-Scenario Run
+""""""""""""""""""""
+
+Pass a map to ``poolAssump`` to run multiple scenarios.
+
+.. code-block:: python
+
+  localAPI.run(test01,
+               poolAssump={"ScenarioA":("Pool",("Mortgage",{"CPR":0.01},{"CDR":0.01},{"Rate":0.7,"Lag":18})
+                                 ,None
+                                 ,None)
+                           ,"ScenarioB":("Pool",("Mortgage",{"CPR":0.02},{"CDR":0.02},{"Rate":0.7,"Lag":18})
+                                 ,None
+                                 ,None)
+                          },
+               runAssump =[("pricing"
+                            ,{"PVDate":"2021-08-22"
+                            ,"PVCurve":[["2021-01-01",0.025]
+                                       ,["2024-08-01",0.025]]})],
+               read=True)
+
+
 
 Running a pool of assets 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -755,8 +777,8 @@ Getting Results
 
 ``r['result']`` save the run result other than cashflow.
 
-Status During Run
-^^^^^^^^^^^^^^^^^^^^
+Deal Status Change During Run
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 it is not uncommon that `triggers` may changed deal status between `accelerated` `defaulted` `amorting` `revolving`.
 user can check the `status` chang log via :
@@ -789,6 +811,18 @@ then the <Formula> value can be view in the ``result`` ``waterfallInspect``.
    
   r['result']['waterfallInspect']
 
+
+Validation Messages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are two types of validation message 
+
+* Error -> result can't be trusted.
+* Warning -> result is correct but need to be review.
+
+.. code-block:: python
+   
+  r['result']['logs']
 
 
 
