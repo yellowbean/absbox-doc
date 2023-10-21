@@ -610,7 +610,7 @@ syntax
 .. code-block:: python
   
   ("bond_service_fee"
-      ,{"type":{"pctFee":["bondBalance",0.02]}})
+      ,{"type":{"pctFee":[("bondBalance",),0.02]}})
 
 
 annualized fee
@@ -666,7 +666,7 @@ Pool
 ``Pool`` represents a set of assets ,which generate cashflows to support expenses and liabilities.
 
 * it can either has a loan level ``asset`` or ``projected cashflow``
-* other optional fields like ``issuance balance``, which will be supplimental to calculate certain value , like ``Pool Factor``
+* other fields like ``issuance balance``, which will be supplimental to calculate certain value , like ``Pool Factor``
 
 syntax
   ``Pool`` is modeled as map with following fields:
@@ -676,7 +676,7 @@ syntax
   * ``issuanceStat`` -> a map describe extra information of pool
   
     * ``IssuanceBalance`` -> issuance balance of pool
-  * ``extendBy`` -> <DatePattern>, used to provide extra dates of pool collection
+  * ``extendBy`` -> :ref:`DatePattern`, used to provide extra dates of pool collection
 
 .. warning::
 
@@ -888,6 +888,10 @@ Installment
 
 `Installment` is an asset which has evenly distributed fee and principal
 
+``type``
+
+  * ``f_p`` : evenly distributed fee and principal
+
 .. code-block:: python
 
   ["Installment"
@@ -952,6 +956,7 @@ The rule was defined as a *List*, each element is a *List* with 2 elements.
 
 * 1st element describes the ``Proceeds`` 
 * 2nd element describes `percentage` to be allocated to each account
+
   * if it is just an `account name`,then 100% of ``Proceeds`` will be flowed into that account
 
 syntax
@@ -1309,6 +1314,10 @@ example:
         ,["payResidual","acc01","B"]]
       ,"cleanUp":[]
       }
+
+.. warning::
+   
+   Make sure there are waterfall to be run if deal status changed. Otherwise the deal won't do anything. ie. if there is trigger change in deal,make sure there is a corresponding waterfall modeled for that status.
 
 
 Action
@@ -1977,7 +1986,7 @@ View Variables In Waterfall
 ------------------------------
 
 * set "inpsect" during the waterfall with a comment string and a list of ``<Formula>``
-* view resutl from ``["inspect"]["waterfallInspect"]``
+* view result from ``["inspect"]["waterfallInspect"]``
 
 .. literalinclude:: deal_sample/test12.py
    :language: python
