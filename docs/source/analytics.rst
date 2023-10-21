@@ -817,8 +817,8 @@ Validation Messages
 
 There are two types of validation message 
 
-* Error -> result can't be trusted.
-* Warning -> result is correct but need to be review.
+* ``Error`` -> result can't be trusted.
+* ``Warning`` -> result is correct but need to be review.
 
 .. code-block:: python
    
