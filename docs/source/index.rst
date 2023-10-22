@@ -42,6 +42,6 @@ Content
    analytics
    howto
    support
-   internals
+   reference
 
 

@@ -1,4 +1,4 @@
-Internals(WIP)
+Reference
 =================
 
 Asset Cashflow Projection Document
@@ -44,6 +44,13 @@ With starting ``("Mortgage","Delinq",...)`` the engine treat this as identifier 
 
 It is scalable if more assumption type comming in.
 
+
+Why so many list tuples and maps in deal model
+---------------------------------------------------
+
+* Unlike `Class` , all data were exposed to user via native structure, transperancy matters.
+* Because native stucture will enable user's own way to build data structure required.
+* Most of persistent layer supports native structure, like `PyMongo` `redis` etc . It's easy to pull from these data and initialized models.
 
 
 JSON Format
