@@ -49,7 +49,13 @@ Why so many list tuples and maps in deal model
 ---------------------------------------------------
 
 * Unlike `Class` , all data were exposed to user via native structure, transperancy matters.
+  
+  `Class` will hide `states` and changing behavior of methods, that's dark magic we should avoid.
+
 * Because native stucture will enable user's own way to build data structure required.
+  
+  User has his/her own code base, which may have heavily couple with `PyDantic` or `Numpy` or other library, but anyway, all these data structure will provide methods to convert back to Python structure.
+
 * Most of persistent layer supports native structure, like `PyMongo` `redis` etc . It's easy to pull from these data and initialized models.
 
 
