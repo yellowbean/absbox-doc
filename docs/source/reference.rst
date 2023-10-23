@@ -24,6 +24,16 @@ Mortgage/Loan/Installment
 
   * `projected cashflow` was truncated via `cutoff date` ,that's the cashflow of asset which flows into the SPV
 
+
+How assumption was applied on asset ? 
+""""""""""""""""""""""""""""""""""""""
+
+  .. image:: img/assump_balance.png
+    :width: 500
+    :alt: waterfall_run_loc
+
+
+
 Non-Performing Asset(WIP)
 """"""""""""""""""""""
 
