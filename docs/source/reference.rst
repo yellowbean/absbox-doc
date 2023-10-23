@@ -59,6 +59,26 @@ Why so many list tuples and maps in deal model
 * Most of persistent layer supports native structure, like `PyMongo` `redis` etc . It's easy to pull from these data and initialized models.
 
 
+* Isn't making too much keystroke to model a deal ? 
+
+  Don't have to that way ,because `list` `tuple` `maps` are just *DATA* ,user can easily build candy function wrap the generator 
+
+  .. code-block:: python 
+
+  ["payPrin","SourceAccount","A"
+          ,{"formula": ("substract"
+                          ,("poolBalance",)
+                          ,("factor"
+                              ,("poolBalance",), 0.12))}]
+  # isn't it nice ?
+  
+  def payBondwithOC(an,bn,oc):
+      return ["payPrin",an,bn
+                        ,{"formula": ("substract"
+                                        ,("poolBalance",)
+                                        ,("factor"
+                                            ,("poolBalance",),oc))}]
+
 JSON Format
 --------------
 
