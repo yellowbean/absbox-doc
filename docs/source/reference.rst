@@ -65,19 +65,19 @@ Why so many list tuples and maps in deal model
 
   .. code-block:: python 
 
-  ["payPrin","SourceAccount","A"
-          ,{"formula": ("substract"
-                          ,("poolBalance",)
-                          ,("factor"
-                              ,("poolBalance",), 0.12))}]
-  # isn't it nice ?
-  
-  def payBondwithOC(an,bn,oc):
-      return ["payPrin",an,bn
-                        ,{"formula": ("substract"
-                                        ,("poolBalance",)
-                                        ,("factor"
-                                            ,("poolBalance",),oc))}]
+    ["payPrin","SourceAccount","A"
+            ,{"formula": ("substract"
+                            ,("poolBalance",)
+                            ,("factor"
+                                ,("poolBalance",), 0.12))}]
+    # isn't it nice ?
+    
+    def payBondwithOC(an,bn,oc):
+        return ["payPrin",an,bn
+                          ,{"formula": ("substract"
+                                          ,("poolBalance",)
+                                          ,("factor"
+                                              ,("poolBalance",),oc))}]
 
 JSON Format
 --------------
