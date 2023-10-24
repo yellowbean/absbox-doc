@@ -1137,6 +1137,10 @@ Bonds/Tranches serves as a ``Liability`` in the SPV, with two components to mode
 syntax
     ``({bond/tranche name},{bond/tranche description})``
 
+optional fields:
+  * ``maturityDate`` : maturity date of bond
+  * ``lastAccrueDate`` : last date of interest accrued
+  * ``dueInt`` : due interest amount already accrued
 
 Interest
 ^^^^^^^^^^^
@@ -1160,6 +1164,8 @@ Float Rate
 The bond will use an initial floater rate , with an index and spread, and a reset frequency, with option of day count convention.
 
 syntax
+    :code:`"rateType":{"floater":[<start rate>, <index>, <spread>, <reset dates>]}`
+    
     :code:`"rateType":{"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"]}`
     
     :code:`"rateType":{"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"], "dayCount":"DC_ACT_365"}`
