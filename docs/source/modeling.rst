@@ -380,6 +380,7 @@ Day Count
 
 Indexs
 ^^^^^^^^^
+
 * ``LPR5Y``
 * ``LPR1Y``
 * ``LIBOR1M``
@@ -410,12 +411,12 @@ Indexs
 
 Period
 ^^^^^^^^^^^
- * ``Daily``
- * ``Weekly``
- * ``Monthly``
- * ``Quarterly`` 
- * ``SemiAnnually``
- * ``Annually``
+* ``Daily``
+* ``Weekly``
+* ``Monthly``
+* ``Quarterly`` 
+* ``SemiAnnually``
+* ``Annually``
 
 
 Components
