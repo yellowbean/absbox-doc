@@ -66,8 +66,9 @@ Why so many list tuples and maps in deal model
   
   User has his/her own code base, which may have heavily couple with `PyDantic` or `Numpy` or other library, but anyway, all these data structure will provide methods to convert back to Python structure.
 
-* Most of persistent layer supports native structure, like `PyMongo` `redis` etc . It's easy to pull from these data and initialized models.
+* Most of persistent layer supports native structure, like `PyMongo` `redis` etc .
 
+  It's easy to pull from these data and initialized models.
 
 * Isn't making too much keystroke to model a deal ? 
 
@@ -88,6 +89,9 @@ Why so many list tuples and maps in deal model
                                           ,("poolBalance",)
                                           ,("factor"
                                               ,("poolBalance",),oc))}]
+    
+    # now you can build your own functions !
+    payBondwithOC("SourceAccount","A",0.15)
 
 JSON Format
 --------------

@@ -42,6 +42,11 @@ There are two type of assumptions:
 * Assumptions for performance of asset
 * Assumptions for running a deal
 
+.. seealso::
+   
+   The assumption of asset start from point of time of `Asset`
+   :ref:`How assumption was applied on asset ?`
+
 Mortgage/Loan/Installment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
