@@ -1999,5 +1999,18 @@ View Variables In Waterfall
    :language: python
    :emphasize-lines: 42,46,67
 
+Schedule Cashflow with Default Amount Vector as assumption
+-------------------------------------------------------------
+
+.. versionadd:: 0.22
+
+* set default amount vector as assumption
+* use schedule input cashflow
+
+.. literalinclude:: deal_sample/test13.py
+   :language: python
+   :emphasize-lines: 66,10-23
+
+
 
 
