@@ -1759,6 +1759,9 @@ Query trigger during run
 
 By specify in the `inspect`, user are able to view the status of trigger during the run.
 
+.. seealso::
+
+  To get status of trigger, see query on trigger status :ref:`Bool Type`
 
 
 Liquidity Provider
