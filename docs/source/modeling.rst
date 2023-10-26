@@ -2002,7 +2002,7 @@ View Variables In Waterfall
 Schedule Cashflow with Default Amount Vector as assumption
 -------------------------------------------------------------
 
-.. versionadd:: 0.22
+.. versionadded:: 0.22
 
 * set default amount vector as assumption
 * use schedule input cashflow
