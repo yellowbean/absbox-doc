@@ -7,7 +7,6 @@ deal_data = {
               ,"poolFreq":"MonthEnd"
               ,"stated":"2030-01-01"}
     ,"pool":{'assets':[]
-             ,'issuanceStat':{'IssuanceBalance':2200.8}
              ,'cashflow':
                     [["2022-10-28",2000,200.0,100]
                     ,["2022-11-28",1800,200.0,100]
