@@ -675,13 +675,32 @@ syntax
   * ``assets`` -> a list of assets
   * ``cashflow`` -> a list of projected cashflow
   * ``issuanceStat`` -> a map describe extra information of pool
-  
-    * ``IssuanceBalance`` -> issuance balance of pool
   * ``extendBy`` -> :ref:`DatePattern`, used to provide extra dates of pool collection
 
 .. warning::
 
   ``assets`` and ``cashflow`` are mutually exclusive, only one of them can be used in a pool
+
+issuanceStat
+^^^^^^^^^^^^^^^^
+a map represents history information of a `ongoing` deal.
+
+``IssuanceBalance``
+  Issuance balance of deal, which used to be queried via `poolFactor`, `cumuPoolDefaultedRate` etc 
+
+``HistoryDefaults``
+  Cumulative Defaulted balance as of ``last collection`` date 
+``HistoryDelinquency``
+  Cumulative Delinquency balance as of ``last collection`` date 
+``HistoryLoss``
+  Cumulative Loss balance as of ``last collection`` date 
+``HistoryRecoveries``
+  Cumulative Recovery received as of ``last collection`` date 
+``HistoryPrincipal``
+  Cumulative Principal paid as of ``last collection`` date 
+``HistoryPrepayment``
+  Cumulative Prepayment paid as of ``last collection`` date 
+
 
 
 Mortgage
