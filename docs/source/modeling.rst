@@ -1880,10 +1880,13 @@ example:
 Examples
 ============
 
+Basic
+--------------
+
 .. _exmaple-01:
 
 Subordination
----------------
+^^^^^^^^^^^^^^^^^
 
   * Subordination
   * One-off fees
@@ -1892,46 +1895,51 @@ Subordination
    :language: python
    :emphasize-lines: 30,33-36
 
-Multiple Waterfalls with triggers
-------------------------------------
+Assumption
+-------------
 
-There can be multiple waterfalls which corresponding to `status`.
-a acceleration/turbo event could be triggered and changing the payment sequence
+Schedule Cashflow with Default Amount Vector as assumption
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* amortizing
-* revolving
-* accelerated
-* defaulted 
-* clean up 
-  
-.. literalinclude:: deal_sample/test02.py
+.. versionadded:: 0.22
+
+* set default amount vector as assumption
+* use schedule input cashflow
+
+.. literalinclude:: deal_sample/test13.py
    :language: python
-   :emphasize-lines: 38-55
+   :emphasize-lines: 66,10-23
 
+Bond 
+---------------
 
-Define Conditional Action
-------------------------------------
+Step-Up coupon 
+^^^^^^^^^^^^^^^^^^
 
-User can specify a condtional clause in the waterfall.
+User can model a step up bond which start to increase a spread after a certain day by an interval specified by <datepattern>
 
-Only the conditions were met, actions following will be executed.
-
-  
-.. literalinclude:: deal_sample/test03.py
+.. literalinclude:: deal_sample/stepup_sample.py
    :language: python
-   :emphasize-lines: 42-44
+   :emphasize-lines: 20
 
-Split income by percentage 
-----------------------------
+Credit Enhancement
+-----------------------
 
-The deal docs may split income from pools by pct% to another account 
+Interest Rate Swap
+^^^^^^^^^^^^^^^^^^^^
 
-.. literalinclude:: deal_sample/test04.py
+* Setup a swap instrument ,merge it into a deal map
+* using shortcut `mkDeal` to create a generic deal object 
+* Swap can reference a notion with a `formula`
+
+.. literalinclude:: deal_sample/test10.py
    :language: python
-   :emphasize-lines: 39-40
+
+Liquidition Provider 
+---------------------------
 
 Liquidation Provider /Insurance / Ganrantee
-----------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Liquidation provider will deposit the gap amount of interest due against the account available balance.
 And it will start to be repaid if both A1 and B tranche were paid off
@@ -1948,17 +1956,88 @@ Using a formula to cap the support amount.
    :language: python
    :emphasize-lines: 33-37,43-44,51-53
 
-Step-Up coupon 
-----------------------------------------------
 
-User can model a step up bond which start to increase a spread after a certain day by an interval specified by <datepattern>
 
-.. literalinclude:: deal_sample/stepup_sample.py
+
+
+Pool Collection
+----------------------------
+
+Pool Proceeds Split
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The deal docs may split income from pools by pct% to another account 
+
+.. literalinclude:: deal_sample/test04.py
    :language: python
-   :emphasize-lines: 20
+   :emphasize-lines: 39-40
+
+
+
+Triggers
+--------------
+
+Multiple Waterfalls with triggers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There can be multiple waterfalls which corresponding to `status`.
+a acceleration/turbo event could be triggered and changing the payment sequence
+
+* amortizing
+* revolving
+* accelerated
+* defaulted 
+* clean up 
+  
+.. literalinclude:: deal_sample/test02.py
+   :language: python
+   :emphasize-lines: 38-55
+
+Formula based trigger 
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* formula based on delinquency  
+* query trigger status via `inspect`
+
+.. literalinclude:: deal_sample/test11.py
+   :language: python
+   :emphasize-lines: 53-60,76-84
+
+Waterfall
+--------------
+
+Limit Principal Payment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Using a formula to limit the principal repayment of a bond 
+* Using `Inspect` to view the formula value 
+
+
+.. literalinclude:: deal_sample/test09.py
+   :language: python
+   :emphasize-lines: 3-5,42,58-59
+
+Define Conditional Action
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+User can specify a condtional clause in the waterfall.
+
+Only the conditions were met, actions following will be executed.
+
+  
+.. literalinclude:: deal_sample/test03.py
+   :language: python
+   :emphasize-lines: 42-44
+
+
+
+
+
+Real World Transaction
+---------------------------
 
 BMW Auto Deal 2023-01
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 * Revolving structure with revolving asset perf assumption / pricing method 
 * Formula based way to transfer cash between accounts
@@ -1971,7 +2050,7 @@ BMW Auto Deal 2023-01
    :language: python
 
 Ginnie Mae /ARM Mortgage Deal 
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Model an ARM 
 * Using a rate curve
 * Using variable fee rate ( a formula based `rate` for a formula)
@@ -1979,40 +2058,11 @@ Ginnie Mae /ARM Mortgage Deal
 .. literalinclude:: deal_sample/test08.py
    :language: python
 
-Limit Principal Payment
-------------------------------------
-
-* Using a formula to limit the principal repayment of a bond 
-* Using `Inspect` to view the formula value 
-
-
-.. literalinclude:: deal_sample/test09.py
-   :language: python
-   :emphasize-lines: 3-5,42,58-59
-
-Interest Rate Swap
------------------------
-
-* Setup a swap instrument ,merge it into a deal map
-* using shortcut `mkDeal` to create a generic deal object 
-* Swap can reference a notion with a `formula`
-
-.. literalinclude:: deal_sample/test10.py
-   :language: python
-
-Formula based trigger 
-------------------------
-
-* formula based on delinquency  
-* query trigger status via `inspect`
-
-.. literalinclude:: deal_sample/test11.py
-   :language: python
-   :emphasize-lines: 53-60,76-84
-
+Debug 
+----------
  
 View Variables In Waterfall
-------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * set "inpsect" during the waterfall with a comment string and a list of ``<Formula>``
 * view result from ``["inspect"]["waterfallInspect"]``
@@ -2020,18 +2070,6 @@ View Variables In Waterfall
 .. literalinclude:: deal_sample/test12.py
    :language: python
    :emphasize-lines: 42,46,67
-
-Schedule Cashflow with Default Amount Vector as assumption
--------------------------------------------------------------
-
-.. versionadded:: 0.22
-
-* set default amount vector as assumption
-* use schedule input cashflow
-
-.. literalinclude:: deal_sample/test13.py
-   :language: python
-   :emphasize-lines: 66,10-23
 
 
 
