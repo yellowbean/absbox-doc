@@ -166,6 +166,29 @@ Notes:
   * ``<rental assump>`` -> describe the rental increase/decrease over time
   * ``<end date>`` -> the date when lease projection ends 
 
+
+Fixed Asset
+^^^^^^^^^^^^^^^^^
+
+syntax
+  ("Fixed",<Utilization Rate Curve>,<Cash value per Unit>)
+
+
+.. code-block:: python
+
+   myAssump = ("Pool"
+               ,("Fixed",[["2022-01-01",0.1]]
+                        ,[["2022-01-01",400] ,["2024-09-01",300]])
+               ,None
+               ,None)
+   
+   p = localAPI.runAsset("2021-04-01"
+                         ,assets
+                         ,poolAssump=myAssump
+                         ,read=True)
+
+
+
 Assumption on Asset Level
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
