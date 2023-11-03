@@ -706,11 +706,11 @@ Project Cashflow for Solar Panel
 
 Fixed Asset 
 ^^^^^^^^^^^
-``FixedAsset`` was introduced in version `0.23`, which represent a thing:
+``FixedAsset`` was introduced in ``absbox`` version `0.23`, which represent a thing:
 
 * depreciates per `Accounting` rule
 * has the ability to produce an amount of `something` ,the `ability` may decay as the asset is depreciating.
-* `something` can be monitized in the market.
+* `something` can be monetized in the market.
 
 But it's not always producing `something` in the maxium level, so it will subject to a ``Utilization Rate`` curve from input assumption.
 And, it can't sell all the `something` at same price all over the time, the market price will be read from ``Price Curve`` from input assumption.
@@ -723,8 +723,8 @@ Solar Panel
 `Solar Panel` is a good example of this type of asset as it fullfill the feactures below:
 
 * it produce `Electricity` as `Something`, the production of `Electricity` fluctuates due to season, thus ``Utilization Rate`` Curve can be applied.
-* the maxium production capcability is decaying due to the installation equipment depreciates.
-* The `Electricity` can be monitized in someway ,and the price may varies, due to supply and demand, thus ``Price Curve`` can be applied as well.
+* the maxium production capacity is decaying due to the installation equipment depreciates.
+* The `Electricity` can be monetized in someway ,and the price may varies, due to supply and demand, thus ``Price Curve`` can be applied as well.
 
 
 Build a story
@@ -862,7 +862,7 @@ it was ``1.67%`` (YoY)...whoa...sad
 Sensitivity Analysis 
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Well, things won't work out as planned, what happen if price fall down ? or the utilizatio rate fall ? 
+Well, things won't work out as planned, what happen if price fall down ? or the utilization rate fall ? 
 
 We can perform sensitivity analysis to explore how robust our investment is
 
@@ -917,9 +917,9 @@ or you can buy a robot to do that ,but it will drag down the IRR :)
 Conclusion
 ^^^^^^^^^^^^^
 
-Making an installation of roof solar panel is a big investment decision which invovling pretty long time horizon and calculation of factor like electricity price as well as loan rate.
+Making an installation of roof solar panel is a big investment decision which involves pretty long time horizon and calculation of factor like electricity price as well as loan rate.
 
-It may look easier if you can build a cashflow model and perfrom quantitative analysis to support the decision !
+It may look easier if you can build a cashflow model and perform quantitative analysis to support the decision !
 
 Happy hacking !
 
