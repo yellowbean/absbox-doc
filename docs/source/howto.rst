@@ -698,6 +698,251 @@ preview
   :width: 600
   :alt: waterfall_viz
   
+Project Cashflow for Solar Panel 
+-------------------------------------
+
+.. versionadded:: 0.23
+
+
+Fixed Asset 
+^^^^^^^^^^^
+``FixedAsset`` was introduced in version `0.23`, which represent a thing:
+
+* depreciates per `Accounting` rule
+* has the ability to produce an amount of `something` ,the `ability` may decay as the asset is depreciating.
+* `something` can be monitized in the market.
+
+But it's not always producing `something` in the maxium level, so it will subject to a ``Utilization Rate`` curve from input assumption.
+And, it can't sell all the `something` at same price all over the time, the market price will be read from ``Price Curve`` from input assumption.
+
+It looks abstract but indeed provide more coverage to different asset classes.
+
+Solar Panel
+^^^^^^^^^^^^^^
+
+`Solar Panel` is a good example of this type of asset as it fullfill the feactures below:
+
+* it produce `Electricity` as `Something`, the production of `Electricity` fluctuates due to season, thus ``Utilization Rate`` Curve can be applied.
+* the maxium production capcability is decaying due to the installation equipment depreciates.
+* The `Electricity` can be monitized in someway ,and the price may varies, due to supply and demand, thus ``Price Curve`` can be applied as well.
+
+
+Build a story
+^^^^^^^^^^^^^^^^
+
+OK, let's assume ,we are a homeowner that want to install a solar panel system with financing from a loan. Now we are going to build a cashflow deal model to see if it's a good `deal`.
+
+* Liability & Equity
+
+  * assuming taking a passthrough loan with rate of 6%
+  * down payment at 40%
+
+* Asset & expense
+
+  * maxium production level : 20kw per day,average sunlight per month 20days.
+  * cost 15000, expect usage life 15 yrs(180 months), residual value at $1000
+  * monthly insurance fee 45
+  * average maintenance cost $500 each year, extra $1000 after 10yrs.
+
+.. code-block:: python
+
+  assets = [["FixedAsset"
+              ,{"start":"2023-11-01","originBalance":15000,"originTerm":240
+                ,"residual":1000,"period":"Monthly","amortize":"Straight"
+                ,"capacity":("Fixed",20*20*2)}
+              ,{"remainTerm":240}]] 
+
+  exps = (("maintenance",{"type":{"recurFee":["YearFirst",200]}})
+          ,("maintenance2",{"type":{"recurFee":["YearFirst",200],"feeStart":"2033-11-01"}})
+          ,("insurance",{"type":{"recurFee":["MonthFirst",20]}}))
+
+* Waterfall 
+  
+  * pay all the expense 
+  * pay interest and principal of loan
+  * pay principal to equity tranche but keep fee/insurance at account
+  * when clean up deal , sell the asset and pay prin and yield to equity tranche.
+
+.. code-block:: python
+
+  waterfall = {"amortizing":[
+                  ["payFee","acc01",['maintenance','maintenance2','insurance']]
+                  ,["accrueAndPayInt","acc01",["A"]]
+                  ,["payPrin","acc01",["A"]]
+                  ,["payPrin","acc01",["EQ"]
+                    ,{"limit":{"formula":("floorWithZero"
+                                ,("substract"
+                                  ,("accountBalance","acc01"),("constant",1045)))}}]
+                ]
+              ,"cleanUp":[
+                  ["sellAsset",["Current|Defaulted",1.0,0],"acc01"]
+                  ,["payPrin","acc01",["EQ"]]
+                  ,["payIntResidual","acc01","EQ"]
+              ]}
+
+transaction file:
+
+.. code-block:: python
+
+  from absbox.local.generic import Generic
+  from absbox import API
+  localAPI = API("https://absbox.org/api/dev",lang='english',check=False)
+
+  solarPanel = Generic(
+    "TEST01"
+    ,{"cutoff":"2024-01-01","closing":"2024-01-01","firstPay":"2024-02-01"
+     ,"payFreq":"MonthEnd","poolFreq":"MonthEnd","stated":"2050-01-01"}
+    ,{'assets':assets}
+    ,(("acc01",{"balance":0}),)
+    ,(("A",{"balance":9_000
+           ,"rate":0.05
+           ,"originBalance":9_000
+           ,"originRate":0.00
+           ,"startDate":"2024-01-01"
+           ,"rateType":{"Fixed":0.05}
+           ,"bondType":{"Sequential":None}})
+      ,("EQ",{"balance":7_000
+           ,"rate":0.0
+           ,"originBalance":7_000
+           ,"originRate":0.00
+           ,"startDate":"2024-01-01"
+           ,"rateType":{"Fixed":0.00}
+           ,"bondType":{"Equity":None}}),
+     )
+    ,exps
+    ,waterfall
+    ,[["CollectedCash","acc01"]]
+    ,None
+    ,None
+    ,None
+    ,None
+    ,("PreClosing","Amortizing")
+    )
+
+
+Project Cashflow
+^^^^^^^^^^^^^^^^^^^
+
+Nowe we need assumption to project cashflow:
+
+* Assumption
+
+  * utility rate, utility rate start first year at 90% and 85% second year, then stable at 80%
+  * price of Electricity, fixed price first year at 0.3 and drop down 0.5 each year and remains at 0.2
+  * call the deal at ``2044`` ,20yrs later
+
+
+.. code-block:: python
+
+  myAssump = ("Pool"
+              ,("Fixed",[["2024-01-01",0.3]
+                        ,["2025-01-01",0.25]
+                        ,["2026-01-01",0.2]]
+                       ,[["2024-01-01",0.9]
+                        ,["2025-01-01",0.85]
+                        ,["2026-01-01",0.8]])
+              ,None
+              ,None)
+
+  p = localAPI.run(solarPanel,poolAssump=myAssump
+                        ,runAssump=[("call",{"afterDate":"2044-01-01"})
+                                    ,("report",{"dates":"MonthEnd"})]
+                        ,read=True)
+
+we can inspect the cashflow projection  :ref: 
+and calculate the IRR of equity investment:
+
+.. code-block:: python 
+
+  from absbox.local.util import irr
+  irr(p['bonds']['EQ'],init=('2024-01-01',-7_000))
+
+it was ``1.67%`` (YoY)...whoa...sad 
+
+Sensitivity Analysis 
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Well, things won't work out as planned, what happen if price fall down ? or the utilizatio rate fall ? 
+
+We can perform sensitivity analysis to explore how robust our investment is
+
+.. code-block:: python 
+
+  scenarioMap = {
+    "base":("Pool"
+            ,("Fixed",[["2024-01-01",0.3]
+                      ,["2025-01-01",0.25]
+                      ,["2026-01-01",0.2]]
+                     ,[["2024-01-01",0.9]
+                      ,["2025-01-01",0.85]
+                      ,["2026-01-01",0.8]])
+            ,None
+            ,None)
+    ,"lowUtil" :("Pool"
+                ,("Fixed",[["2024-01-01",0.3]
+                          ,["2025-01-01",0.25]
+                          ,["2026-01-01",0.2]]
+                         ,[["2024-01-01",0.85]
+                          ,["2025-01-01",0.80]
+                          ,["2026-01-01",0.75]])
+                ,None
+                ,None)
+   ,"lowPrice" : ("Pool"
+                ,("Fixed",[["2024-01-01",0.3]
+                          ,["2025-01-01",0.225]
+                          ,["2026-01-01",0.19]]
+                         ,[["2024-01-01",0.9]
+                          ,["2025-01-01",0.85]
+                          ,["2026-01-01",0.8]])
+                ,None
+                ,None)
+   }
+   p = localAPI.run(solarPanel,poolAssump=scenarioMap
+                       ,runAssump=[("call",{"afterDate":"2044-01-01"})
+                                  ,("report",{"dates":"MonthEnd"})]
+                       ,read=True)
+  from absbox.local.util import irr
+  {k:irr(v['bonds']['EQ'],init=('2024-01-01',-7000)) 
+    for k,v in p.items()}
+
+  #  {'base': 0.016930937065270275,
+  #   'lowPrice': 0.0028372850153230164,
+  #   'lowUtil': -0.0013152392627518972}
+
+Well, it's pretty clear that in current transaction , lower price isn't most scary factor comparing to low utilization rate.
+In the long run of 20 years, keep higher utilization rate is important, so sweep the panel weekly! 
+
+or you can buy a robot to do that ,but it will drag down the IRR :) 
+
+Conclusion
+^^^^^^^^^^^^^
+
+Making an installation of roof solar panel is a big investment decision which invovling pretty long time horizon and calculation of factor like electricity price as well as loan rate.
+
+It may look easier if you can build a cashflow model and perfrom quantitative analysis to support the decision !
+
+Happy hacking !
+
+
+
+Other Asset types
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The `FixedAsset` type can be used to model assets as well. For example ,
+
+`Hotel`
+""""""""""""
+We can model a hotel as `FixedAsset` ,whose `capacity` is the all rooms available for booking.
+When projects cashflow , we provide assumptions
+
+* utility rate curve -> on average ,how many rooms served during the `Period`.
+* price curve -> average price per night during the `Period`, which may reflect seasonality flucturation.
+
+The multiplication of two would be the cashflow generated from this asset.
+
+`EV charger station`
+""""""""""""""""""""
+same with `Hotel`
 
 
 
