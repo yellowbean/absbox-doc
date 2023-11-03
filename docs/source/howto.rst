@@ -734,15 +734,15 @@ OK, let's assume ,we are a homeowner that want to install a solar panel system w
 
 * Liability & Equity
 
-  * assuming taking a passthrough loan with rate of 6%
+  * assuming taking a passthrough loan with rate of 5%
   * down payment at 40%
 
 * Asset & expense
 
   * maxium production level : 20kw per day,average sunlight per month 20days.
   * cost 15000, expect usage life 15 yrs(180 months), residual value at $1000
-  * monthly insurance fee 45
-  * average maintenance cost $500 each year, extra $1000 after 10yrs.
+  * monthly insurance fee 20
+  * average maintenance cost $200 each year, extra $200 after 10yrs.
 
 .. code-block:: python
 
