@@ -164,6 +164,9 @@ Building Blocks
 
 There are 5 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, ``<Curve>``, ``<Pricing Method>``, all of them are being used in different components.
 
+.. note::
+   It looks boring at first place to learn the ``Building Blocks`` but these are essential.
+   
 
 DatePattern
 -------------
@@ -182,6 +185,7 @@ DatePattern
 * ``["EveryNMonth","YYYY-MM-DD",N]`` -> a seriers day starts with "YYYY-MM-DD", then every other N months afterwards
 
 Composite ``<DatePattern>``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 DatePatterns can be composed together:
 
@@ -275,7 +279,6 @@ Combination Type
     * ``("custom", <Name of user define data>)`` -> use a custom data
 
 
-
 Condition
 ------------
 
@@ -324,8 +327,8 @@ Deal Status
 
 Nested Condition
 ^^^^^^^^^^^^^^^^^^^^
-* ``["all",<condition>,<condition>]`` -> true if all of <condition> is true
-* ``["any",<condition>,<condition>]`` -> true if any of <condition> is true
+* ``["all",<condition>,<condition>....]`` -> true if all of <condition> is true
+* ``["any",<condition>,<condition>....]`` -> true if any of <condition> is true
 
 Curve
 ----------
@@ -1467,7 +1470,12 @@ AccrueAndPayInt
 
   syntax
     ``["accrueAndPayInt", {Account}, [<Bonds>] ]``
+    ``["accrueAndPayInt", {Account}, [<Bonds>], m ]``
+    `m` is a map with 
 
+      * ``limit`` -> same as `payFee` , describe how much to be paid
+      * ``support`` -> same as `payFee`
+    
 PayPrin 
   pay principal to a bond till due principal balance is 0
 
