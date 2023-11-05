@@ -510,6 +510,28 @@ bond cashflow equals to ``<price>``
       ,"curve":[["2021-01-01",0.025]
                ,["2024-08-01",0.025]]})
 
+Mannual Fire Trigger 
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.23
+
+It's not that often but someone may need to mannually fire a trigger and run the effects of a trigger. 
+
+syntax
+  [(<Date Of Fire>,<Loc of Trigger>,<Trigger Name>)]
+
+
+
+.. code-block:: python
+
+  ("fireTrigger",[("2021-10-01","AfterCollect","poolDef")
+
+.. seealso::
+  
+  Example :ref:`Mannual fire a trigger` 
+
+
+
 
 Running
 --------------

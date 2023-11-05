@@ -2041,6 +2041,15 @@ Formula based trigger
    :language: python
    :emphasize-lines: 53-60,76-84
 
+Mannual fire a trigger 
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* override trigger message shown in warning logs
+
+.. literalinclude:: deal_sample/fireTrigger.py
+   :language: python
+   :emphasize-lines: 72,78
+
 Waterfall
 --------------
 
