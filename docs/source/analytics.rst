@@ -41,7 +41,7 @@ There are two type of assumptions:
 
 * Assumptions for performance of asset
 * Assumptions for running a deal
-  
+
 .. graphviz::
     :name: sphinx.ext.graphviz
     :caption: pool assumption
@@ -58,12 +58,17 @@ There are two type of assumptions:
         "Current" -> "Lease"
         "Lease" -> "Rental Increase"
         "Lease" -> "Rental Renew"
+        "FixedAsset" -> "Production Rate"
+        "FixedAsset" -> "Utilization Rate"
         "Asset Performance" -> "Delinquent" [label="Not implemented","color"="red"]
         "Asset Performance" -> "Defaulted" 
         "Prepayment" ["color"="green"]
         "Default" ["color"="green"]
+        "Recovery" ["color"="green"]
         "Rental Renew" ["color"="green"]
         "Rental Increase" ["color"="green"]
+        "Production Rate" ["color"="green"]
+        "Utilization Rate" ["color"="green"]
     }
 
 
