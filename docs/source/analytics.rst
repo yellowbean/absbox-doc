@@ -58,6 +58,7 @@ There are two type of assumptions:
         "Current" -> "Lease"
         "Lease" -> "Rental Increase"
         "Lease" -> "Rental Renew"
+        "Current" -> "FixedAsset"
         "FixedAsset" -> "Production Rate"
         "FixedAsset" -> "Utilization Rate"
         "Asset Performance" -> "Delinquent" [label="Not implemented","color"="red"]
