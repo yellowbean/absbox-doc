@@ -41,6 +41,31 @@ There are two type of assumptions:
 
 * Assumptions for performance of asset
 * Assumptions for running a deal
+  
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: pool assumption
+    :alt: pool assumption
+    :align: center
+ 
+    digraph {
+        rankdir = LR
+        "Asset Performance" -> "Current"
+        "Current" -> "Mortgage/Installment/Loan"
+        "Mortgage/Installment/Loan" -> "Prepayment" 
+        "Mortgage/Installment/Loan" -> "Default"
+        "Mortgage/Installment/Loan" -> "Recovery"
+        "Current" -> "Lease"
+        "Lease" -> "Rental Increase"
+        "Lease" -> "Rental Renew"
+        "Asset Performance" -> "Delinquent" [label="Not implemented","color"="red"]
+        "Asset Performance" -> "Defaulted" 
+        "Prepayment" ["color"="green"]
+        "Default" ["color"="green"]
+        "Rental Renew" ["color"="green"]
+        "Rental Increase" ["color"="green"]
+    }
+
 
 .. seealso::
    
