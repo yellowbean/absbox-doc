@@ -213,7 +213,7 @@ How to structuring a deal
 
 Structuring
   `Structuring` may have different meanings for different people, in this context, `structuring` means using different deal components to see what is most desired reuslt (like bond price, WAL ,duration, credit event ) for issuance purpose
-  
+
   `Modelling` / `Reverse Engineering` means using data(bond,trigger,repline pool,waterfall) from offering memorandum to build a deal, the goal is to get best possible bond cashflow/pool cashflow for trading purpose
 
 Strucuring a deal may looks intimidating, while the process is simple:
