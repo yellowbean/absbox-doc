@@ -501,6 +501,21 @@ if deal is ``ongoing`` ( which has been issued ), the difference is that in ``Pr
     ,"payFreq":["DayOfMonth",20]
     }
 
+``payFreq`` and ``poolFreq``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Usually pool collection date is prior to waterfall payment date in a single cycle.
+
+* Pool cash proceeds were deposit to accounts at ``poolFreq`` date.
+* Engine will pick a waterfall base on ``deal status`` to exectue waterfall on ``payFreq`` date 
+
+``payFreq`` and ``poolFreq`` can be same day,and  engine will run pool collection before waterfall execution by default.
+
+.. image:: img/payFeq_poolFreq.png
+  :width: 600
+  :alt: payFeq_poolFreq
+
+
 
 Custom Defined Dates
 ^^^^^^^^^^^^^^^^^^^^^
@@ -535,9 +550,11 @@ Deal status is a ``Tag`` to describe the current ``status`` of deal, it can be o
 
 The ``status`` is being used by engine to:
 
-* pick up the ``right`` waterfall actions of the deal.
-* being used in ``waterfall`` or ``Condtion`` to condtionally execute actions or calculate a value
+* pick up the ``right`` waterfall actions of the deal on dates of `payFreq`.
+* can be used in ``waterfall`` or ``Condtion`` to condtionally execute actions or calculate a value
 
+Deal Status Enums
+^^^^^^^^^^^^^^^^^^^^^
 
 ``(PreClosing,"<new status>")``
   Deal is in pre-closing stage, which means the deal has not been issued yet. Make sure to include a ``new status`` which deal will enter after ``Closing Date``
