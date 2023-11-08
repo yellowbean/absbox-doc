@@ -511,7 +511,7 @@ Usually pool collection date is prior to waterfall payment date in a single cycl
 
 ``payFreq`` and ``poolFreq`` can be same day,and  engine will run pool collection before waterfall execution by default.
 
-.. image:: img/payFeq_poolFreq.png
+.. image:: img/payFreq_poolFreq.png
   :width: 600
   :alt: payFeq_poolFreq
 

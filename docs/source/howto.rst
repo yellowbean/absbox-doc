@@ -149,7 +149,7 @@ Once we have built the loan level data `loans` , we can just plug it into the _d
                ,"bondType":{"Sequential":None}}),)
       ,(("trusteeFee",{"type":{"fixFee":30}}),)
       ,{"amortizing":[
-           ["payFee",["acc01"],['trusteeFee']]
+           ["payFee","acc01",['trusteeFee']]
            ,["payInt","acc01",["A1"]]
            ,["payPrin","acc01",["A1"]]
        ]}
