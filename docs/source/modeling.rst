@@ -240,6 +240,13 @@ LiquidationProvider
     * ``("liqCredit","F1","F2")`` -> sum of credit available from "F1" "F2"
     * ``("liqBalance","F1","F2")`` -> sum of credit drawn from "F1" "F2"
 
+Ledger
+""""""""""""
+    * ``("ledgerBalance","L1","L2"..)`` -> sum of ledger balance
+    * ``("ledgerTxnAmount","L1")`` -> sum of ledger transaction 
+    * ``("ledgerTxnAmount","L1",<comment>)`` -> sum of ledger transaction with <comment>
+
+
 `formula` can be used to refer to  Integer/Bool/Ratio type data as well
 
 Integer Type
@@ -1656,6 +1663,32 @@ syntax
 
     ["inspect",<Comment>,<Formula1>,<Formula2>.....]
 
+Booking Ledger
+^^^^^^^^^^^^^^^^^
+
+This action would book a transaction to the ledger
+
+syntax
+  .. code-block:: python
+
+    ["bookBy",<bookType>]
+
+``bookType``
+
+  * ``["PDL",<default>,[(<ledger name>,<cap>)....] ]``
+  
+    Typically this was used to model `Principal Deficiency Ledger`.
+
+    * ``<default>`` -> definition of `default` of asset balance, ``("cumPoolDefaultedBalance",)``
+    * ``[("Bond-B-Ledger",("bondBalance","B"))...]`` -> book the defaults with cap of ``current balance`` of tranche B to `Ledger`: "Bond-B-Ledger"
+  * ``["AccountDraw",<ledger name>]``
+  
+    It was used in ``Support``,when there is insufficent interest or fee payment from account A and account B cures the shortfall ,that amount draw from account B was call "Account Draw" and booked in the ledger.
+  * ``["ByFormula",<ledger name>,<formula>]``
+
+    The most generic booking type ,which just book a ``<formula>`` value to ledger ``<ledger name>``
+
+
 
 Trigger
 -----------
@@ -1911,9 +1944,6 @@ common properites
   * ``fee`` ->  premium feee to be used on ``lineOfCredit``
 
 
-
-
-
 Interest Rate Swap
 --------------------
 
@@ -1942,6 +1972,20 @@ example:
                ,"start":"2021-06-25"
                ,"balance":2093.87}
   }
+
+Ledgers
+------------------------
+
+``Ledger`` conceptually was introduced similar to the same term in accounting. It is just a book which records transaction,for each transaction :
+
+* it is either ``Credit`` or ``Debit``
+* it has amount
+* it has a oustanding balance 
+
+It can be booked in waterfall action :ref:`Booking Ledger` ,and it can be query oustanding balance /transaction amount :ref:`Ledger` . 
+
+The ``Ledger`` won't hold any cash,but serve a purpose of record. The `balance` or `transaction amount` of ``Ledger`` was used to calculate amount to pay bonds or transfer amount in accounts.
+
 
 
 Examples
