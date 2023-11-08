@@ -652,7 +652,7 @@ syntax
 count type fee
 ^^^^^^^^^^^^^^^^^^^
 
-the fee due equals to a number multiply a unit fee. The number is a formula reference.
+The fee due equals to a number multiply a unit fee. The number is a formula reference.
 
 syntax 
   `numFee`:[ <DatePattern>, <Formula>, <Amount> ]
@@ -661,6 +661,18 @@ syntax
   
    ,("borrowerFee"
     ,{"type":{"numFee":[["DayOfMonth",20],("borrowerNumber",),1]}}
+
+target amount fee 
+^^^^^^^^^^^^^^^^^^^^^^
+
+The fee due amount is equal to ``max ( <Formula 1> - <Formula 2>,0)``
+
+syntax
+  `targetBalanceFee`:[<Formula 1> <Formula 2>]
+
+.. code-block:: python 
+   ("VAT"
+     ,{"type":{"targetBalanceFee":[("poolBalance",),("bondBalance",)]))
 
 
 
