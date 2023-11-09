@@ -1727,6 +1727,9 @@ syntax
   * ``["AccountDraw",<ledger name>]``
     It was used in ``Support``,when there is insufficent interest or fee payment from account A and account B cures the shortfall ,that amount draw from account B was call "Account Draw" and booked in the ledger.
 
+.. seealso:: 
+  
+  :ref:`Book Ledger`
 
 
 
@@ -2190,7 +2193,16 @@ Only the conditions were met, actions following will be executed.
    :language: python
    :emphasize-lines: 42-44
 
+Book Ledger
+^^^^^^^^^^^^^^^^^
 
+* User can book a formula based value to ledger 
+* query the ledger balance via formula ``("ledgerBalance","<ledgerName>")`` 
+  * it can be reference in all places in waterfall/trigger/accounts which are applicable to :ref:`<Formla>`
+
+.. literalinclude:: deal_sample/book.py
+   :language: python
+   :emphasize-lines: 43-44,62
 
 
 
