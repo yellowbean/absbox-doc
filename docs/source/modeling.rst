@@ -1986,6 +1986,7 @@ It can be booked in waterfall action :ref:`Booking Ledger` ,and it can be query 
 
 The ``Ledger`` won't hold any cash,but serve a purpose of record. The `balance` or `transaction amount` of ``Ledger`` was used to calculate amount to pay bonds or transfer amount in accounts.
 
+Enough explain for finance people, from engineering pespective, ``Ledger`` is just a ``stateful variable`` during whole projection period 😎
 
 
 Examples
