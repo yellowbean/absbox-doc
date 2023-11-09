@@ -221,7 +221,6 @@ Pool
     * ``("currentPoolDefaultedBalance",)``  -> pool defaulted balance 
     * ``("cumPoolDefaultedBalance",)``  -> pool cumulative defaulted balance 
     * ``("cumPoolRecoveries",)`` -> pool cumulative recoveries
-    * ``("poolFactor",)`` -> pool factor
     * ``("borrowerNumber",)`` -> number of borrower
 Accounts
 """""""
@@ -1087,7 +1086,7 @@ The rule was defined as a *List*, each element is a *List* with 2 elements.
 
 syntax
   * ``[<Proceeds from pool>, <Account to be depsit>]``
-  * ``[<Proceeds from pool>, [[<Allocation ration1>,<Account01>],[<Allocation ration2>,<Account02>] ]``
+  * ``[<Proceeds from pool>, [<Allocation ration1>,<Account01>],[<Allocation ration2>,<Account02>]... ]``
 
 
 exmaple:
@@ -2088,13 +2087,13 @@ Interest Rate Swap
 .. literalinclude:: deal_sample/test10.py
    :language: python
 
-Liquidition Provider 
+Liquidity Provider 
 ---------------------------
 
-Liquidation Provider /Insurance / Ganrantee
+Liquidity Provider /Insurance / Ganrantee
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Liquidation provider will deposit the gap amount of interest due against the account available balance.
+Liquidity provider will deposit the gap amount of interest due against the account available balance.
 And it will start to be repaid if both A1 and B tranche were paid off
 
 Fixed amount with interest accured.
