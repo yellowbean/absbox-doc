@@ -1681,12 +1681,14 @@ syntax
 
     * ``<default>`` -> definition of `default` of asset balance, ``("cumPoolDefaultedBalance",)``
     * ``[("Bond-B-Ledger",("bondBalance","B"))...]`` -> book the defaults with cap of ``current balance`` of tranche B to `Ledger`: "Bond-B-Ledger"
-  * ``["AccountDraw",<ledger name>]``
-  
-    It was used in ``Support``,when there is insufficent interest or fee payment from account A and account B cures the shortfall ,that amount draw from account B was call "Account Draw" and booked in the ledger.
-  * ``["ByFormula",<ledger name>,<formula>]``
+
+  * ``["ByFormula",<ledger name>,<Debit|Credit>,<formula>]``
 
     The most generic booking type ,which just book a ``<formula>`` value to ledger ``<ledger name>``
+..
+  * ``["AccountDraw",<ledger name>]``
+    It was used in ``Support``,when there is insufficent interest or fee payment from account A and account B cures the shortfall ,that amount draw from account B was call "Account Draw" and booked in the ledger.
+
 
 
 
