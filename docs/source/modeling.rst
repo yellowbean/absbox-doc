@@ -1666,6 +1666,8 @@ syntax
 Booking Ledger
 ^^^^^^^^^^^^^^^^^
 
+.. versionadded:: 0.23
+
 This action would book a transaction to the ledger
 
 syntax
