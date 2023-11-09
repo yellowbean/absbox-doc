@@ -578,6 +578,14 @@ Deal Status Enums
 ``Ended`` 
   Means deal stop projection cashflow.
 
+Changinge Deal Status
+^^^^^^^^^^^^^^^^^^^^^^^
+
+``Deal Status`` can be changed via:
+
+* ``Trigger`` -> :ref:`Effects/Consequence of a trigger`
+* auto enter new status if it is a ``PreClosing`` status
+
 
 Fee/Expenses
 --------------
@@ -997,7 +1005,10 @@ this type of asset can be used to model : `Hotel room` / `Solar Panel` / `EV Cha
 Collection Rules 
 -------------------
 
-`Colelction Rules` defines *how* ``SPV`` / ``Transaction`` / ``Deal`` collect *proceeds* from ``Pool``
+`Colelction Rules` defines *HOW* :
+
+*  ``SPV`` / ``Transaction`` / ``Deal`` collect *proceeds* from ``Pool``
+*  and *proceeds* were deposited into ``Accounts``
 
 Proceeds
 ^^^^^^^^^^
@@ -1013,30 +1024,56 @@ Proceeds
      - Prepayment
      - Recovery
      - Rental
+     - Cash
    * - Mortgage
      - Yes
      - Yes
      - Yes
      - Yes
      - No
+     - Yes
    * - Installment
      - Yes
      - Yes
      - Yes
      - Yes
      - No
+     - Yes
    * - Loan
      - Yes
      - Yes
      - Yes
      - Yes
      - No
+     - Yes
    * - Lease
      - No
      - No
      - No
      - No
      - Yes
+     - Yes
+   * - FixedAsset
+     - No
+     - No
+     - No
+     - No
+     - No
+     - Yes
+
+Pool Source Enums
+^^^^^^^^^^^^^^^^^
+
+* ``CollectedInterest``
+* ``CollectedPrincipal``
+* ``CollectedRecoveries``
+* ``CollectedPrepayment``
+* ``CollectedRental``
+* ``CollectedCash``
+
+.. warning::
+
+  ``CollectedCash``  includes other fields, make sure use it exclusively with other pool source.
 
 Allocation Rule
 ^^^^^^^^^^^^^^^^
@@ -1684,7 +1721,7 @@ syntax
     * ``<default>`` -> definition of `default` of asset balance, ``("cumPoolDefaultedBalance",)``
     * ``[("Bond-B-Ledger",("bondBalance","B"))...]`` -> book the defaults with cap of ``current balance`` of tranche B to `Ledger`: "Bond-B-Ledger"
 
-  * ``["ByFormula",<ledger name>,<Debit|Credit>,<formula>]``
+  * ``["formula",<ledger name>,<Debit|Credit>,<formula>]``
 
     The most generic booking type ,which just book a ``<formula>`` value to ledger ``<ledger name>``
 ..
