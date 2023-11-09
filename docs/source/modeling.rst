@@ -1484,7 +1484,7 @@ PayFee
   
     * ``{"balPct": 0.6}`` , pay up to 60% of due amount
     * ``{"balCapAmt": 500}`` ,  pay up to 500.
-    * ``{"formula": <formula> }``, pay up the <formula> 
+    * ``{"formula": <formula> }``, pay up the :ref:`Formula`
  
     ie. ``["payFee", "CashAccount", ["ServiceFee"], {"balPct":0.1}]``
   
@@ -1508,6 +1508,7 @@ Calc Fee and Pay
 
   syntax
     ``["calcAndPayFee", {Account}, [<Fee>]]``
+
     ``["calcAndPayFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
 
 Pay Fee Residual
@@ -1515,6 +1516,7 @@ Pay Fee Residual
 
   syntax  
     ``["payFeeResidual", {Account}, {Fee} ]``
+
     ``["payFeeResidual", {Account}, {Fee}, <limit> ]``
 
 Bond
@@ -1531,7 +1533,9 @@ PayInt
 
   syntax
     ``["payInt", {Account}, [<Bonds>] ]``
+
     ``["payInt", {Account}, [<Bonds>], m ]``
+    
     `m`is just a map same in the `payFee` , which has keys :
 
       * ``limit`` -> same as `payFee`
@@ -1542,6 +1546,7 @@ AccrueAndPayInt
 
   syntax
     ``["accrueAndPayInt", {Account}, [<Bonds>] ]``
+
     ``["accrueAndPayInt", {Account}, [<Bonds>], m ]``
     `m` is a map with 
 
@@ -1553,7 +1558,9 @@ PayPrin
 
   syntax
     ``["payPrin", {Account}, [<Bonds>] ]``
+
     ``["payPrin", {Account}, [<Bonds>], m ]``
+    
     `m`is just amp same in the `payFee` , which has keys :
 
       * ``limit`` -> same as `payFee`
@@ -1583,9 +1590,10 @@ PayIntResidual
 
   syntax  
     ``["payIntResidual", {Account}, <Bond> ]``
+
     ``["payIntResidual", {Account}, <Bond>, <Limit> ]``
   
-  The ``<Limit>`` can be used to describe limit amount via ``{"formula":<formula>}`` 
+    The ``<Limit>`` can be used to describe limit amount via ``{"formula":<formula>}`` 
   
 Account
 ^^^^^^^^^
@@ -1645,6 +1653,7 @@ Pay interest/principal to bond
 
   syntax
     ``["liqSupport", <liqProvider>, "interest", <Bond Name>, <Limit>]``
+
     ``["liqSupport", <liqProvider>, "principal", <Bond Name>, <Limit>]``
 
 Liquidity Repay 
