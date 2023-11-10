@@ -856,7 +856,7 @@ Buy-To-Let
 
 .. versionadded:: 0.23
 
-`Buy-To-Let` type usually refers to a mortgage contract which only require interest payment only and a bullet principal at last period.
+`Buy-To-Let` type usually refers to a mortgage which only requires interest payment and a bullet principal at last period.
 User just need to set ``I_P`` in field ``type``, which means ``Interest`` comes first then ``Principal`` comes last.
 
 .. code-block:: python
