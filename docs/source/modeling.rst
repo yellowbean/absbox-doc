@@ -851,6 +851,32 @@ ARM
       ,"remainTerm": 19
       ,"status": "current"}]
 
+Buy-To-Let
+""""""""""""""
+
+.. versionadded:: 0.23
+
+`Buy-To-Let` type usually refers to a mortgage contract which only require interest payment only and a bullet principal at last period.
+User just need to set ``I_P`` in field ``type``, which means ``Interest`` comes first then ``Principal`` comes last.
+
+.. code-block:: python
+  :emphasize-lines: 6
+
+  ["Mortgage"
+  ,{"originBalance": 12000.0
+    ,"originRate": ["fix",0.045]
+    ,"originTerm": 36
+    ,"freq": "Monthly"
+    ,"type": "I_P"
+    ,"originDate": "2021-02-01"
+    ,"prepayPenalty":{"byTerm":[15,0.1,0.2]}
+    }
+  ,{"currentBalance": 10000.0
+    ,"currentRate": 0.075
+    ,"remainTerm": 24
+    ,"status": "Current"}]
+
+
 Loan
 ^^^^^^^^^^
 `Loan` is type of asset which has interest only and a lump sum principal payment at end
