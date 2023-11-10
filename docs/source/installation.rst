@@ -37,8 +37,11 @@ which shows current version of `absbox`
   :alt: version
 
 .. warning::
-   Version matters !! As `absbox` is calling RESTful service from `Hastructure`. 
-   The message format for both shall be compatible to each other. i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.6`.
+   *Version matters !!*
+   
+   As `absbox` is calling RESTful service from `Hastructure`. The message format for both shall be compatible to each other. 
+   
+   i.e `absbox 0.8.5` is compatible with `Hastructure 0.8.6`.
    A general rule is that the "MINOR" part shall be same. ( here the ``8`` )
    
 
@@ -65,6 +68,8 @@ Public Server vs Self-hosted
 Connect to a engine 
 ^^^^^^^^^^^^^^^^^^^^^
 
+User just need to pass in a URL points to engine.
+
 .. code-block:: python
 
    from absbox import API
@@ -80,7 +85,12 @@ For public server list, please visit `absbox.org <https://absbox.org>`_
 
 .. warning::
   
-  Public server may provide less calculation performance and suffer high network IO and doesn't ganrantee the SLA. Pls don't use it in production.
+  Public server :
+  
+  * may provide less calculation performance 
+  * suffer high network IO 
+  * doesn't ganrantee the SLA. 
+  Pls don't use it in production.
 
 
 Use Private/In-House Server
