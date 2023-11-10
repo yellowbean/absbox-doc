@@ -1480,7 +1480,7 @@ PayFee
   syntax
     ``["payFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
   
-  * ``<limit>``
+  * ``<limit>`` :ref:`<limit>`
   
     * ``{"balPct": 0.6}`` , pay up to 60% of due amount
     * ``{"balCapAmt": 500}`` ,  pay up to 500.
@@ -1488,20 +1488,8 @@ PayFee
  
     ie. ``["payFee", "CashAccount", ["ServiceFee"], {"balPct":0.1}]``
   
-  If there is a shortfall from ``{Account}`` to pay, the shortfall can be supported by other accounts or liquidity provider.
+  * ``support`` -> :ref:`<support>`
 
-  syntax
-    ``["payFee", {Account}, [<Fee>], {'support':<supports>}]``
-  
-    * supported by accounts : 
-  
-      *  ``["account","accountName"]``
-    * supported by liquidity provider: 
-    
-      *  ``["facility","liquidity provider name"]``
-    * supported by mix 
-    
-      *  ``["multiSupport" ,["account","accountName1"] ,["facility","liquidity provider name"] ,["account","accountName2"]]``
 
 Calc Fee and Pay
   calculate the due balance of a fee and pay it till due balance is 0
@@ -1538,8 +1526,8 @@ PayInt
     
     `m`is just a map same in the `payFee` , which has keys :
 
-      * ``limit`` -> same as `payFee`
-      * ``support`` -> same as `payFee`
+      * ``limit`` -> :ref:`<limit>`
+      * ``support`` -> :ref:`<support>`
   
 AccrueAndPayInt 
   accrue interest and pay interset to a bond till due int balance is 0
@@ -1550,8 +1538,8 @@ AccrueAndPayInt
     ``["accrueAndPayInt", {Account}, [<Bonds>], m ]``
     `m` is a map with 
 
-      * ``limit`` -> same as `payFee` , describe how much to be paid
-      * ``support`` -> same as `payFee`
+      * ``limit`` -> :ref:`<limit>`
+      * ``support`` -> :ref:`<support>`
     
 PayPrin 
   pay principal to a bond till due principal balance is 0
@@ -1560,11 +1548,11 @@ PayPrin
     ``["payPrin", {Account}, [<Bonds>] ]``
 
     ``["payPrin", {Account}, [<Bonds>], m ]``
-    
+
     `m`is just amp same in the `payFee` , which has keys :
 
-      * ``limit`` -> same as `payFee`
-      * ``support`` -> same as `payFee`
+      * ``limit`` -> :ref:`<limit>`
+      * ``support`` -> :ref:`<support>`
  
   the ``limit`` is the magic key to make principal payment more versatile. User can control the amount to be paid via a :ref:`Formula` ie.
   
@@ -1591,9 +1579,9 @@ PayIntResidual
   syntax  
     ``["payIntResidual", {Account}, <Bond> ]``
 
-    ``["payIntResidual", {Account}, <Bond>, <Limit> ]``
+    ``["payIntResidual", {Account}, <Bond>, {"limit": <Limit>} ]``
   
-    The ``<Limit>`` can be used to describe limit amount via ``{"formula":<formula>}`` 
+    The ``<Limit>`` :ref:`<limit>`
   
 Account
 ^^^^^^^^^
@@ -1609,11 +1597,11 @@ Transfer
   syntax
     ``["transfer", {Account}, {Account}, <limit> ]``
     
-  ``<limit>`` could be 
+  ``<limit>`` is a map of: 
 
     * ``{"balCapAmt":100}`` -> transfer up to 100
     * ``{"balPct":0.1}`` -> transfer up to 10% of source account 
-    * ``{"formula":<formula>}`` -> transfer up to the value of formula
+    * ``{"formula":<formula>}`` -> transfer up to the value of :ref:`Formula`
     * ``{"reserve":"gap"}`` -> transfer till reserve amount of *target* account is met
     * ``{"reserve":"excess"}`` -> transfer till reserve amount of *source* account is met
 
@@ -1630,9 +1618,13 @@ Buy Asset
   use cash from an account to buy assets.
   
   syntax 
+    ``["buyAsset",{pricing method}, {Account}, None]`` buy with all cash in the account 
+    ``["buyAsset",{pricing method}, {Account}]`` # buy with all cash in the account 
+    
     ``["buyAsset",{pricing method}, {Account}, {limit}]``
 
-    ``limit`` can be either a :ref:`Formula` or a Cap Amount
+    ``limit`` :
+      * {"formula": :ref:`Formula`}
       
 
 Liquidtiy Facility 
@@ -1740,6 +1732,57 @@ syntax
   
   :ref:`Book Ledger`
 
+
+Limit & Support
+^^^^^^^^^^^^^^^^
+
+<limit>
+""""""""""""
+
+``limit`` is a usedful decorator which describle how much it should pay, usually it's a cap.
+it is being widely used in scope :
+
+* pay fee 
+* pay interest to bond or limit the principal payment to bond
+
+  *  it is useful to model `target oc` which define how much principal repayment should be.
+* transfer between accounts
+* limit amount for asset selling
+* cap amount for liquidity support
+
+examples: 
+  
+    * ``{"balPct": 0.6}`` , pay up to 60% of due amount
+    * ``{"balCapAmt": 500}`` ,  pay up to 500.
+    * ``{"formula": <formula> }``, pay up the :ref:`Formula`
+
+
+<support>
+""""""""""""
+
+``support`` was used to model ,the `extra source fund` to make up the shortfall if there is a shortfall in the payment.
+
+  scope:
+    * cure shortfall when pay fee
+    * cure shortfall when pay bond interest and principal 
+
+  source of funds:
+    * :ref:`Accounts`
+    * :ref:`Liquidity Provider`
+    * a combination of above
+
+  syntax:
+    ``["payFee", {Account}, [<Fee>], {'support':<supports>}]``
+    
+    * supported by accounts : 
+    
+      *  ``["account","accountName"]``
+    * supported by liquidity provider: 
+    
+      *  ``["facility","liquidity provider name"]``
+    * supported by mix (draw via sequence)
+    
+      *  ``["support" ,["account","accountName1"] ,["facility","liquidity provider name"] ,["account","accountName2"]]``
 
 
 Trigger
