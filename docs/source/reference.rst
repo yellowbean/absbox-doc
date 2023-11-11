@@ -64,19 +64,27 @@ It is scalable if more assumption type comming in.
 Why so many list tuples and maps in deal model
 ---------------------------------------------------
 
-* Unlike `Class` , all data were exposed to user via native structure, transperancy matters.
+* Transparency 
   
-  `Class` will hide `states` and changing behavior of methods, that's dark magic we should avoid.
+  Unlike `Class` , all data were exposed to user via native structure.
+  
+  `Class` will hide `states` and changing based on behavior of methods, that's dark magic we should avoid.
 
-* Because native stucture will enable user's own way to build data structure required.
+* Integration
+  
+  Because native stucture will enable user's own way to build data structure required.
   
   User has his/her own code base, which may have heavily couple with `PyDantic` or `Numpy` or other library, but anyway, all these data structure will provide methods to convert back to Python structure.
 
-* Most of persistent layer supports native structure, like `PyMongo` `redis` etc .
+* IO friendly
+  
+  Most of persistent layer supports native structure, like `PyMongo` `redis` etc .
 
   It's easy to pull from these data and initialized models.
 
-* Isn't making too much keystroke to model a deal ? 
+* Flexibility
+  
+  Isn't making too much keystroke to model a deal ? 
 
   Don't have to that way ,because `list` `tuple` `maps` are just *DATA* ,user can easily build candy function wrap the generator 
 
@@ -98,6 +106,11 @@ Why so many list tuples and maps in deal model
     
     # now you can build your own functions !
     payBondwithOC("SourceAccount","A",0.15)
+
+  .. note::
+    If you are typing too much or feel duplication of coding, pls think twice what can be done to perform `abstraction` on your code.
+    
+    Because `absbox` isn't designed to be used boilerplate code.
 
 JSON Format
 --------------
