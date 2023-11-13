@@ -2237,6 +2237,14 @@ The deal docs may split income from pools by pct% to another account
    :language: python
    :emphasize-lines: 39-40
 
+Aggregation on condition
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The transaction may require different aggregation rule base on a certain *Pre* or *Deal Status*.
+i.e if a deal failed in certain *test* ,then interest portion may aggregate into principal account.
+
+We may just model dummy accounts which accepts Principal and Interest .
+But in the Pool Collection waterfall, we can move the funds around base on "if" action in the waterfall, which can be test certain test pass or fail or test current deal status.
 
 
 Triggers
