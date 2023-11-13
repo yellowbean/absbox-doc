@@ -343,7 +343,7 @@ a time series of expense will be used in cashflow projection.
 Call When
 ^^^^^^^^^^^^^^
 
-Assumptions to call the deal. 
+Assumptions to call the deal and run ``CleanUp`` waterfall. If no ``CleanUp`` waterfall is setup ,then no action perform.
 
 * either of condtion was met, then the deal was called.
 * the call test was run on `distribution day`, which is describle by `payFreq` on :ref:`Deal Dates`
@@ -364,8 +364,31 @@ Assumptions to call the deal.
          ,{"and":[{"afterDate":"2023-06-01"} # nested !! 
                   ,{"or":
                      [{"poolFactor":0.03}
-                     ,{"bondBalance":100}]}]}
-     
+                     ,{"bondBalance":100}]}]})
+
+.. versionadded:: 0.23
+
+Or more powerfull condition with :ref:`Condition` ! Yeah, we are reuse as many components as possible to flat the learning curve. 😎
+
+.. code-block:: python
+  
+  ("call", ("if", <Condition>))
+  ("call", ("condition", <Condition>))
+
+Let's build some fancy call condition with a :ref:`Formula` value less than a threshold.
+
+.. code-block:: python
+  
+  ("call", ("if", 
+            [("substract",("poolWaRate",),("bondWaRate","A1","A2","B")), "<", 0.01]
+            )
+  )
+ 
+.. note::
+   *Why Call is an assumption ?*
+
+   In deal arrangement, `call` is an option which doesn't have to be triggered. It may grant issuer call option if net loss rate above 5%, but issuer may call the deal when loss rate is 7%. That's why when projecting cashflow, it leave option to user assumption.
+
 
 Revolving Assumption
 ^^^^^^^^^^^^^^

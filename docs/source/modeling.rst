@@ -259,6 +259,8 @@ Ratio Type
     * ``("poolFactor",)`` -> factor of pool
     * ``("cumuPoolDefaultedRate",)`` -> cumulative default rate of pool
     * ``("cumuPoolNetLossRate",)`` -> cumulative loss rate of pool
+    * ``("poolWaRate",)`` -> weighted average pool coupon 
+    * ``("bondWaRate",<Bond1>,<Bond2>...)`` -> weighted average bond coupon
 
 Bool Type
 ^^^^^^^
@@ -1726,7 +1728,7 @@ Conditional Action
 There are two types of `Conditional Action`, which are same in with "IF" / "IF-ELSE" clause in programming language
 
 ``If``
-  waterfall actions follows will be executed if certain ``Condtion`` is met.
+  waterfall actions follows will be executed if certain :ref:`Condition` is met.
 
   .. code-block:: python 
     
@@ -1735,7 +1737,7 @@ There are two types of `Conditional Action`, which are same in with "IF" / "IF-E
 
 
 ``IfElse``
-  first list of actions will be executed if ``condtion`` was met , otherwise , second list of actions will be executed
+  first list of actions will be executed if :ref:`Condition` was met , otherwise , second list of actions will be executed
 
   .. code-block:: python 
     
@@ -1846,14 +1848,14 @@ examples:
 Trigger
 -----------
 
-`Trigger` is a generalized concept in `absbox` / `Hastructure`, it is not limited to <pool performance> related design to protect tranches but a border concpet as below:
+``Trigger`` is a generalized concept in `absbox` / `Hastructure`, it is not limited to *pool performance* which is design to protect tranches but a border concept as below:
 
 .. image:: img/trigger.png
   :width: 500
   :alt: version
 
 
-There are 4 fields in Triggers:
+There are 4 fields in ``Triggers``:
 
   * ``Condition`` -> it will fire the trigger effects, when :ref:`Condition` is met
   * ``Effects`` -> what would happen if the trigger is fired
@@ -1863,7 +1865,7 @@ There are 4 fields in Triggers:
 Syntax of trigger
 ^^^^^^^^^^^^^^^^^^^^^^
 
-it's optional to specify ``Location``
+it is a must to specify ``Location``
 
 .. code-block:: python 
 
@@ -1883,6 +1885,12 @@ it's optional to specify ``Location``
     {}
   }
 
+``Location`` of Trigger:
+  * ``BeforeCollect`` 
+  * ``AfterCollect``
+  * ``BeforeDistribution`` 
+  * ``AfterDistribution``
+  * during the waterfall
 
 When to run trigger
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -1968,58 +1976,61 @@ Examples
 .. code-block:: python
 
     {
-      "BeforeCollect":[]
-      ,"AfterCollect":[
-        {"condition":[("cumPoolDefaultedRate",),">",0.05]
-        ,"effects":("newStatus","Defaulted")
-        ,"status":False
-        ,"curable":False}
-      ]
-      ,"BeforeDistribution":[
-        {"condition":[">=","2025-01-01"]
-        ,"effects":("newStatus","Defaulted")
-        ,"status":False
-        ,"curable":False}
-      ]
-      ,"AfterDistribution":[
-        {"condition":[("bondFactor",),"<=",0.1]
-        ,"effects":("newStatus","Accelerated")
-        ,"status":False
-        ,"curable":False}
-      ]
+      "BeforeCollect":{}
+      ,"AfterCollect":{
+        "Mytrigger0":{"condition":[("cumPoolDefaultedRate",),">",0.05]
+                      ,"effects":("newStatus","Defaulted")
+                      ,"status":False
+                      ,"curable":False}
+      }
+      ,"BeforeDistribution":{
+        "Mytrigger1":{"condition":[">=","2025-01-01"]
+                    ,"effects":("newStatus","Defaulted")
+                    ,"status":False
+                    ,"curable":False}
+      }
+      ,"AfterDistribution":{
+        "Mytrigger2": {"condition":[("bondFactor",),"<=",0.1]
+                      ,"effects":("newStatus","Accelerated")
+                      ,"status":False
+                      ,"curable":False}
       }
     }
 
     #a list of triggers effects
     {
-      "AfterCollect":[
-        {"condition":[("cumPoolDefaultedRate",),">",0.05]
-        ,"effects":("Effects"
-                    ,("newStatus","Defaulted")
-                    ,("accrueFees","feeA","feeB"))
-        ,"status":False
-        ,"curable":False}
-      ]
+      "AfterCollect":{
+        "Mytrigger3":{"condition":[("cumPoolDefaultedRate",),">",0.05]
+          ,"effects":("Effects"
+                      ,("newStatus","Defaulted")
+                      ,("accrueFees","feeA","feeB"))
+          ,"status":False
+          ,"curable":False}
+      }
     }
 
     # ALL and ANY logic of triggers ( and they can nested toghter ! )
-    ,{"AfterCollect":[
+    ,{"AfterCollect":
+      {"Mytrigger4":
         {"condition":["any"
                        ,[("cumPoolDefaultedRate",),">",0.05]
                        ,[">","2021-09-15"]]
         ,"effects":("newStatus","Accelerated")
         ,"status":False
         ,"curable":False}
-        ]}
+        }
+      }
 
-    ,{"AfterCollect":[
+    ,{"AfterCollect":
+      {"Mytrigger5":
         {"condition":["all"
                       ,[("cumPoolDefaultedRate",),">",0.05]
                       ,[">","2021-09-15"]]
         ,"effects":("newStatus","Accelerated")
         ,"status":False
         ,"curable":False}
-        ]}
+      }
+    }
 
 .. seealso::
   
@@ -2245,6 +2256,10 @@ i.e if a deal failed in certain *test* ,then interest portion may aggregate into
 
 We may just model dummy accounts which accepts Principal and Interest .
 But in the Pool Collection waterfall, we can move the funds around base on "if" action in the waterfall, which can be test certain test pass or fail or test current deal status.
+
+.. literalinclude:: deal_sample/conditionAgg.py
+   :language: python
+   :emphasize-lines: 37-38
 
 
 Triggers
