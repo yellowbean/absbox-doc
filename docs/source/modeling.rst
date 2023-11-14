@@ -523,6 +523,13 @@ Usually pool collection date is prior to waterfall payment date in a single cycl
   :width: 600
   :alt: payFeq_poolFreq
 
+Examples:
+  .. code-block:: python
+  
+     # quaterly pay dates
+     ["EveryNMonth","2019-9-15",3] # 2019-12-15,2020-03-15...
+     # monthly pay
+     ["DayOfMonth",10], # every 10th of month after first pay date or next pay date
 
 
 Custom Defined Dates
@@ -2210,6 +2217,36 @@ User can model sink-fund like mechanisim to ensure redeem the note timely fashio
 * test the number of Months as a :ref:`Condition`
 * using *IF* in the waterfall to control deposit cash to a certain account.
 
+Delay of Principal
+^^^^^^^^^^^^^^^^^^^
+
+It's common to see that priority during tranches like
+
+::
+
+  Unless the principal balances of the class A-1, class A-2, class A-3 and class A-4 notes have been reduced to zero, the class B and class C notes will not be entitled to any payments of principal until the June 2009 distribution date,
+  
+  or during any period thereafter in which cumulative realized losses on the trust student loans exceed specified levels. During these periods, in general principal will be paid to the class A-1, class A-2, class A-3 and class A-4 notes, in that order, until each of their principal balances is reduced to zero.
+  
+
+We can model these two like:
+
+* a lockout period till "2009-06-30"
+* a ``payPrin`` with a ``If`` which reference to ``pool cumulative loss``
+
+.. code-block:: python
+
+    ....
+    ,["payPrin","acc01",["A1"]]
+    ,["payPrin","acc01",["A2"]]
+    ,["If",["or"
+          ,["isPaidOff","A1","A2"]
+          ,[">=","2009-06-30"]
+          ,[("cumuPoolNetLossRate",),"<",0.05]]
+      ,["payPrin","acc01",["B"]]
+      ,["payIntResidual","acc01","B"]]
+    ....
+                                                                                                                         ]
 
 
 
