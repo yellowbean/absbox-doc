@@ -345,7 +345,7 @@ Call When
 
 Assumptions to call the deal and run ``CleanUp`` waterfall. If no ``CleanUp`` waterfall is setup ,then no action perform.
 
-* either of condtion was met, then the deal was called.
+* either of :ref:`Condition` was met, then the deal was called.
 * the call test was run on `distribution day`, which is describle by `payFreq` on :ref:`Deal Dates`
 
 .. code-block:: python

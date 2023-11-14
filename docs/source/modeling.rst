@@ -559,7 +559,7 @@ Deal status is a ``Tag`` to describe the current ``status`` of deal, it can be o
 The ``status`` is being used by engine to:
 
 * pick up the ``right`` waterfall actions of the deal on dates of `payFreq`.
-* can be used in ``waterfall`` or ``Condtion`` to condtionally execute actions or calculate a value
+* can be used in ``waterfall`` or ``Condition`` to conditionally execute actions or calculate a value
 
 Deal Status Enums
 ^^^^^^^^^^^^^^^^^^^^^
@@ -1358,14 +1358,17 @@ syntax
 Step-Up Rate
 """"""""""""""
 
+.. versionadded:: 0.23
+
 The bond will use a step up rate with:
 
-* a base rate which will be used "When"
-* a spread which will be added to base rate 
-* a condtion ``When`` which describle  when to start steping up and the frequency.
+* add a spread to rate on a date 
+* add spreads to rate on dates ,described via a :ref:`DatePattern`
 
 syntax
-    :code:`"rateType":{"StepUp":0.06,"Spread":0.01,"When":["After","2023-05-01","YearEnd"]}`
+    :code:`{"stepUp":("ladder","2024-01-01",0.01,"QuarterEnd")}`
+    
+    :code:`{"stepUp":("once","2024-01-01",0.01)}`
 
 
 Principal 
@@ -2198,6 +2201,19 @@ User can model a step up bond which start to increase a spread after a certain d
    :language: python
    :emphasize-lines: 20
 
+Accumulation/SinkFund redeemption
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+User can model sink-fund like mechanisim to ensure redeem the note timely fashion.
+
+* Time the months before maturity of bond A
+* test the number of Months as a :ref:`Condition`
+* using *IF* in the waterfall to control deposit cash to a certain account.
+
+
+
+
+
 Credit Enhancement
 -----------------------
 
@@ -2317,7 +2333,7 @@ Limit Principal Payment
 Define Conditional Action
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-User can specify a condtional clause in the waterfall.
+User can specify a conditional clause in the waterfall.
 
 Only the conditions were met, actions following will be executed.
 
