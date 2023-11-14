@@ -2224,14 +2224,16 @@ We can model these two like:
 
 .. code-block:: python
 
+    ....
     ,["payPrin","acc01",["A1"]]
     ,["payPrin","acc01",["A2"]]
     ,["If",["or"
           ,["isPaidOff","A1","A2"]
           ,[">=","2009-06-30"]
-                                                                                 ,[("cumuPoolNetLossRate",),"<",0.05]]
-                                                                                                ,["payPrin","acc01",["B"]]
-                                                                                                               ,["payIntResidual","acc01","B"]
+          ,[("cumuPoolNetLossRate",),"<",0.05]]
+      ,["payPrin","acc01",["B"]]
+      ,["payIntResidual","acc01","B"]]
+    ....
                                                                                                                          ]
 
 
