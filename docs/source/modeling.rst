@@ -523,6 +523,14 @@ Usually pool collection date is prior to waterfall payment date in a single cycl
   :width: 600
   :alt: payFeq_poolFreq
 
+Examples:
+
+.. code-block:: python
+
+   # quaterly pay dates
+   ["EveryNMonth","2019-9-15",3] # 2019-12-15,2020-03-15...
+   # monthly pay
+   ["DayOfMonth",10], # every 10th of month after first pay date or next pay date
 
 
 Custom Defined Dates
