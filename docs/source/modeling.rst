@@ -1369,13 +1369,14 @@ Step-Up Rate
 
 The bond will use a step up rate with:
 
-* add a spread to rate on a date 
+* add a spread to rate on a date.
 * add spreads to rate on dates ,described via a :ref:`DatePattern`
 
 syntax
+    :code:`{"stepUp":("once","2024-01-01",0.01)}`
+    
     :code:`{"stepUp":("ladder","2024-01-01",0.01,"QuarterEnd")}`
     
-    :code:`{"stepUp":("once","2024-01-01",0.01)}`
 
 
 Principal 
@@ -1617,7 +1618,9 @@ PayPrin
   syntax
     ``["payPrin", {Account}, [<Bonds>] ]``
 
-    ``["payPrin", {Account}, [<Bonds>], m ]``
+    ``["payPrin", {Account}, [<Bonds>], m ]``      # pay bond via pro-rata basis
+    
+    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, new in 0.23
 
     `m`is just amp same in the `payFee` , which has keys :
 
