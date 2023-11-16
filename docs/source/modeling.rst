@@ -266,7 +266,7 @@ Bool Type
 ^^^^^^^
     * ``("trigger", loc ,<trigger name>)`` -> trigger with name ``<trigger name>`` at ``loc`` status
     * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
-    * ``("status", <deal status>)`` -> True if current deal status is ``<deal status>``
+    * ``("status", <deal status>)`` -> True if current deal status is :ref:`<Deal Status>`
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
@@ -586,13 +586,17 @@ Deal Status Enums
 ``Ended`` 
   Means deal stop projection cashflow.
 
-Changinge Deal Status
+Changing Deal Status
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 ``Deal Status`` can be changed via:
 
 * ``Trigger`` -> :ref:`Effects/Consequence of a trigger`
 * auto enter new status if it is a ``PreClosing`` status
+
+.. seealso::
+
+  To view the result of status changes in deal run :ref:`Deal Status Change During Run`
 
 
 Fee/Expenses
