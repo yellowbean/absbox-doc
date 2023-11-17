@@ -747,6 +747,24 @@ a map represents history information of a `ongoing` deal.
 ``IssuanceBalance``
   Issuance balance of deal, which used to be queried via `poolFactor`, `cumuPoolDefaultedRate` etc 
 
+``AccruedInterest``
+  .. versionadded:: 0.23
+    
+  This field will `claw back` interest in pool cashflow.
+
+  .. code-block:: python
+
+    {'assets':[["Mortgage"
+              ,{"originBalance":2200,"originRate":["fix",0.045],"originTerm":30
+                ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
+                ,{"currentBalance":2200
+                ,"currentRate":0.08
+                ,"remainTerm":20
+                ,"status":"current"}]]
+      ,'issuanceStat':{"AccruedInterest":23.35}
+     }
+
+
 ``HistoryDefaults``
   Cumulative Defaulted balance as of ``last collection`` date 
 ``HistoryDelinquency``
