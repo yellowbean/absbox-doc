@@ -1381,7 +1381,9 @@ syntax
     
     :code:`{"stepUp":("ladder","2024-01-01",0.01,"QuarterEnd")}`
     
+.. seealso:: 
 
+  :ref:`Step-Up Coupon`
 
 Principal 
 ^^^^^^^^^^^
