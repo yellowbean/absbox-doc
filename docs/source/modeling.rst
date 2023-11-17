@@ -1462,7 +1462,6 @@ Equity
            ,"bondType":{"Equity":None} })
 
 
-
 Waterfall
 -------------
 
@@ -1626,7 +1625,7 @@ PayPrin
 
     ``["payPrin", {Account}, [<Bonds>], m ]``      # pay bond via pro-rata basis
     
-    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, new in 0.23
+    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, with optional cap in `m` , new in 0.23, :ref:`PayBond Sequential`
 
     `m`is just amp same in the `payFee` , which has keys :
 
@@ -2259,6 +2258,14 @@ We can model these two like:
       ,["payIntResidual","acc01","B"]]
     ....
                                                                                                                          ]
+PayBond Sequential
+^^^^^^^^^^^^^^^^^^^^^^
+
+* user can set action to pay bond sequentially, with option to set up a limit tie up to :ref:`Formula`
+
+.. literalinclude:: deal_sample/payPrinSeq.py
+   :language: python
+   :emphasize-lines: 46,47
 
 
 Credit Enhancement
