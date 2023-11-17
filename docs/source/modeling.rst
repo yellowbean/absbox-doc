@@ -1604,6 +1604,7 @@ PayInt
 
       * ``limit`` -> :ref:`<limit>`
       * ``support`` -> :ref:`<support>`
+
   
 AccrueAndPayInt 
   accrue interest and pay interset to a bond till due int balance is 0
@@ -1617,6 +1618,10 @@ AccrueAndPayInt
       * ``limit`` -> :ref:`<limit>`
       * ``support`` -> :ref:`<support>`
     
+  .. code-block:: python
+    
+    ["accrueAndPayInt","acc01",["A1","A2"],{"limit":{"formula":("constant",2)}}]
+
 PayPrin 
   pay principal to a bond till due principal balance is 0
 
