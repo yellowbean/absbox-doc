@@ -2206,14 +2206,17 @@ Schedule Cashflow with Default Amount Vector as assumption
 Bond 
 ---------------
 
-Step-Up coupon 
-^^^^^^^^^^^^^^^^^^
+Step-Up Coupon
+^^^^^^^^^^^^^^^^^^^
 
-User can model a step up bond which start to increase a spread after a certain day by an interval specified by <datepattern>
+User can set step-up bond either in one-off basis or increase via a :ref:`DatePattern`
 
-.. literalinclude:: deal_sample/stepup_sample.py
+* step-bond is just an optinal field in the bond map 
+* user can aggregate all cash in a single aggregation rule
+
+.. literalinclude:: deal_sample/bondStepUp.py
    :language: python
-   :emphasize-lines: 20
+   :emphasize-lines: 26,44
 
 Accumulation/SinkFund redeemption
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2254,8 +2257,6 @@ We can model these two like:
       ,["payIntResidual","acc01","B"]]
     ....
                                                                                                                          ]
-
-
 
 
 Credit Enhancement
