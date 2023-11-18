@@ -165,7 +165,7 @@ Building Blocks
 There are 5 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, ``<Curve>``, ``<Pricing Method>``, all of them are being used in different components.
 
 .. note::
-   It looks boring at first place to learn the ``Building Blocks`` but these are essential.
+   It looks boring at first place to learn the ``Building Blocks`` but these are well designed and are essential to tackle the complexity of structured finance.
    
 
 DatePattern
@@ -403,6 +403,8 @@ Day Count
 Indexes
 ^^^^^^^^^
 
+``Index`` is just a tag.
+
 * ``LPR5Y``
 * ``LPR1Y``
 * ``LIBOR1M``
@@ -433,6 +435,7 @@ Indexes
 
 Period
 ^^^^^^^^^^^
+
 * ``Daily``
 * ``Weekly``
 * ``Monthly``
@@ -2492,6 +2495,15 @@ Book Ledger
    :language: python
    :emphasize-lines: 43-44,62
 
+Use Rate Hedge
+^^^^^^^^^^^^^^^^^^^^
+
+* build interest rate cap 
+* view interest rate cap flow
+
+.. literalinclude:: deal_sample/rateCap.py
+   :language: python
+   :emphasize-lines: 48-61,63,71-72,35
 
 
 Real World Transaction
