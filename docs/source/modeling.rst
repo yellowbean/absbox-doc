@@ -1662,8 +1662,6 @@ PayPrin
 
     ``["payPrin", {Account}, [<Bonds>], m ]``      # pay bond via pro-rata basis
     
-    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, with optional cap in `m` , new in 0.23, :ref:`PayBond Sequential`
-
     `m`is just amp same in the `payFee` , which has keys :
 
       * ``limit`` -> :ref:`<limit>`
@@ -1681,7 +1679,19 @@ PayPrin
                                     ,("poolBalance",)
                                     ,("factor"
                                         ,("poolBalance",), 0.12))}]
-  
+
+PayPrinBySeq 
+  pay principal to a list of bond sequentially ,with option to specify limit
+
+  syntax
+    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, with optional cap in `m` , new in 0.23, :ref:`PayBond Sequential`
+
+    `m`is just amp same in the `payFee` , which has keys :
+
+      * ``limit`` -> :ref:`<limit>`
+      * ``support`` -> :ref:`<support>`
+ 
+
 PayPrinResidual 
   pay principal to a bond regardless its due principal balance
     
@@ -2496,7 +2506,7 @@ Book Ledger
    :emphasize-lines: 43-44,62
 
 Use Rate Hedge
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 * build interest rate cap 
 * view interest rate cap flow
