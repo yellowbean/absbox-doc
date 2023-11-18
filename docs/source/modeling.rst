@@ -2508,6 +2508,9 @@ Book Ledger
 Use Rate Hedge
 --------------------
 
+Interest Rate Cap Hedge
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 * build interest rate cap 
 * view interest rate cap flow
 
