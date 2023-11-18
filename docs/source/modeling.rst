@@ -206,7 +206,7 @@ Balance Type
 Bond 
 """""""
     * ``("bondBalance",)`` -> sum of all bond balance
-    * ``("bondBalance","A","B")`` -> sum of balance of bond A and bond B
+    * ``("bondBalance","A","B"...)`` -> sum of balance of bond A and bond B
     * ``("originalBondBalance",)`` -> bond balance at issuance
     * ``("bondFactor",)``  -> bond factor
     * ``("bondDueInt","A","B")``  -> bond due interest for bond A and bond B
@@ -217,9 +217,11 @@ Bond
 Pool 
 """""""
     * ``("poolBalance",)``  -> current pool balance
+    * ``("poolBegBalance",)``  -> current pool begin balance
     * ``("originalPoolBalance",)``  -> pool original balance 
-    * ``("currentPoolDefaultedBalance",)``  -> pool defaulted balance 
+    * ``("currentPoolDefaultedBalance",)``  -> pool defaulted balance at last collection period
     * ``("cumPoolDefaultedBalance",)``  -> pool cumulative defaulted balance 
+    * ``("cumPoolNetLoss",)`` -> pool cumulative pool net loss balance
     * ``("cumPoolRecoveries",)`` -> pool cumulative recoveries
     * ``("borrowerNumber",)`` -> number of borrower
 Accounts
@@ -227,6 +229,7 @@ Accounts
     * ``("accountBalance",)`` -> sum of all account balance
     * ``("accountBalance","A","B")`` -> sum of account balance for "A" and "B"
     * ``("reserveGap","A","B")`` -> sum of shortfall of reserve amount of specified accounts
+    * ``("reserveExcess","A","B")`` -> sum of excess of reserve amount of specified accounts
     * ``("accountTxnAmt",None,"A")`` -> total transaction amount of account "A"
     * ``("accountTxnAmt","<tag>","A")`` -> total transaction amount tagged with ``<tag>`` of account "A"
 Expense
@@ -258,6 +261,7 @@ Ratio Type
     * ``("bondFactor",)`` -> factor of bond
     * ``("poolFactor",)`` -> factor of pool
     * ``("cumuPoolDefaultedRate",)`` -> cumulative default rate of pool
+    * ``("cumuPoolDefaultedRate",n)`` -> cumulative default rate of pool at `N` period. ( -1 means period before last period)
     * ``("cumuPoolNetLossRate",)`` -> cumulative loss rate of pool
     * ``("poolWaRate",)`` -> weighted average pool coupon 
     * ``("bondWaRate",<Bond1>,<Bond2>...)`` -> weighted average bond coupon
@@ -267,6 +271,10 @@ Bool Type
     * ``("trigger", loc ,<trigger name>)`` -> trigger with name ``<trigger name>`` at ``loc`` status
     * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
     * ``("status", <deal status>)`` -> True if current deal status is :ref:`<Deal Status>`
+    * ``("rateTest", <formula>, <cmp>, rate)`` -> True if <formula> compare with a rate value
+    * ``("allTest", True|False, <boolean type ds>....)`` -> True if all boolean type ds are True
+    * ``("anyTest", True|False, <boolean type ds>....)`` -> True if any boolean type ds are True
+
 
 Or `formula` can be an arithmetic calculation on itselfies.
 
@@ -277,6 +285,7 @@ Combination Type
     * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
     * ``("sum", <Formula>, <Formula>, ...)`` -> sum of formula values
     * ``("avg", <Formula>, <Formula>, ...)`` -> average of formula values
+    * ``("/", <Formula>, <Formula>, ...)`` -> divide two formulas
     * ``("abs", <Formula>)`` -> absolute value of formula value
     * ``("substract", <Formula>, <Formula>, ...)`` -> using 1st of element to substract rest in the list
     * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
@@ -360,13 +369,15 @@ Pricing Method
 
 there are couple ways of pricing
 
-* Pricing by current balance 
+Pricing by Balance 
+^^^^^^^^^^^^^^^^^^^^^
 
   * ``["Current|Defaulted", a, b]``  -> Applies ``a`` as factor to current balance of a performing asset; ``b`` as factor to current balance of a defaulted asset
   * ``["Cuurent|Delinquent|Defaulted", a, b, c]`` -> same as above ,but with a ``b`` applies to an asset in deliquency.
   * ``["PV|Defaulted", a, b]`` ->  using ``a`` as pricing curve to discount future cashflow of performing asset while use ``b`` as factor to current balance of defautled asset.
 
-* Pricing by PV of future cashflow of assets 
+Pricing by Cashflow 
+^^^^^^^^^^^^^^^^^^^^^^^
 
   * ``["PVCurve", ts]`` -> using `ts` as pricing curve to discount future cashflow of all assets.
 
@@ -389,7 +400,7 @@ Day Count
 * ``DC_30_360_German`` -- ^ Gernman
 * ``DC_30_360_US``     -- ^ 30/360 US Municipal , Bond basis
 
-Indexs
+Indexes
 ^^^^^^^^^
 
 * ``LPR5Y``
@@ -749,7 +760,7 @@ a map represents history information of a `ongoing` deal.
 
 ``AccruedInterest``
   .. versionadded:: 0.23
-    
+
   This field will `claw back` interest in pool cashflow.
 
   .. code-block:: python
@@ -2149,22 +2160,36 @@ common properites
   * ``fee`` ->  premium feee to be used on ``lineOfCredit``
 
 
+Interest Rate Hedge 
+---------------------
+
+Index Hedge Base
+^^^^^^^^^^^^^^^^^^^
+A base could be:
+
+* a fixed value : ``{"fix":10000}``
+* a formula : ``{"formula": <Formula> }``
+* a schedule  :  ``{"schedule": <Ts>}`` , :ref:`Curve` type
+
+
 Interest Rate Swap
---------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 `Interest Rate Swap` is a 3rd party entity ,which can either deposit money into a SPV or collecting money from SPV. The direction of cashflow depends on the strike rate vs interest rate curve in assumption.
 
 it was modeled as a map ,with key as name to swap ,value serve as properties to swap. The very reason using a map becasue a deal can have multiple Swap contract.
 
-syntax:
-  * `settleDates` -> describe the setttlement dates .
-  * `pair` -> describe rates to swap (paying rate in left, receiving rate on right)
-  * `base` -> describe how reference balance is being updated 
-  * `start` -> when the swap contract come into effective
-  * `balance` -> (optional), current reference balance
-  * `lastSettleDate` -> (optional), last settle date which calculate `netcash`
-  * `netcash` -> (optional), current cash to pay/to collect 
-  * `stmt` -> (optional),transaction history
+Fields:
+  * ``settleDates`` -> :ref:`DatePattern`,describe the settlement dates .
+  * ``pair`` -> describe rates to swap (paying rate in left, receiving rate on right)
+    
+    it can be float to float , fix to float , or float to fix 
+  * ``base`` -> :ref:`Index Hedge Base`,describe how reference balance is being updated 
+  * ``start`` -> when the swap contract come into effective
+  * ``balance`` -> (optional), current reference balance
+  * ``lastSettleDate`` -> (optional), last settle date which calculate `netcash`
+  * ``netcash`` -> (optional), current cash to pay/to collect 
+  * ``stmt`` -> (optional),transaction history
 
 example: 
 
@@ -2176,6 +2201,43 @@ example:
                ,"base":{"formula":("poolBalance",)}
                ,"start":"2021-06-25"
                ,"balance":2093.87}
+  }
+
+Interest Rate Cap
+^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.23
+
+`Interest Rate Cap` serve as a 3rd party which will accrue cash if interest rate from assumption(:ref:`Interest Rate`) is higher than strike rate.
+
+Fields:
+  * ``index`` -> :ref:`Indexes` linked to .
+  * ``strike`` -> a :ref:`Curve` data 
+  * ``base`` -> :ref:`Index Hedge Base`,the notional balance
+  * ``start`` -> start date of cap
+  * ``end`` -> end date of cap
+  * ``settleDates`` -> :ref:`DatePattern`, settle dates
+  * ``rate`` ->  current reference rate
+  * ``lastSettleDate`` -> (optional), last settle date which calculate `netcash`
+  * ``netcash`` -> (optional), current cash to collect 
+  * ``stmt`` -> (optional), transaction history
+
+example: 
+
+.. code-block:: python
+
+  cap = {
+      "cap1":{"index":"LIBOR6M"
+              ,"strike":["2023-01-01",0.03
+                         ,"2024-01-01",0.05]
+              ,"base":{"fix":10000}
+              ,"start":"2022-01-01"
+              ,"end":"2025-01-01"
+              ,"settleDates":"QuarterEnd"
+              ,"rate":0.035
+              ,"lastSettleDate":"2023-06-01"
+              ,"netCash":100
+              }
   }
 
 Ledgers
