@@ -45,11 +45,10 @@ which shows current version of `absbox`
    A general rule is that the "MINOR" part shall be same. ( here the ``8`` )
    
 
-Github
---------------
+Github(Not Recommend)
+---------------------------
 
 User can install from Github.com as it is actively fixing new bugs and developing new features.
-Documents and sample code in this site are being test against with code from github.com
 
 .. code-block:: console
 
@@ -90,7 +89,7 @@ For public server list, please visit `absbox.org <https://absbox.org>`_
   * may provide less calculation performance 
   * suffer high network IO 
   * doesn't ganrantee the SLA. 
-  Pls don't use it in production.
+  Please don't use it in production.
 
 
 Use Private/In-House Server
