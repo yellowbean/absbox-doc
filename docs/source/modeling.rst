@@ -251,8 +251,16 @@ Ledger
     * ``("ledgerTxnAmount","L1")`` -> sum of ledger transaction 
     * ``("ledgerTxnAmount","L1",<comment>)`` -> sum of ledger transaction with <comment>
 
+Rate Hedge
+""""""""""""""""
+.. versionadded:: 0.23.3
 
-`formula` can be used to refer to  Integer/Bool/Ratio type data as well
+    * ``("rateSwapNet",<ratCapName>)`` -> get accrued cash to pay/collect of rate swap
+    * ``("rateCapNet",<ratCapName>)`` -> get accrued cash to collect of rate cap
+
+
+
+`formula` can be used to refer to `Integer`/ `Bool`/ `Ratio` type data as well
 
 Integer Type
 ^^^^^^^^^^^^^^
