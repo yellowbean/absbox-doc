@@ -49,5 +49,9 @@ test05 = Generic(
       ,["CollectedRecoveries","acc02"]]
     ,{"insuranceProvider":
          {"lineOfCredit":100,"start":"2021-06-15","fixRate":0.01
-          ,"rateAccDates":"MonthEnd","lastAccDate":"2021-06-15"}
-     })
+          ,"rateAccDates":"MonthEnd","lastAccDate":"2021-06-15"}}
+    ,None
+    ,None
+    ,None
+    ,("PreClosing","Amortizing")
+     )

@@ -59,7 +59,11 @@ GNMA_36208ALG4 = Generic(
       ,["CollectedPrepayment","acc01"]
       ,["CollectedRecoveries","acc01"]]
     ,{"Ginnie_Mae":{"type":"Unlimited","start":"2023-05-26"}}
-    ,None)
+    ,None
+    ,None
+    ,None
+    ,("PreClosing","Amortizing")
+    )
 
 
 r = localAPI.run(GNMA_36208ALG4

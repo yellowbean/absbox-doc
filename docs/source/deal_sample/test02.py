@@ -66,5 +66,6 @@ test01 = Generic(
           ,"effects":("newStatus","Accelerated")
           ,"status":False
           ,"curable":False}}}
+    ,("PreClosing","Amortizing")
 )
 

@@ -48,13 +48,17 @@ test01 = Generic(
       ,["CollectedPrepayment","acc01"]
       ,["CollectedRecoveries","acc01"]]
     ,None
-    ,None)
+    ,None
+    ,None
+    ,None
+    ,("PreClosing","Amortizing")
+    )
 
 from absbox import API
 
 #localAPI = API("<url to calculation engine>",'english')
 
 r = localAPI.run(test01,
-           runAssump=[("inspect",(["DayOfMonth",20],fm['formula']))],
-           read=True)
+                 runAssump=[("inspect",(["DayOfMonth",20],fm['formula']))],
+                 read=True)
 
