@@ -30,7 +30,8 @@ Deal modeling is a process to build deal class with descriptive components follo
   entities provides interest bearing/non-bearing support to shortfall of fee/interest or bond principal
 * Hedges (Optional) 
   
-  interest rate swap
+  * interest rate swap
+  * interest rate cap
 
 
 Structure of a `Generic` deal 
@@ -66,9 +67,10 @@ There are couple must-have components in a deal:
         Deal -> "Liquiditiy Provider" [label="Optional"]
         Deal -> Ledger [label="Optional"]
         Deal -> InterestRateSwap [label="Optional"]
+        Deal -> InterestCap [label="Optional"]
     }
 
-To model them in code:
+To model them via sequential parameter ( *Not Recommend* ):
 
 .. code-block:: python
 
@@ -84,9 +86,10 @@ To model them in code:
         ,<Waterfall Info>
         ,<Collection Rule>
         ,<Call settings>
-        ,<liquidation facilities>
-        ,<custom data/formula>
-        ,<triggers>
+        ,<Liquidation facilities>
+        ,<Custom data/formula>
+        ,<Triggers>
+        ,<Deal Status>
     )
 
 .. _Generic ABS:
