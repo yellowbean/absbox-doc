@@ -271,9 +271,9 @@ Ratio Type
 ^^^^^^^^^^^^
     * ``("bondFactor",)`` -> factor of bond
     * ``("poolFactor",)`` -> factor of pool
-    * ``("cumuPoolDefaultedRate",)`` -> cumulative default rate of pool
-    * ``("cumuPoolDefaultedRate",n)`` -> cumulative default rate of pool at `N` period. ( -1 means period before last period)
-    * ``("cumuPoolNetLossRate",)`` -> cumulative loss rate of pool
+    * ``("cumPoolDefaultedRate",)`` -> cumulative default rate of pool
+    * ``("cumPoolDefaultedRate",n)`` -> cumulative default rate of pool at `N` period. ( -1 means period before last period)
+    * ``("cumPoolNetLossRate",)`` -> cumulative loss rate of pool
     * ``("poolWaRate",)`` -> weighted average pool coupon 
     * ``("bondWaRate",<Bond1>,<Bond2>...)`` -> weighted average bond coupon
 
@@ -785,7 +785,7 @@ issuanceStat
 a map represents history information of a `ongoing` deal.
 
 ``IssuanceBalance``
-  Issuance balance of deal, which used to be queried via `poolFactor`, `cumuPoolDefaultedRate` etc 
+  Issuance balance of deal, which used to be queried via `poolFactor`, `cumPoolDefaultedRate` etc 
 
 ``AccruedInterest``
   .. versionadded:: 0.23
@@ -2387,7 +2387,7 @@ We can model these two like:
     ,["If",["or"
           ,["isPaidOff","A1","A2"]
           ,[">=","2009-06-30"]
-          ,[("cumuPoolNetLossRate",),"<",0.05]]
+          ,[("cumPoolNetLossRate",),"<",0.05]]
       ,["payPrin","acc01",["B"]]
       ,["payIntResidual","acc01","B"]]
     ....
