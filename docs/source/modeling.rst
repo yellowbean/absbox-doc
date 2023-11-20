@@ -454,6 +454,14 @@ Period
 * ``SemiAnnually``
 * ``Annually``
 
+Trigger Locations
+^^^^^^^^^^^^^^^^^^
+
+* ``BeforeCollect`` -> before pool collection waterfall
+* ``AfterCollect``  -> after pool collection waterfall
+* ``BeforeDistribution`` -> before bond pay waterfall
+* ``AfterDistribution``  -> after bond pay waterfall
+
 
 Components
 ============
@@ -644,7 +652,7 @@ one-off fee
 with a oustanding balance and will be paid off once it paid down to zero
 
 syntax
-  `fixFee` : total oustanding fee amount to be paid
+  ``{"fixFee": <balance>}`` : total oustanding fee amount to be paid
 
 .. code-block:: python
   
@@ -657,7 +665,7 @@ recurrance fee
 a fix amount fee which occurs by defined :ref:`DatePattern`
 
 syntax
-  `recurFee`:[ <DatePattern>,<new due amount on each DatePattern> ]
+  ``{"recurFee":[ <DatePattern>,<new due amount on each DatePattern> ]}``
 
 .. code-block:: python
     
@@ -678,7 +686,7 @@ like a fee is base on
   * ...
 
 syntax 
-  `pctFee`:[ <Formula>,<percentage> ]
+  ``{"pctFee":[ <Formula>,<percentage> ]}``
 
 .. code-block:: python
   
@@ -693,7 +701,7 @@ similar to `percentage fee` but it will use an annualized rate to multiply the v
 either reference to pool balance  or bond balance , etc.... it will accure type fee, which if not being paid, it will increase the due amount.
 
 syntax 
-  `annualPctFee`:[ <Formula>,<percentage> ]
+  ``{"annualPctFee":[ <Formula>,<percentage> ] }``
 
 .. code-block:: python
   
@@ -709,7 +717,7 @@ A user defined time series expenses, the date and amount can be customized.
 like 100 USD at 2022-1-20 and incur other 20 USD at 2024-3-2
 
 syntax 
-  `customFee`:[ [<Date>,<Amount>] .... ]
+  ``{"customFee":[ [<Date>,<Amount>] .... ]}``
 
 .. code-block:: python
   
@@ -813,8 +821,9 @@ Mortgage
 ``type``
   `type` field can be used to define either its `Annuity` type or `Linear` Type
 
-  * `Level` -> `Annuity`,`French`
+  * `Level` -> `Annuity`, `French` style
   * `Even` -> `Linear`
+  * `I_P` -> interest only till last payment; last payment will cover all oustanding balance 
 
 .. code-block:: python
 
@@ -832,7 +841,7 @@ Mortgage
 
 Prepayment Penalty
 """"""""""""""""""""""
-If ``Prepayment Penalty`` was modeled and any prepayment will be yield extra cashflow to the pool.
+If ``Prepayment Penalty`` was modeled and any prepayment will be yield extra cashflow from the pool.
 
 ``prepayPenalty``
 
@@ -1950,7 +1959,7 @@ There are 4 fields in ``Triggers``:
 Syntax of trigger
 ^^^^^^^^^^^^^^^^^^^^^^
 
-it is a must to specify ``Location``
+it is a must to specify :ref:`Trigger Locations`
 
 .. code-block:: python 
 
@@ -2386,19 +2395,6 @@ PayBond Sequential
    :emphasize-lines: 46,47
 
 
-Credit Enhancement
------------------------
-
-Interest Rate Swap
-^^^^^^^^^^^^^^^^^^^^
-
-* Setup a swap instrument ,merge it into a deal map
-* using shortcut `mkDeal` to create a generic deal object 
-* Swap can reference a notion with a `formula`
-
-.. literalinclude:: deal_sample/test10.py
-   :language: python
-
 Liquidity Provider 
 ---------------------------
 
@@ -2537,6 +2533,17 @@ Interest Rate Cap Hedge
 .. literalinclude:: deal_sample/rateCap.py
    :language: python
    :emphasize-lines: 48-61,63,71-72,35
+
+Interest Rate Swap
+^^^^^^^^^^^^^^^^^^^^
+
+* Setup a swap instrument ,merge it into a deal map
+* using shortcut `mkDeal` to create a generic deal object 
+* Swap can reference a notion with a `formula`
+
+.. literalinclude:: deal_sample/test10.py
+   :language: python
+
 
 
 Real World Transaction
