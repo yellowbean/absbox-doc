@@ -278,13 +278,13 @@ Ratio Type
     * ``("bondWaRate",<Bond1>,<Bond2>...)`` -> weighted average bond coupon
 
 Bool Type
-^^^^^^^
-    * ``("trigger", loc ,<trigger name>)`` -> trigger with name ``<trigger name>`` at ``loc`` status
+^^^^^^^^^^
+    * ``("trigger", loc ,<trigger name>)`` -> status of trigger with name ``<trigger name>`` at :ref:`Trigger Locations`
     * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
-    * ``("status", <deal status>)`` -> True if current deal status is :ref:`<Deal Status>`
-    * ``("rateTest", <formula>, <cmp>, rate)`` -> True if <formula> compare with a rate value
-    * ``("allTest", True|False, <boolean type ds>....)`` -> True if all boolean type ds are True
-    * ``("anyTest", True|False, <boolean type ds>....)`` -> True if any boolean type ds are True
+    * ``("status", <deal status>)`` -> True if current deal status is :ref:`Deal Status`
+    * ``("rateTest", <formula>, <cmp>, rate)`` -> True if :ref:`Formula` compare with a rate value
+    * ``("allTest", True|False, <boolean type ds>....)`` -> True if all boolean type ds are True/False
+    * ``("anyTest", True|False, <boolean type ds>....)`` -> True if any boolean type ds are True/False
 
 
 Or `formula` can be an arithmetic calculation on itselfies.
@@ -292,6 +292,8 @@ Or `formula` can be an arithmetic calculation on itselfies.
 Combination Type
 ^^^^^^^^^^^^^^
     * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
+
+      * ``("*", <Formula>, <Number>)`` same
     * ``("Max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
     * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
     * ``("sum", <Formula>, <Formula>, ...)`` -> sum of formula values
@@ -299,11 +301,16 @@ Combination Type
     * ``("/", <Formula>, <Formula>, ...)`` -> divide two formulas
     * ``("abs", <Formula>)`` -> absolute value of formula value
     * ``("substract", <Formula>, <Formula>, ...)`` -> using 1st of element to substract rest in the list
+
+      * ``("subtract",<Formula>,<Formula>,...)`` same
+      * ``("-",<Formula>,<Formula>,...)``  same
     * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
     * ``("floorWithZero", <Formula> )`` -> get value of <formula1> and floor with 0
     * ``("floorCap", <Formula1>, <Formula2>, <Formula3> )`` -> use <Formula1> as floor, <Formula2> as cap, and use <Formula3> as value
     * ``("capWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and cap with <formula2>
     * ``("constant", <Number>)``  -> a constant value
+
+      * ``("const", <Number>)`` same
     * ``("custom", <Name of user define data>)`` -> use a custom data
 
 
