@@ -456,6 +456,22 @@ Users are able to query values from any point of time ,using syntax ``(<DatePatt
              ,("QuarterFirst",("bondBalance",))
              ,....)
 
+   r = localAPI.run(test01
+                ,poolAssump = ("Pool",("Mortgage",{"CDR":0.01},None,None,None)
+                                        ,None
+                                        ,None)
+                ,runAssump = [("inspect",["MonthEnd",("poolFactor",)]
+                                        ,["MonthEnd",("trigger","AfterCollect","DefaultTrigger")]
+                                        ,['MonthEnd',("cumPoolDefaultedRate",)]
+                                        ,['MonthEnd',("status","Amortizing")]
+                                        ,['MonthEnd',("rateTest",("cumPoolDefaultedRate",),">=",0.00107)]
+                                        ,['MonthEnd',("anyTest", False
+                                                      ,("rateTest",("cumPoolDefaultedRate",),">=",0.00107)
+                                                      ,("trigger","AfterCollect","DefaultTrigger")
+                                                     )]
+                              )]
+                ,read=True)
+
 To view these data as map, with formula as key and a dataframe with time series as value. 
 
 .. code-block:: python
