@@ -1453,6 +1453,30 @@ syntax
 
   :ref:`Step-Up Coupon`
 
+Cap & Floor 
+""""""""""""""
+
+.. versionadded:: 0.23.4
+
+Bond Rate may subject to a optional cap or floor ,or both.
+
+syntax
+
+  cap
+  
+  :code:`"rateType":("cap",0.06, {"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"]})`
+
+  floor
+
+  :code:`"rateType":("floor",0.005, {"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"]})`
+
+  cap & floor
+
+  :code:`"rateType":("floor",0.005, ("cap",0.06 ,{"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"]}))`
+
+  :code:`"rateType":("cap",0.06, ("floor",0.005 ,{"floater":[0.05, "SOFR1Y",-0.0169,"MonthEnd"]}))`
+
+
 Principal 
 ^^^^^^^^^^^
 there are 4 types of `Principal` for bonds/tranches
