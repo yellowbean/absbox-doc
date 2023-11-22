@@ -285,6 +285,10 @@ Bool Type
     * ``("rateTest", <formula>, <cmp>, rate)`` -> True if :ref:`Formula` compare with a rate value
     * ``("allTest", True|False, <boolean type ds>....)`` -> True if all boolean type ds are True/False
     * ``("anyTest", True|False, <boolean type ds>....)`` -> True if any boolean type ds are True/False
+    
+    .. versionadded:: 0.23.4
+
+    * ``("isPaidOff", "A", "B", "C"...)`` -> True if all "A","B","C" bonds are paid off
 
 
 Or `formula` can be an arithmetic calculation on itselfies.
