@@ -1641,7 +1641,7 @@ PayFee
   syntax
     ``["payFee", {Account}, [<Fee>], {'limit':<limit> , 'support':<supports>}]``
   
-  * ``<limit>`` :ref:`<limit>`
+  * ``<limit>`` -> :ref:`<limit>`
   
     * ``{"balPct": 0.6}`` , pay up to 60% of due amount
     * ``{"balCapAmt": 500}`` ,  pay up to 500.
@@ -1649,6 +1649,18 @@ PayFee
  
     ie. ``["payFee", "CashAccount", ["ServiceFee"], {"balPct":0.1}]``
   
+  * ``support`` -> :ref:`<support>`
+
+PayFeeBySeq 
+  .. versionadded:: 0.23.4
+  pay to a list of fee sequentially ,with option to specify limit and support
+
+  snytax
+    ``["payFeeBySeq", <Account>, [<Fee>]]``
+    
+    ``["payFeeBySeq", <Account>, [<Fee>], m]``
+
+  * ``<limit>`` -> :ref:`<limit>`
   * ``support`` -> :ref:`<support>`
 
 
@@ -1690,6 +1702,19 @@ PayInt
       * ``limit`` -> :ref:`<limit>`
       * ``support`` -> :ref:`<support>`
 
+PayIntBySeq
+  .. versionadded:: 0.23.4
+  pay interest to bonds sequentially
+
+  syntax
+    ``["payIntBySeq", {Account}, [<Bonds>]]``
+    
+    ``["payIntBySeq", {Account}, [<Bonds>], m ]``
+    
+    `m`is just a map same in the `payFee` , which has keys :
+
+      * ``limit`` -> :ref:`<limit>`
+      * ``support`` -> :ref:`<support>`
   
 AccrueAndPayInt 
   accrue interest and pay interset to a bond till due int balance is 0
@@ -1706,6 +1731,23 @@ AccrueAndPayInt
   .. code-block:: python
     
     ["accrueAndPayInt","acc01",["A1","A2"],{"limit":{"formula":("constant",2)}}]
+
+AccrueAndPayIntBySeq
+  accrue interest and pay interset to bonds sequentially till due int balance is 0
+
+  syntax
+    ``["accrueAndPayIntBySeq", {Account}, [<Bonds>] ]``
+
+    ``["accrueAndPayIntBySeq", {Account}, [<Bonds>], m ]``
+    `m` is a map with 
+
+      * ``limit`` -> :ref:`<limit>`
+      * ``support`` -> :ref:`<support>`
+    
+  .. code-block:: python
+    
+    ["accrueAndPayIntBySeq","acc01",["A1","A2"],{"limit":{"formula":("constant",2)}}]
+
 
 PayPrin 
   pay principal to a bond till due principal balance is 0
@@ -1734,10 +1776,11 @@ PayPrin
                                         ,("poolBalance",), 0.12))}]
 
 PayPrinBySeq 
+  .. versionadded:: 0.23.4
   pay principal to a list of bond sequentially ,with option to specify limit
 
   syntax
-    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, with optional cap in `m` , new in 0.23, :ref:`PayBond Sequential`
+    ``["payPrinBySeq", {Account}, [<Bonds>], m ]``  # pay bonds by sequential, with optional cap in `m` ,:ref:`PayBond Sequential`
 
     `m`is just amp same in the `payFee` , which has keys :
 
