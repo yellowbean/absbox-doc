@@ -302,15 +302,14 @@ Combination Type
     * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
 
       * ``("*", <Formula>, <Number>)`` same
-    * ``("Max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
-    * ``("Min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
+    * ``("max", <Formula>, <Formula>, ...)`` -> get the higher value in the list
+    * ``("min", <Formula>, <Formula>, ...)`` -> get the lower value in the list
     * ``("sum", <Formula>, <Formula>, ...)`` -> sum of formula values
     * ``("avg", <Formula>, <Formula>, ...)`` -> average of formula values
     * ``("/", <Formula>, <Formula>, ...)`` -> divide two formulas
     * ``("abs", <Formula>)`` -> absolute value of formula value
-    * ``("substract", <Formula>, <Formula>, ...)`` -> using 1st of element to substract rest in the list
+    * ``("subtract", <Formula>, <Formula>, ...)`` -> using 1st of element to substract rest in the list
 
-      * ``("subtract",<Formula>,<Formula>,...)`` same
       * ``("-",<Formula>,<Formula>,...)``  same
     * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
     * ``("floorWithZero", <Formula> )`` -> get value of <formula1> and floor with 0
@@ -353,6 +352,7 @@ Compare with a curve
 
 Date Based Condition
 ^^^^^^^^^^^^^^^^^^^^
+
 * ``["<",date]`` -> before certain date
 * ``[">",date]`` -> after certain date
 * ``["<=",date]`` -> On or beore certain date
@@ -360,6 +360,9 @@ Date Based Condition
 
 Deal Status 
 ^^^^^^^^^^^^^^^^^^^^
+
+available status :ref:`Deal Status`
+
 * ``["status", "Amortizing"]`` -> true if current status is `Amortizing`
 * ``["status", "Revolving"]`` -> true if current status is `Revolving`
 * ``["status", "Accelerated"]`` -> true if current status is `Accelerated`
@@ -368,8 +371,10 @@ Deal Status
 * ``["status", "Ended"]`` -> true if current status is `Ended`
 
 
+
 Nested Condition
 ^^^^^^^^^^^^^^^^^^^^
+
 * ``["all",<condition>,<condition>....]`` -> true if all of <condition> is true
 * ``["any",<condition>,<condition>....]`` -> true if any of <condition> is true
 
