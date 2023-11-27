@@ -226,7 +226,11 @@ Pool
     * ``("cumPoolDefaultedBalance",)``  -> pool cumulative defaulted balance 
     * ``("cumPoolNetLoss",)`` -> pool cumulative pool net loss balance
     * ``("cumPoolRecoveries",)`` -> pool cumulative recoveries
-    * ``("borrowerNumber",)`` -> number of borrower
+    * ``("cumPoolCollection", <field1>,<field2>....)`` -> pool cumulative on <field...> fields :ref:`Pool Sources`
+    * ``("cumPoolCollectionTill", N,<field1>,<field2>....)`` -> pool cumulative on <field...> fields till Period N :ref:`Pool Sources`
+    * ``("curPoolCollection", <field1>,<field2>...)``   -> pool current sum of fields
+    * ``("curPoolCollectionTill", N,<field1>,<field2>...)``   -> pool current sum of fields till Period N
+  
 Accounts
 """""""
     * ``("accountBalance",)`` -> sum of all account balance
@@ -473,6 +477,19 @@ Trigger Locations
 * ``BeforeDistribution`` -> before bond pay waterfall
 * ``AfterDistribution``  -> after bond pay waterfall
 
+Pool Sources
+^^^^^^^^^^^^^^^^^
+
+* ``Interest``, ``CollectedInterest``
+* ``Principal``, ``CollectedPrincipal``
+* ``Recovery``, ``CollectedRecoveries``
+* ``Prepayment``, ``CollectedPrepayment``
+* ``Rental``, ``CollectedRental``
+* ``Cash``, ``CollectedCash``
+* ``Defaults`` 
+* ``Delinquencies``
+* ``Losses``
+
 
 Components
 ============
@@ -501,7 +518,7 @@ PreClosing Deal dates
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. warning::
-    if deal was modeled as `PreClosing` ,user has to include a ``new status`` in deal status ("PreClosing","<new status>"")
+    if deal was modeled as `PreClosing` ,user has to include a ``new status`` in deal status (``PreClosing``, ``<new status>``)
 
 if it is ``preclosing`` stage ( the deal has not been issued yet )
 
@@ -1848,8 +1865,9 @@ Buy Asset
     
     ``["buyAsset",{pricing method}, {Account}, {limit}]``
 
-    ``limit`` :
-      * {"formula": :ref:`Formula`}
+    ``limit`` : {"formula": :ref:`Formula`}
+
+    ``{pricing method}``: :ref:`Pricing Method`
       
 
 Liquidtiy Facility 
