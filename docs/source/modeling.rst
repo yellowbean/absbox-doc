@@ -262,14 +262,15 @@ Rate Hedge
     * ``("rateSwapNet",<ratCapName>)`` -> get accrued cash to pay/collect of rate swap
     * ``("rateCapNet",<ratCapName>)`` -> get accrued cash to collect of rate cap
 
-
-
 `formula` can be used to refer to `Integer`/ `Bool`/ `Ratio` type data as well
 
 Integer Type
 ^^^^^^^^^^^^^^
     * ``("borrowerNumber",)`` -> number of borrower
     * ``("monthsTillMaturity","A")``  -> number of months till the maturity date of bond A
+    .. versionadded:: 0.23.5
+    * ``("periodNum",)``  -> number of pool collection periods collected during *PROJECTION*
+
 
 Ratio Type
 ^^^^^^^^^^^^
@@ -765,7 +766,7 @@ count type fee
 The fee due equals to a number multiply a unit fee. The number is a formula reference.
 
 syntax 
-  `numFee`:[ <DatePattern>, <Formula>, <Amount> ]
+  ``{"numFee":[ <DatePattern>, <Formula>, <Amount> ]}``
 
 .. code-block:: python
   
@@ -778,11 +779,24 @@ target amount fee
 The fee due amount is equal to ``max ( <Formula 1> - <Formula 2>,0)``
 
 syntax
-  `targetBalanceFee`:[<Formula 1> <Formula 2>]
+  ``{"targetBalanceFee:[<Formula 1> <Formula 2>]}``
 
 .. code-block:: python 
+
    ("VAT"
      ,{"type":{"targetBalanceFee":[("poolBalance",),("bondBalance",)]))
+
+
+fee by collection periods
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. versionadded:: 0.23.5
+
+The fee due amount depends on the number of collection peirods collected.
+
+.. code-block:: python 
+
+   #period , serviceFee charge 15 in each period
+   ("serviceFee", {"type":{"byPeriod":15}})
 
 
 
