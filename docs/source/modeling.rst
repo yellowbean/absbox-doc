@@ -379,8 +379,12 @@ Nested Condition
 * ``["all",<condition>,<condition>....]`` -> true if all of <condition> is true
 * ``["any",<condition>,<condition>....]`` -> true if any of <condition> is true
 
+Curve & Table 
+----------------
+
 Curve
-----------
+^^^^^^^^^^^^^^^^
+
 ``Curve`` was an abstract type of a series time-depend data points, which are being used in couple components:
 
 * Bond Schedule Amortization balance
@@ -394,6 +398,20 @@ To build a ``Curve`` , just a list of 2-element list
 .. code-block:: python
 
   [["2022-01-01",150],["2022-02-01",200]]
+
+Table
+^^^^^^^^^^^^^^^^
+
+``Table`` is just a table with two columns *ONLY* , it serves a purpose of mapping from value of type A to value of type B.
+
+.. code-block:: python
+
+  [[10,150],[20,200]]
+
+  [["A",150],["B",200]]
+
+  [[100,"A"],[200,"B"]]
+
 
 Pricing Method
 ----------------
