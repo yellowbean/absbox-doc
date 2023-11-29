@@ -697,6 +697,32 @@ syntax
   * ``"feeDue"`` ->    total oustanding due amount 
   * ``"feeLastPaidDate"`` -> the date when last paid
 
+.. warning::
+
+  Auto Accrue Type Fee will calculate due amount of fee automatically. 
+  
+  User shouldn't accrue them mannually in waterfall again.
+
+.. list-table:: Auto Accrue Type Fee
+   :header-rows: 1
+
+   * - Fee Type
+     - Auto Accrural ? 
+   * - ``RecurFee``
+     - Yes
+   * - ``FixFee``
+     - Yes
+   * - ``FeeFlow``
+     - Yes
+   * - ``NumFee``
+     - Yes
+   * - ``Fee by table``
+     - Yes
+   * - Others 
+     - No
+
+
+
 
 one-off fee
 ^^^^^^^^^^^^^^^^^^
