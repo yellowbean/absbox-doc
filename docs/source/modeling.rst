@@ -793,11 +793,30 @@ fee by collection periods
 
 The fee due amount depends on the number of collection peirods collected.
 
-.. code-block:: python 
+syntax
+  ``{"byPeriod":<Amount Per Period>}``
+
+.. code-block:: python
 
    #period , serviceFee charge 15 in each period
    ("serviceFee", {"type":{"byPeriod":15}})
 
+fee by table
+^^^^^^^^^^^^^^^
+.. versionadded:: 0.23.5
+
+The fee due amount depends on a :ref:`Formula` based value and look up in table.
+
+syntax
+  ``{"byTable": [ <DatePattern>, <Formula>, <Table>]}``
+
+.. code-block:: python
+
+   #look up table with value of pool balance * 0.01
+   ("serviceFee", {"type":{"byTable":["MonthEnd"
+                                      ,("*",("poolBalance",),0.01)
+                                      ,[(0,5),(2,10),(10,15)]]
+                                   }})
 
 
 Pool
@@ -2628,6 +2647,19 @@ Book Ledger
 .. literalinclude:: deal_sample/book.py
    :language: python
    :emphasize-lines: 43-44,62
+
+Expenses Sample
+-------------------
+
+.. versiondadd:: 0.23.5
+
+* fix amount of fee for each collection period
+* fee by a table,lookup by a formula
+
+.. literalinclude:: deal_sample/fee1.py
+   :language: python
+   :emphasize-lines: 33-37
+
 
 Use Rate Hedge
 --------------------
