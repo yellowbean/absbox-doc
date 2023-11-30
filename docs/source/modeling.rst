@@ -288,7 +288,6 @@ Bool Type
     * ``("isMostSenior","A",["B","C"])`` -> True if the bond "A" is oustanding and "B" and "C" are not outsanding
     * ``("status", <deal status>)`` -> True if current deal status is :ref:`Deal Status`
     * ``("rateTest", <formula>, <cmp>, rate)`` -> True if :ref:`Formula` compare with a rate value
-    * ``("isPaidOff", <bond name1>, <bond name2>...)`` -> True if all bonds are paid off
     * ``("allTest", True|False, <boolean type ds>....)`` -> True if all boolean type ds are True/False
     * ``("anyTest", True|False, <boolean type ds>....)`` -> True if any boolean type ds are True/False
     
