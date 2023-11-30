@@ -771,6 +771,9 @@ syntax
   
   ("bond_service_fee"
       ,{"type":{"pctFee":[("bondBalance",),0.02]}})
+  
+  ("bond_service_fee"
+      ,{"type":{"pctFee":[("cumPoolDefaultedBalance",),0.03]}})
 
 
 annualized fee
