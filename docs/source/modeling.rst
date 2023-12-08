@@ -1790,11 +1790,34 @@ Bond
 ^^^^^^
 
 Calc Bond Int
-  calculate the due balance of a bond
+  calculate the due interest of a bond
     
   syntax
     ``["calcInt", <Bond1> , <Bond2> ... ]``
- 
+
+  .. versionadded:: 0.24.0
+  calculate the due interest of a bond with customized interest rate and balance
+
+  syntax
+    ``["calcIntBy", (<Balance Formula>,<Rate Formula>|float) , <Bond1>]``
+
+  .. code-block:: python
+    
+    # same as ["calcInt","A1"]
+    ["calcIntBy",(None,None),"A1"]
+
+    # accrue bond with fix balance of 2000, and a fix rate of 14%
+    ["calcIntBy",(("const",2000),0.14),"A1"] 
+    
+    # accrue with a formula reference to a balance value
+    ["calcIntBy",(("bondBalance","B"),0.14),"A1"]
+    
+    # accrue with a formula reference to a balance value
+    ["calcIntBy",(("bondBalance","B"),0.14),"A1"]
+    
+    # accure with inflated interest rate up with 50%
+    ["calcIntBy",(None,("*",("bondRate","A1"),1.5)),"A1"]
+
 PayInt 
   pay interset to a bond till due int balance is 0
 
