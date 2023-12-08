@@ -787,7 +787,7 @@ syntax
 .. code-block:: python
   
   ("servicer_fee"
-      ,{"type":{"annualPctFee":["poolBalance",0.02]}})
+      ,{"type":{"annualPctFee":[("poolBalance",),0.02]}})
 
 
 custom fee flow
