@@ -1020,11 +1020,40 @@ powered by `pyxirr`, user have option to calculate the IRR of a bond.
 * 2nd `init` represent `initial investment` a tuple with first as date of invesment and second as monetary amount of investment
 
 
+.. versionchanged:: 0.23.4
+
 .. code-block:: python
 
-   from absbox.local.util import irr
+   from absbox.local.analytics import irr
    irr(r['bonds']['A1'],init=('2021-06-15',-70))
 
 
+Plotting
+-------------------------
+
+a collection of functions to plot `not-so-bad` charts with ``matplotlib``
+
+.. versionadded:: 0.23.4
+
+Plot Deal Balance Sheet
+^^^^^^^^^^^^^^^^^^^^
+* Prerequisite: user request a :ref:`Financial Reports` in deal run assumption
+
+syntax:
+  ``plot_bs(<deal after run>)``
+
+
+Plot Deal Cash Flow
+^^^^^^^^^^^^^^^^^^^^
+* Prerequisite: user request a :ref:`Financial Reports` in deal run assumption
+
+Plot Bond Flow
+^^^^^^^^^^^^^^^^^^^^
+
+* Prerequisite: user request a :ref:`Financial Reports` in deal run assumption
+
+
+Plot Bond OC
+""""""""""""""
 
 

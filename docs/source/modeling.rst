@@ -924,6 +924,61 @@ a map represents history information of a `ongoing` deal.
 ``HistoryPrepayment``
   Cumulative Prepayment paid as of ``last collection`` date 
 
+Multiple Pools 
+^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.24.0
+
+A deal may be setup with a multiple pools with a name.
+
+.. code-block:: python
+
+  "pool":{"PoolA":{'assets':[["Mortgage"
+                    ,{"originBalance":2200,"originRate":["fix",0.045],"originTerm":30
+                      ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
+                      ,{"currentBalance":2200
+                      ,"currentRate":0.08
+                      ,"remainTerm":30
+                      ,"status":"current"}]]},
+          "PoolB":{'assets':[["Mortgage"
+                    ,{"originBalance":1100,"originRate":["fix",0.045],"originTerm":30
+                      ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
+                      ,{"currentBalance":1100
+                      ,"currentRate":0.08
+                      ,"remainTerm":30
+                      ,"status":"current"}]]}
+  }
+
+or, it's possbile to include different asset type in same deal:
+
+.. code-block:: python 
+
+  "pool":{"PoolA":{'assets':[["Mortgage"
+                    ,{"originBalance":2200,"originRate":["fix",0.045],"originTerm":30
+                      ,"freq":"Monthly","type":"Level","originDate":"2021-02-01"}
+                      ,{"currentBalance":2200
+                      ,"currentRate":0.08
+                      ,"remainTerm":30
+                      ,"status":"current"}]]},
+          "PoolB":{'assets':[["Loan"
+                          ,{"originBalance": 80000
+                            ,"originRate": ["floater",0.045,{"index":"SOFR3M"
+                                                            ,"spread":0.01
+                                                            ,"reset":"QuarterEnd"}]
+                            ,"originTerm": 60
+                            ,"freq": "Monthly"
+                            ,"type": "i_p"
+                            ,"originDate": "2021-02-01"}
+                          ,{"currentBalance": 65000
+                            ,"currentRate": 0.06
+                            ,"remainTerm": 60
+                            ,"status": "Current"}]]}
+        }
+
+Pls make sure there are couple adjustment to set assumptions and get result.
+
+.. seealso:: :ref:`Multiple Pool with mixed assets`
+
 
 
 Mortgage
@@ -1514,7 +1569,9 @@ optional fields:
 Interest
 ^^^^^^^^^^^
 
-there are 3 types of `Interest` settings for bonds
+there are 3 types of `Interest` settings for bonds. 
+
+.. seealso:: User has the option to accrue with custom rate / custom balance in waterfall action ``calIntBy``
 
 
 Fix Rate 
@@ -1799,11 +1856,10 @@ Calc Bond Int
   calculate the due interest of a bond with customized interest rate and balance
 
   syntax
-    ``["calcIntBy", (<Balance Formula>,<Rate Formula>|float) , <Bond1>]``
+    ``["calcIntBy", (<Formula>,<Formula>|float) , <Bond1>]``
 
   .. code-block:: python
-    
-    # same as ["calcInt","A1"]
+
     ["calcIntBy",(None,None),"A1"]
 
     # accrue bond with fix balance of 2000, and a fix rate of 14%
@@ -2590,6 +2646,18 @@ PayBond Sequential
 .. literalinclude:: deal_sample/payPrinSeq.py
    :language: python
    :emphasize-lines: 46,47
+
+
+Pool Examples
+-----------------
+
+Multiple Pool with mixed assets 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. literalinclude:: deal_sample/multi_pool.py
+   :language: python
+   :emphasize-lines: 13-33,73-82,90,56-57,51
+
 
 
 Liquidity Provider 
