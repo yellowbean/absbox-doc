@@ -231,6 +231,10 @@ Pool
     * ``("curPoolCollection", <field1>,<field2>...)``   -> pool current sum of fields
     * ``("curPoolCollectionTill", N,<field1>,<field2>...)``   -> pool current sum of fields till Period N
   
+.. versionadded:: 0.24.1
+
+    * ``("schedulePoolValuation", <pricing method>, <pool name1>, <pool name2>..)`` -> get valuation on schedule cashflow from specific pool or all pools with :ref:`Pricing Method` 
+  
 Accounts
 """""""
     * ``("accountBalance",)`` -> sum of all account balance
@@ -430,6 +434,13 @@ Pricing by Cashflow
 ^^^^^^^^^^^^^^^^^^^^^^^
 
   * ``["PVCurve", ts]`` -> using `ts` as pricing curve to discount future cashflow of all assets.
+
+Pricing by a rate
+^^^^^^^^^^^^^^^^^^^^^^^
+
+  * ``[PvRate, r]``  -> price with a fixed annualized rate
+  * ``[PvRate, <rate formula> ]`` -> using a rate formula, :ref:`Ratio Type`
+
 
 Constants
 --------------
@@ -2785,6 +2796,25 @@ Book Ledger
 .. literalinclude:: deal_sample/book.py
    :language: python
    :emphasize-lines: 43-44,62
+
+Yield Supplement Overcollateralization 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. warning:: this is NOT a complete example!!
+
+the core concept of ``Yield Supplement Overcollateralization`` is 
+
+* price the Schduled cashflow of the pool remaining with two rates ( rate being used, and  a rate of higher of required rate or rate being used )
+* subtract the two value, that's amount can be used to paid off to ensure a senior tranche is safe comparing to balance of pool
+* usually , there is a constant OC% needed to inflat the OC over adjusted pool balance.
+
+.. versiondadd:: 0.24.1
+
+.. literalinclude:: deal_sample/ysoc.py
+   :language: python
+   :emphasize-lines: 42-45,57-60
+
+
 
 Expenses Sample
 -------------------
