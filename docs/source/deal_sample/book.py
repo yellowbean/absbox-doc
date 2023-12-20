@@ -48,7 +48,7 @@ deal_data = {
     ,"ledgers":{"myLedger":{"balance":100}}
 }
 
-from absbox import API,mkDeal
+from absbox import API, mkDeal
 localAPI = API("http://localhost:8081",check=False)
 
 deal = mkDeal(deal_data)

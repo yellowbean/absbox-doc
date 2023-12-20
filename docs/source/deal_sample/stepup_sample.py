@@ -1,4 +1,4 @@
-from absbox.local.generic import Generic
+from absbox import Generic
 
 test06 = Generic(
     "Step Up bond"

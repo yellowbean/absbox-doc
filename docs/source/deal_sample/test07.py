@@ -1,4 +1,4 @@
-from absbox.local.generic import Generic
+from absbox import Generic
 
 BMW202301 = Generic(
     "BMW Auto"

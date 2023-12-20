@@ -1,4 +1,4 @@
-from absbox import mkDeal,Generic
+from absbox import mkDeal, API
 
 deal_data = {
     "name":"Sample with Interest Swap"

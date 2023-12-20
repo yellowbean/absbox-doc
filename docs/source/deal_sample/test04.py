@@ -1,4 +1,4 @@
-from absbox.local.generic import Generic
+from absbox import Generic
 
 test04 = Generic(
     "split pool income"

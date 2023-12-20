@@ -74,7 +74,7 @@ To model them via sequential parameter ( *Not Recommend* ):
 
 .. code-block:: python
 
-    from absbox.local.generic import Generic
+    from absbox import Generic
     
     generalDeal = Generic(
         "Deal Name/Description"
@@ -162,7 +162,7 @@ Building Blocks
 
 .. code-block:: python
     
-    from absbox.local.generic import Generic
+    from absbox import Generic
 
 
 There are 5 reusable building blocks: ``<DatePattern>``, ``<Formula>``, ``<Condition>``, ``<Curve>``, ``<Pricing Method>``, all of them are being used in different components.

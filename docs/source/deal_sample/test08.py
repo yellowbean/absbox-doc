@@ -1,4 +1,4 @@
-from absbox import API
+from absbox import API,Generic
 
 asset = ["AdjustRateMortgage"
         ,{"originBalance":73_875.00

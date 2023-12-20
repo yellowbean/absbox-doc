@@ -430,7 +430,7 @@ syntax:
 
 .. code-block:: python
 
-   from absbox.local.generic import Generic
+   from absbox import Generic
    ## interest on asset
    r = localAPI.run(test01
                   ,runAssump=[("interest"
@@ -486,7 +486,7 @@ But, the values are a dataframe with single column, how to view all the variable
 
 .. code-block:: python
    
-   from absbox.local.util import unifyTs
+   from absbox import unifyTs
 
    unifyTs(r['result']['inspect'].values())
 

@@ -222,8 +222,29 @@ Strucuring a deal may looks intimidating, while the process is simple:
 2. Swap them into the deal, build the multiple deals
 3. Compare the new result of interest,back to Step 2 if result is not desired.
 
+Two methods to construct structuring plans 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: build deal plans
+    :alt: build deal plans
+    :align: center
+
+    digraph {
+        b -> "mkDealsBy" [label="use dataclasses"]
+        b -> "setDealsBy,prodDealsBy" [label="use Lenses"]
+        "setDealsBy,prodDealsBy"
+        "mkDealsBy"
+        b [shape=diamond, label="build mulitple deals"]
+    }
+
+
+``mkDealsBy()``
+^^^^^^^^^^^^^^^
+
 Build components
-^^^^^^^^^^^^^^^^^^
+""""""""""""""""""
 
 Assume we have already a base line model called :ref:`subordination exmaple <exmaple-01>` , now we want to see how differnt issuance size and issuance rate of the bonds would affect the pricing/bond cashflow.
 (rationale : the smaller issuance size would require lower interest rate as short WAL)
@@ -255,10 +276,8 @@ Assume we have already a base line model called :ref:`subordination exmaple <exm
 Now we have ``bond_plan`` which has two bonds components, represents two different liability sizing structure.
 (Same method applies to swapping different ``pool`` as well, user can swap different pool plans to structuring deals)
 
-
-
 Build multiple deals
-^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""
 
 1. Now we need to build a dict with named key.
 2. Call ``mkDealsBy()`` ,which takes a base deal, and a dict which will be swaped into the base deal. It will return a map with same key of `bond_plan`, with new deals as value.
@@ -268,16 +287,51 @@ Build multiple deals
 
   bond_plan_with_name = dict(zip(["SmallSenior","HighSenior"],bond_plan))
 
-  from absbox.local.util import mkDealsBy
+  from absbox import mkDealsBy
 
   differentDeals = mkDealsBy(test01,bond_plan_with_name)
   
   differentDeals['HighSenior']
 
 
+``setDealsBy() / proDealsBy()``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.24.2
+
+There are two new functions introduced after version ``0.24.2``, Both functions are quite small (only 12 lines of code!), but thanks to `lenses` package of python, they are good enough to generate a bunch variants of deal. The return deal map would be used to run sensitivity analysis.
+
+syntax
+  ``setDealsBy(baseDealObject:SPV|Generic, (path1,value1), (path2,value2)....., init=<common path>, )``
+
+  * `baseDealObject` -> a SPV or Generic class
+  * `(path1,value1)....` -> pairs with (`lens`, `value`) ,which the value will be set to specific location of deal object. The `lens` can be anything ,condtional, or apply with a function, see https://github.com/ingolemo/python-lenses
+  * `init` -> a common path with will be patch to head of `pathN`
+
+syntax
+  ``prodDealsBy(baseDealObject:SPV|Generic,(path1,[value1,value2,value3]),(path2,[valueA,valueB]),init=<common path> )``
+  
+  * `baseDealObject` -> a SPV or Generic class
+  * `init` -> a common path with will be patch to head of `pathN`
+
+ The difference is that ``setDealsBy()`` will update the deal obj with paths/vals and return a SINGLE deal object.
+ While ``prodDealsBy`` , the prefix ``prod`` means *cartisian product* ,it will run all permunations of deals.
+
+The pitfall so far, the `key` of return map is need to fix in the future.
+
+Exmaple
+""""""""""""
+
+.. literalinclude:: deal_sample/structuring_sample.py
+   :language: python
+   :emphasize-lines: 56-59,62-66
+
+
 Set Assumption & Get Result 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Once a map is ready with string as keys, and deal object ( ``Generic`` class ) as values.
+  
 To run mulitple deal with same assumptions ,use ``runStructs()``
 
 .. code-block:: python
@@ -348,7 +402,11 @@ Run with candy function
 .. code-block:: python
 
   # impor the candy function
+  ## before 0.24.2
   from absbox.local.analytics import run_yield_table
+
+  ## after 0.24.2
+  from absbox import run_yield_table
 
   from absbox import API
   localAPI = API("https://absbox.org/api/latest")

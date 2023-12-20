@@ -45,8 +45,8 @@ deal_data = {
     ,"status":("PreClosing","Amortizing")
 }
 
-from absbox import API,mkDeal
-localAPI = API("http://localhost:8081",check=False)
+from absbox import API, mkDeal
+localAPI = API("http://localhost:8081", check=False)
 
 trigger = {
     "AfterCollect":

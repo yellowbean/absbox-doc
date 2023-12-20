@@ -1,4 +1,4 @@
-from absbox.local.generic import Generic
+from absbox import Generic
 
 test05 = Generic(
     "liquidation provider with interest"
