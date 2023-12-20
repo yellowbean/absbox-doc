@@ -232,11 +232,16 @@ Two methods to construct structuring plans
     :align: center
 
     digraph {
-        b -> "mkDealsBy" [label="use dataclasses"]
-        b -> "setDealsBy,prodDealsBy" [label="use Lenses"]
-        "setDealsBy,prodDealsBy"
-        "mkDealsBy"
-        b [shape=diamond, label="build mulitple deals"]
+        b -> "mkDealsBy()" [label="use dataclasses"]
+        b -> "setDealsBy(),prodDealsBy()" [label="use Lenses"]
+        "setDealsBy(),prodDealsBy()" -> Deals
+        "mkDealsBy()" -> Deals
+        Deals -> runStructs
+        "Pool Assumption" -> runStructs
+        "Deal Run Assumption" -> runStructs
+        Deals [label="A map(k=string,value=deal objs)"]
+        b [shape=diamond, label="Base Deal"]
+        runStructs -> "Result Map" [label="A map(k=string,value=deal run results)"]
     }
 
 
