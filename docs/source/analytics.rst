@@ -926,6 +926,10 @@ It is common to performn sensitivity analysis to get answers to:
 
 That's where we need to have a  `Multi-Scneario` run .
 
+
+
+
+
 Multi-Scenario
 ^^^^^^^^^^^^^^^^^
 
@@ -991,6 +995,11 @@ That's where we need to have a `Multi-Structs` run .
 
   # deal run result using structure test 02
   r["B"]
+
+.. seealso::
+  :ref:`How to structuring a deal`
+
+
 
 Retriving Results
 ^^^^^^^^^^^^^^^^^^^^^
