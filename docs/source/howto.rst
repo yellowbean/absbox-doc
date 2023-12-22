@@ -169,7 +169,7 @@ Then, project the cashflow with:
   r['pool']['flow'] # Now you shall able to view the loan level cashflow ! 
 
 .. warning::
-  if the `run()` call was slow, probably it is caused by network IO or CPU on the server, pls consider using a local docker image instead.
+  if the `run()` call taking too much time, probably it is caused by network IO or CPU on the server, pls consider using a local docker image instead.
 
 Conclusion
 ^^^^^^^^^^^^^^
@@ -318,11 +318,14 @@ syntax
   
   * `baseDealObject` -> a SPV or Generic class
   * `init` -> a common path with will be patch to head of `pathN`
+  * `guessKey` -> default to `False`.
 
  The difference is that ``setDealsBy()`` will update the deal obj with paths/vals and return a SINGLE deal object.
  While ``prodDealsBy`` , the prefix ``prod`` means *cartisian product* ,it will run all permunations of deals.
 
-The pitfall so far, the `key` of return map is need to fix in the future.
+ If user pass ``guessKey=True``, the wrapper will try to `guess` a user readable string from `lenses` as key of the deal map.
+
+
 
 Exmaple
 """"""""""""
