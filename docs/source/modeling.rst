@@ -346,6 +346,12 @@ Compare with a number
 * ``[<formula>,"<=",val]`` -> true when <formula> less or equals than a value
 * ``[<formula>,"=",val]`` -> true when <formula> equals to a value
 
+Compare with a bool
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* ``[<formula>,True]`` -> true when <formula> is equal to `True`
+* ``[<formula>,False]`` -> true when <formula> is equal to `False`
+
 Compare with a curve
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
