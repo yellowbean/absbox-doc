@@ -933,7 +933,34 @@ That's where we need to have a  `Multi-Scneario` run .
 Multi-Scenario
 ^^^^^^^^^^^^^^^^^
 
-if passing `assumptions` with a dict. Then the key will be treated as `secnario name`, the value shall be same as single scneario cases.
+if passing `assumptions` with a dict. Then the key will be treated as `secnario name`, the value shall be same as single scneario assumptions.
+
+There are two ways to build multiple scenarios:
+
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: build scenarios
+    :alt: build scenarios
+    :align: center
+
+    digraph {
+        b [shape=diamond, label="Multi-Scenario Analysis"]
+        b -> "Plain vanilla" 
+        b -> "Using Lenses"
+        "Plain vanilla" -> AssumpDict
+        "Using Lenses" -> AssumpDict
+        AssumpDict [label="A map(k=string,value=Pool Assumptions)"]
+        "Deal Obj" -> "run()"
+        AssumpDict -> "run()"
+        "Deal Run Assumption" -> "run()"
+        "run()" -> Result [label="A map(k=string,value=Run Result on each pool assumption)"]
+    }
+
+
+Plain Vanila Assumptions 
+""""""""""""""""""""""""""
+
 
 .. code-block:: python
 
@@ -949,6 +976,16 @@ if passing `assumptions` with a dict. Then the key will be treated as `secnario 
                ,poolAssump={"00":myAssumption
                            ,"stressed":myAssumption2}
                ,read=True)
+
+Using Lenses 
+""""""""""""""""""""
+Start with a `base` case ,and nudge the assumption by `lenses`
+
+
+
+View Multi-Scenario Result
+""""""""""""""""""""""""""""""
+
 
 User shall able to access the each scenario's response by just by `scenario name`
 
@@ -967,6 +1004,8 @@ There are couple candy function user can view the data field from all the scenar
    flow_by_scenario(rs,["bonds","A1","principal"])
    flow_by_scenario(rs,["bonds","A1", ["principal","cash"]])
    flow_by_scenario(rs,["pricing","A1"],node="idx")
+
+
 
 
 Multi-Structs

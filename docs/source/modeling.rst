@@ -303,7 +303,7 @@ Bool Type
 Or `formula` can be an arithmetic calculation on itselfies.
 
 Combination Type
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
     * ``("factor", <Formula>, <Number>)`` -> multiply <Number> to a formula
 
       * ``("*", <Formula>, <Number>)`` same
@@ -318,12 +318,10 @@ Combination Type
       * ``("-",<Formula>,<Formula>,...)``  same
     * ``("floorWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and floor with <formula2>
     * ``("floorWithZero", <Formula> )`` -> get value of <formula1> and floor with 0
-    * ``("excess", <Formula>, *<Formula>)`` -> equals to ``max 0 <formula> - sum <flormula>`` ( new in 0.24.3)
+    * ``("excess", <Formula>, *<Formula>)`` -> equals to ``max 0 <formula> - sum *<formula>`` ( new in 0.24.3)
     * ``("floorCap", <Formula1>, <Formula2>, <Formula3> )`` -> use <Formula1> as floor, <Formula2> as cap, and use <Formula3> as value
     * ``("capWith", <Formula1> , <Formula2>)`` -> get value of <formula1> and cap with <formula2>
-    * ``("constant", <Number>)``  -> a constant value
-
-      * ``("const", <Number>)`` same
+    * ``("constant", <Number>)`` | ``("const", <Number>)`` -> a constant value
     * ``("custom", <Name of user define data>)`` -> use a custom data
 
 
