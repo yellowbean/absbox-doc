@@ -961,6 +961,7 @@ There are two ways to build multiple scenarios:
 Plain Vanila Assumptions 
 """"""""""""""""""""""""""
 
+User can build a simple dict with ``pool assumption`` as value .
 
 .. code-block:: python
 
@@ -979,8 +980,23 @@ Plain Vanila Assumptions
 
 Using Lenses 
 """"""""""""""""""""
-Start with a `base` case ,and nudge the assumption by `lenses`
 
+.. versionadded:: 0.24.3
+
+Start with a `base` case and nudge the assumption by `lenses` . `absbox` shipped with a util function `prodAssumpsBy()`
+
+.. code-block:: python
+
+    from lenses import lens
+    from absbox import prodAssumpsBy
+
+    base = ("Pool",("Mortgage",{"CDR":0.01},None,None,None)
+                                      ,None
+                                      ,None)
+
+    prodAssumpsBy(base, (lens[1][1]['CDR'], [0.01,0.02,0.03])).values()
+
+`prodAssumpsBy()` will return a map with value as `pool assumption`. But the key representation is terrible, to be enhanced in future release.
 
 
 View Multi-Scenario Result
@@ -998,7 +1014,7 @@ There are couple candy function user can view the data field from all the scenar
 
 .. code-block:: python
    
-   from absbox.local.util import flow_by_scenario
+   from absbox import flow_by_scenario
 
    flow_by_scenario(rs,["pool","flow","Interest"])
    flow_by_scenario(rs,["bonds","A1","principal"])
