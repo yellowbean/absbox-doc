@@ -1741,6 +1741,35 @@ It was modeled as a map, with key as identifier to distinguish different type of
 * ``"cleanUp"`` -> will be exectued *once* when deal is being clean up call
 * ``"closingDay"`` -> will be exectued *once* at the `Day of Closing` if deal status is `PreClosing`
 
+
+How engine pick which waterfall to execute?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This workflow chart demostrate how engine pick the waterfall to execute during deal run.
+
+.. graphviz::
+    :name: sphinx.ext.graphviz
+    :caption: deal waterfall
+    :alt: deal waterfall
+    :align: center
+
+    digraph {
+       "Waterfall" -> "bond payment dates"
+       "bond payment dates" -> "start of waterfall picked"
+       "start of waterfall picked" -> statusChoice
+       statusChoice  [shape="diamond", label="find waterfall by Deal Status"]
+       statusChoice -> useDealStatusWaterfall  [label="Found"]
+       statusChoice -> "use default `amortizing` waterfall" [label="Not Found"]
+       useDealStatusWaterfall [label="use waterfall with matched status"]
+       "use default `amortizing` waterfall"  -> "end of waterfall"
+       useDealStatusWaterfall -> "end of waterfall"
+
+       "Waterfall" -> "pool collection dates"
+       "Waterfall" -> "clean up date"
+       "Waterfall" -> "entering closing date"
+       
+    }
+
 .. image:: img/waterfall_in_deal_runt.png
   :width: 500
   :alt: waterfall_run_loc
