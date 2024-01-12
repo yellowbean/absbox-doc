@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'absbox'
-copyright = '2023, Xiaoyu Zhang'
+copyright = '2024, Xiaoyu Zhang'
 author = 'Xiaoyu Zhang'
 
-release = '0.8'
-version = '0.8.4'
+release = '0.23.4'
+version = '0.23.4'
 
 # -- General configuration
 
