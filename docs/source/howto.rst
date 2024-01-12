@@ -245,8 +245,8 @@ Two methods to construct structuring plans
     }
 
 
-``mkDealsBy()``
-^^^^^^^^^^^^^^^
+Build multiple deals(mkDealBy())
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Build components
 """"""""""""""""""
@@ -281,8 +281,9 @@ Assume we have already a base line model called :ref:`subordination exmaple <exm
 Now we have ``bond_plan`` which has two bonds components, represents two different liability sizing structure.
 (Same method applies to swapping different ``pool`` as well, user can swap different pool plans to structuring deals)
 
-Build multiple deals
-""""""""""""""""""""""""
+call mkDealBy()
+""""""""""""""""""""""""""""""""""""
+
 
 1. Now we need to build a dict with named key.
 2. Call ``mkDealsBy()`` ,which takes a base deal, and a dict which will be swaped into the base deal. It will return a map with same key of `bond_plan`, with new deals as value.
@@ -299,8 +300,8 @@ Build multiple deals
   differentDeals['HighSenior']
 
 
-``setDealsBy() / proDealsBy()``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Build multiple deals ( ``setDealsBy() / proDealsBy()``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 0.24.2
 
@@ -415,13 +416,14 @@ Run with candy function
 
   ## after 0.24.2
   from absbox import run_yield_table
+  from absbox import runYieldTable
 
   from absbox import API
   localAPI = API("https://absbox.org/api/latest")
 
 
   # test01 is a deal object
-  run_yield_table(localAPI
+  runYieldTable(localAPI
                   , test01
                   , "A1"
                   , pool_assumps
