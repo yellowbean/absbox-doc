@@ -995,7 +995,12 @@ Pls make sure there are couple adjustment to set assumptions and get result.
 
 .. seealso:: :ref:`Multiple Pool with mixed assets`
 
+Resecuritizaiton
+^^^^^^^^^^^^^^^^^^^^^^
 
+It's possible to model CDO^2 or ABS CDO.
+
+.. seealso:: :ref:`Resecuritizaiton Deal`
 
 Mortgage
 ^^^^^^^^^^^
@@ -2702,6 +2707,40 @@ Multiple Pool with mixed assets
 .. literalinclude:: deal_sample/multi_pool.py
    :language: python
    :emphasize-lines: 13-33,73-82,90,56-57,51
+
+
+Resecuritizaiton Deal
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 0.25.0
+
+Resecuritizaiton deal is a deal which is backed by a pool of other deals. It's a deal of deal.
+A pool is composed of a list of bonds, each of bonds are affliated to other deals.
+The relationship is being defined by a tuple :
+
+  ``(<BondName>,<Pct of Bond>,<Date of Acquisition>)``
+
+* In this example , ``test01`` is the undelrying bond which is modeled at line:54
+  
+  * <BondName> -> which bond cashflow to be flow into the pool 
+  * <Pct of Bond> -> pct of cashflow to be flow into the pool
+  * <Date of Acquisition> -> since when the bond cashflow to be flow into the pool
+
+* User can set assumption to undelrying deal at line:93-97
+
+  * it's a tuple to describle assumption of underlying deals: ``("ByDealName",<an assumption map>)``
+  * ``<an assumption map>``: ``{<underlying deal name>:(<pool assump>, <deal run assump>)}``
+  
+    * key of map is the name of underlying deal
+    * value of map is a tuple ,which is a pair of pool assumption and deal run assumption
+  
+      *  ``<pool assump>``:  :ref:`Asset Performance Assumption`
+      *  ``<deal run assump>``:  :ref:`Deal Assumption`
+
+.. literalinclude:: deal_sample/resec.py
+  :language: python
+  :emphasize-lines: 54,93-97
+  
 
 
 
