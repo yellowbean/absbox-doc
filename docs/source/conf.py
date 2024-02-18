@@ -16,7 +16,9 @@ import pathlib
 #PROJECT_DIR = pathlib.Path(__file__).parent.parent.parent.parent / 'PyABS'
 
 import sys,os
-sys.path.insert(0, os.path.abspath(r'PyABS'))
+sys.path.insert(0, str( pathlib.Path(__file__) / "PyABS" ))
+                
+                #os.path.relpath(r'PyABS'))
 
 extensions = [
     'sphinx.ext.autodoc',
