@@ -43,5 +43,6 @@ Content
    howto
    support
    reference
+   api
 
 
