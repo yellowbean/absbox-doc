@@ -1019,16 +1019,34 @@ How to use Deal Library
 What is Deal Library?
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Deal Library` is a collection of `deal` objects, which can be used to store and retrieve deal objects. As deal objects is actually represented in JSON , it can be easily stored in a Non-SQL database like `MongoDB` or `CouchDB` or even `AWS S3` or `Azure Blob Storage`.
-Given a customizied tagging , user can easily retrieve the deal object from the library.
+`Deal Library` is a collection of `deal` objects, which can be used to store and retrieve deal objects. 
+
+As deal objects is actually represented in JSON , it can be easily stored in a Non-SQL database like `MongoDB` or `CouchDB` or even `AWS S3` or `Azure Blob Storage`.
+
+Given a customizied tagging , user can easily retrieve the deal objects with criteria from the library.
+
+.. image:: img/deal_library.png
+  :width: 500
+  :alt: balance
+
+.. note::
+  The ``Deal Library Service`` / ``Deals Storage`` / ``Hastructure`` can be deployed in a self-host environment.
+
 
 How to build a deal library?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``absbox.org`` provide a `deal library` service, user can store and retrieve deal objects via `absbox` API. Users have the option to build their own `Deal Library` or just deploy the service(code is available but offering is subjected to a commercial agreement) in self-host environment to maximize the security.
+``absbox.org`` provide a `deal library` service, user can store and retrieve deal objects via `absbox` API. 
+
+Users have the option to build their own `Deal Library` or just deploy the service(code is available but offering is subjected to a commercial agreement) in self-host environment to minimise the security risk.
 
 How to use a deal library?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 User just need to pass the bond id and pool/deal level assumptions to the `runLibrary()` function, the deal object will be retrieved from the library and projected cashflow will be returned.
 
+Why using a deal library ? 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* seperating deal storages and deal calculation engine, which is good for security and performance.
+* seperating running assumption and deal calculation, which is good for reusability and maintainability.
